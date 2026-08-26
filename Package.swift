@@ -54,6 +54,10 @@ let package = Package(
             url: "https://github.com/swift-primitives/swift-pair-primitives.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-input-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -85,6 +89,7 @@ let package = Package(
         .target(
             name: "Coder Parser Primitives",
             dependencies: [
+                .product(name: "Input Primitives", package: "swift-input-primitives"),
                 "Coder Primitives",
                 .product(name: "Parser Primitives", package: "swift-parser-primitives"),
                 .product(name: "Parser Pair Primitives", package: "swift-parser-primitives"),
