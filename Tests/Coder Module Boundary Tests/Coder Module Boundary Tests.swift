@@ -1,5 +1,5 @@
 import Coder_Module_Boundary_Control
-import Coder_Primitives
+import Coder
 import Testing
 
 extension Coder.Boundary {

@@ -1,5 +1,5 @@
-public import Parser_Primitives_Core
-public import Serializer_Primitives_Core
+public import Parser_Core
+public import Serializer_Core
 
 extension Coder {
 

@@ -1,0 +1,48 @@
+public import Parser
+public import Product
+public import Serializer_Core
+
+extension Parser.OneOf.Three: @retroactive Serializer.`Protocol`
+where
+    P0: Serializer.`Protocol`,
+    P1: Serializer.`Protocol`,
+    P2: Serializer.`Protocol`,
+    P0.Buffer == P1.Buffer,
+    P1.Buffer == P2.Buffer
+{
+
+    public typealias Buffer = P0.Buffer
+
+    @inlinable
+    public var body: Never {
+        borrowing get {
+            return fatalError("leaf combinator — serialize(_:into:) is implemented directly")
+        }
+    }
+
+    @inlinable
+    public func serialize(
+        _ output: Output,
+        into buffer: inout Buffer
+    ) throws(Product<P0.Failure, P1.Failure, P2.Failure>) {
+        let checkpoint = buffer
+        do throws(P0.Failure) {
+            try p0.serialize(output, into: &buffer)
+            return
+        } catch let error0 {
+            buffer = checkpoint
+            do throws(P1.Failure) {
+                try p1.serialize(output, into: &buffer)
+                return
+            } catch let error1 {
+                buffer = checkpoint
+                do throws(P2.Failure) {
+                    try p2.serialize(output, into: &buffer)
+                } catch let error2 {
+                    buffer = checkpoint
+                    throw Product(error0, error1, error2)
+                }
+            }
+        }
+    }
+}

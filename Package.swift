@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-coder-primitives",
+    name: "swift-coder",
     platforms: [
         .macOS(.v27),
         .iOS(.v27),
@@ -17,45 +17,45 @@ let package = Package(
             targets: ["Coder Primitive"]
         ),
         .library(
-            name: "Coder Witness Primitives",
-            targets: ["Coder Witness Primitives"]
+            name: "Coder Witness",
+            targets: ["Coder Witness"]
         ),
         .library(
-            name: "Coder Primitives",
-            targets: ["Coder Primitives"]
+            name: "Coder",
+            targets: ["Coder"]
         ),
         .library(
-            name: "Coder Parser Primitives",
-            targets: ["Coder Parser Primitives"]
+            name: "Coder Parser",
+            targets: ["Coder Parser"]
         ),
         .library(
-            name: "Coder Primitives Test Support",
-            targets: ["Coder Primitives Test Support"]
+            name: "Coder Test Support",
+            targets: ["Coder Test Support"]
         ),
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-primitives/swift-parser-primitives.git",
+            url: "https://github.com/swift-molecules/swift-parser.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-serializer-primitives.git",
+            url: "https://github.com/swift-molecules/swift-serializer.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-either-primitives.git",
+            url: "https://github.com/swift-molecules/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-product-primitives.git",
+            url: "https://github.com/swift-molecules/swift-product.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-pair-primitives.git",
+            url: "https://github.com/swift-molecules/swift-pair.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-primitives/swift-input-primitives.git",
+            url: "https://github.com/swift-molecules/swift-input.git",
             branch: "main"
         ),
     ],
@@ -63,59 +63,59 @@ let package = Package(
         .target(
             name: "Coder Primitive",
             dependencies: [
-                .product(name: "Parser Primitives Core", package: "swift-parser-primitives"),
+                .product(name: "Parser Core", package: "swift-parser"),
                 .product(
-                    name: "Serializer Primitives Core",
-                    package: "swift-serializer-primitives"
+                    name: "Serializer Core",
+                    package: "swift-serializer"
                 ),
             ]
         ),
 
         .target(
-            name: "Coder Witness Primitives",
+            name: "Coder Witness",
             dependencies: [
                 .target(name: "Coder Primitive")
             ]
         ),
 
         .target(
-            name: "Coder Primitives",
+            name: "Coder",
             dependencies: [
                 .target(name: "Coder Primitive"),
-                .target(name: "Coder Witness Primitives"),
+                .target(name: "Coder Witness"),
             ]
         ),
 
         .target(
-            name: "Coder Parser Primitives",
+            name: "Coder Parser",
             dependencies: [
-                .product(name: "Input Primitives", package: "swift-input-primitives"),
-                "Coder Primitives",
-                .product(name: "Parser Primitives", package: "swift-parser-primitives"),
-                .product(name: "Parser Pair Primitives", package: "swift-parser-primitives"),
+                .product(name: "Input", package: "swift-input"),
+                "Coder",
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Parser Pair", package: "swift-parser"),
                 .product(
-                    name: "Serializer Primitives Core",
-                    package: "swift-serializer-primitives"
+                    name: "Serializer Core",
+                    package: "swift-serializer"
                 ),
-                .product(name: "Either Primitives", package: "swift-either-primitives"),
-                .product(name: "Product Primitives", package: "swift-product-primitives"),
-                .product(name: "Pair Primitives", package: "swift-pair-primitives"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Product", package: "swift-product"),
+                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
 
         .target(
-            name: "Coder Primitives Test Support",
-            dependencies: ["Coder Primitives"],
+            name: "Coder Test Support",
+            dependencies: ["Coder"],
             path: "Tests/Support"
         ),
         .testTarget(
-            name: "Coder Parser Primitives Tests",
-            dependencies: ["Coder Parser Primitives"],
-            path: "Tests/Coder Parser Primitives Tests"
+            name: "Coder Parser Tests",
+            dependencies: ["Coder Parser"],
+            path: "Tests/Coder Parser Tests"
         ),
         .target(
             name: "Coder Module Boundary Control",
-            dependencies: [.target(name: "Coder Primitives")],
+            dependencies: [.target(name: "Coder")],
             path: "Tests/Coder Module Boundary Control",
             swiftSettings: [
 
@@ -129,7 +129,7 @@ let package = Package(
             name: "Coder Module Boundary Tests",
             dependencies: [
                 .target(name: "Coder Module Boundary Control"),
-                .target(name: "Coder Primitives"),
+                .target(name: "Coder"),
             ],
             path: "Tests/Coder Module Boundary Tests"
         ),

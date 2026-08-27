@@ -1,18 +1,18 @@
-# Coder Primitives
+# Coder
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
-[![CI](https://github.com/swift-primitives/swift-coder-primitives/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-primitives/swift-coder-primitives/actions/workflows/ci.yml)
+[![CI](https://github.com/swift-molecules/swift-coder/actions/workflows/ci.yml/badge.svg)](https://github.com/swift-molecules/swift-coder/actions/workflows/ci.yml)
 
 Bidirectional coding primitives — `Coder.Protocol` unifies a parser and a serializer into one codec type, so decode and encode of a format live on a single conformer with unified `Input` / `Output` / `Buffer` / `Failure`. Writing the two directions as separate parser and serializer types forces two names, two failure types, and a round-trip contract nobody checks; a coder is the format-times-value unit that carries both directions and the contract in one place.
 
-The two directions are deliberately asymmetric: decode reads from a cursor `Input` (which may be non-copyable or non-escapable, such as a borrowed span), while encode appends to a mutable `Buffer`. Codecs whose two directions genuinely differ in type and failure mode fit here; text round-trips that share one input type and compose declaratively belong to `Parser.Bidirectional` in swift-parser-primitives instead.
+The two directions are deliberately asymmetric: decode reads from a cursor `Input` (which may be non-copyable or non-escapable, such as a borrowed span), while encode appends to a mutable `Buffer`. Codecs whose two directions genuinely differ in type and failure mode fit here; text round-trips that share one input type and compose declaratively belong to `Parser.Bidirectional` in swift-parser instead.
 
 ---
 
 ## Key Features
 
 - **One conformer, both directions** — `Coder.Protocol` refines the parser and serializer protocols; conforming once yields `parse(_:)` and `serialize(_:into:)` with a single unified failure type.
-- **Typed throws end-to-end** — `Failure` is a type parameter on every surface; no `any Error` appears in the API. Codecs with distinct decode/encode failures populate `Failure` with `Either<DecodeFailure, EncodeFailure>` from swift-either-primitives.
+- **Typed throws end-to-end** — `Failure` is a type parameter on every surface; no `any Error` appears in the API. Codecs with distinct decode/encode failures populate `Failure` with `Either<DecodeFailure, EncodeFailure>` from swift-either.
 - **Closure-backed witnesses** — `Coder.Witness` builds an ad-hoc codec from a parse closure and a serialize closure; `Coder.Pure` is the `Failure == Never` shorthand for infallible codecs.
 - **Canonical-coder attachment** — the `Codable` protocol lets a value type declare its canonical coder, giving the type itself `init(decoding:)` and `encoded()`.
 - **Leaf by design** — coders do not compose through a `body` builder; combinators belong on parsers and serializers, and a coder is the terminal format-times-value unit.
@@ -24,7 +24,7 @@ Note: the package's `Codable` protocol intentionally shadows `Swift.Codable`. Co
 ## Quick Start
 
 ```swift
-import Coder_Primitives
+import Coder
 
 struct TruncatedInput: Error {}
 
@@ -53,8 +53,8 @@ A type can adopt its codec as canonical via `Codable`, so decode and encode beco
 ```swift
 struct Port { var number: UInt16 }
 
-extension Port: Coder_Primitives.Codable {
-    static var coder: Coder_Primitives.Coder.Witness<ArraySlice<UInt8>, Port, [UInt8], TruncatedInput> {
+extension Port: Coder.Codable {
+    static var coder: Coder.Coder.Witness<ArraySlice<UInt8>, Port, [UInt8], TruncatedInput> {
         .init(
             parse: { (input) throws(TruncatedInput) in
                 guard let high = input.popFirst(), let low = input.popFirst() else {
@@ -83,7 +83,7 @@ Add the dependency to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-coder-primitives.git", branch: "main")
+    .package(url: "https://github.com/swift-molecules/swift-coder.git", branch: "main")
 ]
 ```
 
@@ -93,7 +93,7 @@ Add the product to your target:
 .target(
     name: "App",
     dependencies: [
-        .product(name: "Coder Primitives", package: "swift-coder-primitives")
+        .product(name: "Coder", package: "swift-coder")
     ]
 )
 ```
@@ -106,8 +106,8 @@ The package is pre-1.0 — depend on `branch: "main"` until `0.1.0` is tagged. R
 
 | Product | Contents | When to import |
 |---------|----------|----------------|
-| `Coder Primitives` | `Coder.Protocol`, `Coder.Witness`, `Coder.Pure`, and the `Codable` attachment protocol | Most consumers |
-| `Coder Primitives Test Support` | Re-export of `Coder Primitives` for test targets | Test targets that exercise codecs |
+| `Coder` | `Coder.Protocol`, `Coder.Witness`, `Coder.Pure`, and the `Codable` attachment protocol | Most consumers |
+| `Coder Test Support` | Re-export of `Coder` for test targets | Test targets that exercise codecs |
 
 The surface is small and early: the protocol, one closure-backed witness, and the canonical-coder attachment. Combinator vocabulary lives in the parser and serializer packages this one refines; no coder-side combinators exist yet.
 
@@ -126,9 +126,9 @@ The surface is small and early: the protocol, one closure-backed witness, and th
 
 ## Related Packages
 
-- [`swift-parser-primitives`](https://github.com/swift-primitives/swift-parser-primitives) — the parser vocabulary `Coder.Protocol` refines; use `Parser.Bidirectional` there when both directions share one input type and compose declaratively.
-- [`swift-serializer-primitives`](https://github.com/swift-primitives/swift-serializer-primitives) — the serializer vocabulary `Coder.Protocol` refines.
-- [`swift-either-primitives`](https://github.com/swift-primitives/swift-either-primitives) — `Either<DecodeFailure, EncodeFailure>` for codecs with asymmetric failure modes.
+- [`swift-parser`](https://github.com/swift-molecules/swift-parser) — the parser vocabulary `Coder.Protocol` refines; use `Parser.Bidirectional` there when both directions share one input type and compose declaratively.
+- [`swift-serializer`](https://github.com/swift-molecules/swift-serializer) — the serializer vocabulary `Coder.Protocol` refines.
+- [`swift-either`](https://github.com/swift-molecules/swift-either) — `Either<DecodeFailure, EncodeFailure>` for codecs with asymmetric failure modes.
 
 ---
 
