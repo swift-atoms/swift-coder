@@ -1,14 +1,11 @@
-public import Parser_Core
-public import Serializer_Core
+public import Parser
+public import Serializer
 
 extension Coder {
 
     public protocol Codable {
 
-        associatedtype
-            Coder: Coder_Primitive.Coder.`Protocol`<
-                Coder.Input, Coder.Output, Coder.Buffer, Coder.Failure
-            >
+        associatedtype Coder: Coder_Primitive.Coder.`Protocol`
         where Coder.Input: ~Copyable & ~Escapable
 
         static var coder: Coder { get }

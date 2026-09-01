@@ -1,5 +1,6 @@
+public import Cursor_Parser_Many
 public import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Parser.Many.Separated: @retroactive Serializer.`Protocol`
 where

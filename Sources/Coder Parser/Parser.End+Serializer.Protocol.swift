@@ -1,5 +1,6 @@
+public import Collection_Parser_End
 public import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Parser.End: @retroactive Serializer.`Protocol` {
 

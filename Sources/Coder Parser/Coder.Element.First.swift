@@ -1,15 +1,17 @@
 public import Coder
-public import Input
+public import Cursor_Parser_First
+public import Iterator
+public import Iterator_Protocol
 public import Parser
-import Serializer_Core
+import Serializer
 
 extension Coder.Element {
 
     public struct First<
-        Input: Input.Input.`Protocol` & ~Copyable,
+        Input: Iterator.`Protocol` & ~Copyable,
         Sink: RangeReplaceableCollection
     >
-    where Input.Element: Copyable, Sink.Element == Input.Element {
+    where Input.Element: Copyable & Escapable, Input.Failure == Never, Sink.Element == Input.Element {
 
         public init() {}
     }
@@ -34,10 +36,10 @@ extension Coder.Element.First: Coder.`Protocol` {
 
     @inlinable
     public func parse(_ input: inout Input) throws(Failure) -> Input.Element {
-        guard !input.isEmpty else {
+        guard let element = input.next() else {
             throw .unexpected(expected: "any element")
         }
-        return try! input.advance()
+        return element
     }
 
     @inlinable

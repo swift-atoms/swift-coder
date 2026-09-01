@@ -1,4 +1,5 @@
 import Coder_Parser
+import Parser_Match
 import Testing
 
 @Suite
@@ -18,7 +19,7 @@ struct `Coder Witness Dispatch` {
     private static func parseViaWitness<P: Parser.`Protocol`>(
         _ parser: borrowing P,
         _ input: inout P.Input
-    ) throws -> P.Output {
+    ) throws -> P.Output where P.Output: Escapable {
         try parser.parse(&input)
     }
 

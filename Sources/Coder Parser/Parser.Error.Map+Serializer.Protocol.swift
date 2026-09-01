@@ -1,5 +1,6 @@
 public import Parser
-public import Serializer_Core
+public import Parser_Error
+public import Serializer
 
 extension Parser.Error.Map: @retroactive Serializer.`Protocol`
 where Upstream: Serializer.`Protocol` {

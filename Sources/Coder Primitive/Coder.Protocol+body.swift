@@ -1,5 +1,5 @@
-public import Parser_Core
-public import Serializer_Core
+public import Parser
+public import Serializer
 
 extension Parser.`Protocol` where Self: ~Copyable {
 

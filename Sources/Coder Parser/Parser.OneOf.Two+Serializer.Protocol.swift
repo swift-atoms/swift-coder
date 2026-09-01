@@ -1,6 +1,7 @@
+public import Cursor_Parser_OneOf
 public import Parser
 public import Product
-public import Serializer_Core
+public import Serializer
 
 extension Parser.OneOf.Two: @retroactive Serializer.`Protocol`
 where P0: Serializer.`Protocol`, P1: Serializer.`Protocol`, P0.Buffer == P1.Buffer {

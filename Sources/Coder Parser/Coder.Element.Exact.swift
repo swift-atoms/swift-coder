@@ -1,15 +1,18 @@
 public import Coder
-public import Input
+public import Checkpoint
+public import Cursor
+public import Iterator
+public import Iterator_Protocol
 public import Parser
-import Serializer_Core
+import Serializer
 
 extension Coder.Element {
 
     public struct Exact<
-        Input: Input.Input.`Protocol` & ~Copyable,
+        Input: Cursor.`Protocol` & ~Copyable,
         Sink: RangeReplaceableCollection
     >
-    where Input.Element: Equatable, Sink.Element == Input.Element {
+    where Input.Element: Equatable & Copyable & Escapable, Input.Failure == Never, Sink.Element == Input.Element {
 
         public let underlying: Input.Element
 
@@ -49,10 +52,7 @@ extension Coder.Element.Exact: Coder.`Protocol` {
     @inlinable
     public func parse(_ input: inout Input) throws(Error) {
         let checkpoint = input.checkpoint
-        let found: Input.Element
-        do throws(Input.Input.Stream.Error) {
-            found = try input.advance()
-        } catch {
+        guard let found = input.next() else {
             throw .missing(expected: underlying)
         }
         guard found == underlying else {

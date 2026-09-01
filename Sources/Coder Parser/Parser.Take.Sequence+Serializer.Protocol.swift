@@ -1,5 +1,6 @@
 public import Parser
-public import Serializer_Core
+public import Parser_Take
+public import Serializer
 
 extension Parser.Take.Sequence: @retroactive Serializer.`Protocol`
 where Body: Serializer.`Protocol` {

@@ -35,27 +35,55 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/swift-molecules/swift-parser.git",
+            url: "https://github.com/swift-atoms/swift-parser.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-serializer.git",
+            url: "https://github.com/swift-atoms/swift-serializer.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-either.git",
+            url: "https://github.com/swift-atoms/swift-either.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-product.git",
+            url: "https://github.com/swift-atoms/swift-product.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-pair.git",
+            url: "https://github.com/swift-atoms/swift-pair.git",
             branch: "main"
         ),
         .package(
-            url: "https://github.com/swift-molecules/swift-input.git",
+            url: "https://github.com/swift-atoms/swift-checkpoint.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-cursor.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-iterator.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-always.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-always-parser.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-pair-parser.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-cursor-parser.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-collection-parser.git",
             branch: "main"
         ),
     ],
@@ -63,11 +91,8 @@ let package = Package(
         .target(
             name: "Coder Primitive",
             dependencies: [
-                .product(name: "Parser Core", package: "swift-parser"),
-                .product(
-                    name: "Serializer Core",
-                    package: "swift-serializer"
-                ),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
             ]
         ),
 
@@ -89,17 +114,33 @@ let package = Package(
         .target(
             name: "Coder Parser",
             dependencies: [
-                .product(name: "Input", package: "swift-input"),
                 "Coder",
                 .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Pair", package: "swift-parser"),
+                .product(name: "Parser Error", package: "swift-parser"),
+                .product(name: "Parser Skip", package: "swift-parser"),
+                .product(name: "Parser Take", package: "swift-parser"),
                 .product(
-                    name: "Serializer Core",
-                    package: "swift-serializer"
+                    name: "Parser Standard Library Integration",
+                    package: "swift-parser"
                 ),
+                .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
                 .product(name: "Product", package: "swift-product"),
                 .product(name: "Pair", package: "swift-pair"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
+                .product(name: "Cursor", package: "swift-cursor"),
+                .product(name: "Iterator", package: "swift-iterator"),
+                .product(name: "Iterator Protocol", package: "swift-iterator"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Always Parser", package: "swift-always-parser"),
+                .product(name: "Pair Parser", package: "swift-pair-parser"),
+                .product(name: "Cursor Parser First", package: "swift-cursor-parser"),
+                .product(name: "Cursor Parser Many", package: "swift-cursor-parser"),
+                .product(name: "Cursor Parser OneOf", package: "swift-cursor-parser"),
+                .product(name: "Cursor Parser Optionally", package: "swift-cursor-parser"),
+                .product(name: "Collection Parser End", package: "swift-collection-parser"),
+                .product(name: "Collection Parser Prefix", package: "swift-collection-parser"),
+                .product(name: "Collection Parser Rest", package: "swift-collection-parser"),
             ]
         ),
 
@@ -110,7 +151,13 @@ let package = Package(
         ),
         .testTarget(
             name: "Coder Parser Tests",
-            dependencies: ["Coder Parser"],
+            dependencies: [
+                "Coder Parser",
+                .product(name: "Pair", package: "swift-pair"),
+                .product(name: "Pair Parser", package: "swift-pair-parser"),
+                .product(name: "Parser Match", package: "swift-parser"),
+                .product(name: "Parser Skip", package: "swift-parser"),
+            ],
             path: "Tests/Coder Parser Tests"
         ),
         .target(

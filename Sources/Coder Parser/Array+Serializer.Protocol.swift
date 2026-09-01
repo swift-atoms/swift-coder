@@ -1,5 +1,5 @@
 import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Swift.Array: @retroactive Serializer.`Protocol` where Element: Equatable {
 

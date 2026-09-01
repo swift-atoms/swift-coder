@@ -1,4 +1,4 @@
-internal import Parser_Core
-internal import Serializer_Core
+internal import Parser
+internal import Serializer
 
 public enum Coder {}

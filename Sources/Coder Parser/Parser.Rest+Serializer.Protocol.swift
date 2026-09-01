@@ -1,5 +1,6 @@
+public import Collection_Parser_Rest
 public import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Parser.Rest: @retroactive Serializer.`Protocol`
 where Input: RangeReplaceableCollection {

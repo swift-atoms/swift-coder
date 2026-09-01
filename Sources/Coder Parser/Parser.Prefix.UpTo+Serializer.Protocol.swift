@@ -1,5 +1,6 @@
+public import Collection_Parser_Prefix
 public import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Parser.Prefix.UpTo: @retroactive Serializer.`Protocol`
 where Input: RangeReplaceableCollection {

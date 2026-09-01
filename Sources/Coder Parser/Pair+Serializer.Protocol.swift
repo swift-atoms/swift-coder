@@ -1,7 +1,7 @@
 public import Either
 public import Pair
 public import Parser
-public import Serializer_Core
+public import Serializer
 
 extension Pair: @retroactive Serializer.`Protocol`
 where

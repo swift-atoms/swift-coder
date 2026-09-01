@@ -1,6 +1,7 @@
 public import Either
 public import Parser
-public import Serializer_Core
+public import Parser_Skip
+public import Serializer
 
 extension Parser.Skip.First: @retroactive Serializer.`Protocol`
 where P0: Serializer.`Protocol`, P1: Serializer.`Protocol`, P0.Buffer == P1.Buffer {

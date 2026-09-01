@@ -1,7 +1,7 @@
 public import Parser
-public import Serializer_Core
+public import Serializer
 
-extension Parser.Optional: @retroactive Serializer.`Protocol`
+extension Swift.Optional: @retroactive Serializer.`Protocol`
 where Wrapped: Serializer.`Protocol` {
 
     public typealias Buffer = Wrapped.Buffer
@@ -18,7 +18,7 @@ where Wrapped: Serializer.`Protocol` {
         _ output: Wrapped.Output?,
         into buffer: inout Buffer
     ) throws(Wrapped.Failure) {
-        guard let wrapped, let output else { return }
-        try wrapped.serialize(output, into: &buffer)
+        guard let serializer = self, let output else { return }
+        try serializer.serialize(output, into: &buffer)
     }
 }
