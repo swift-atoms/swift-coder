@@ -57,6 +57,7 @@ let package = Package(
                     package: "swift-parser"
                 ),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Either", package: "swift-either"),
             ]
         ),
         .testTarget(
@@ -84,6 +85,7 @@ let package = Package(
                     package: "swift-parser"
                 ),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Either", package: "swift-either"),
             ],
             path: "Tests/Coder Standard Library Integration Tests"
         ),

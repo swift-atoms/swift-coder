@@ -247,3 +247,91 @@ extension Boxed {
 extension Boxed: Coder.Codable {
     static var coder: Coder { Coder() }
 }
+
+@Suite
+struct `Coder Nonescapable Input` {
+
+    @Test
+    func `a coder body parses from a nonescapable cursor and serializes into a buffer`() throws(any Swift.Error) {
+        var buffer: [UInt8] = []
+        try FramedDigit().serialize(0x37, into: &buffer)
+        #expect(buffer == [0x28, 0x37, 0x29])
+        var cursor = Cursor(buffer.span)
+        let parsed = try FramedDigit().parse(&cursor)
+        let end = cursor.index
+        #expect(parsed == 0x37)
+        #expect(end == 3)
+    }
+
+    @Test
+    func `a coder body over a nonescapable cursor reports the leaf failure`() {
+        let bytes: [UInt8] = [0x28, 0x41, 0x29]
+        var cursor = Cursor(bytes.span)
+        var failure: ByteMismatch?
+        do {
+            _ = try FramedDigit().parse(&cursor)
+        } catch {
+            failure = error
+        }
+        #expect(failure == .expected(0x30))
+    }
+}
+
+private struct Cursor: ~Escapable {
+    var span: Span<UInt8>
+    var index: Int
+
+    @_lifetime(copy span)
+    init(_ span: Span<UInt8>) {
+        self.span = span
+        self.index = 0
+    }
+}
+
+private enum ByteMismatch: Swift.Error, Equatable {
+    case expected(UInt8)
+    case endOfInput
+}
+
+private struct ByteMarker: Coder.`Protocol` {
+    let expected: UInt8
+
+    init(_ expected: UInt8) {
+        self.expected = expected
+    }
+
+    borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) {
+        guard input.index < input.span.count else { throw .endOfInput }
+        guard input.span[input.index] == expected else { throw .expected(expected) }
+        input.index += 1
+    }
+
+    borrowing func serialize(_ output: Void, into buffer: inout [UInt8]) throws(ByteMismatch) {
+        buffer.append(expected)
+    }
+}
+
+private struct ByteDigit: Coder.`Protocol` {
+    borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
+        guard input.index < input.span.count else { throw .endOfInput }
+        let byte = input.span[input.index]
+        guard (0x30...0x39).contains(byte) else { throw .expected(0x30) }
+        input.index += 1
+        return byte
+    }
+
+    borrowing func serialize(_ output: UInt8, into buffer: inout [UInt8]) throws(ByteMismatch) {
+        guard (0x30...0x39).contains(output) else { throw .expected(0x30) }
+        buffer.append(output)
+    }
+}
+
+private struct FramedDigit: Coder.`Protocol` {
+    typealias Failure = ByteMismatch
+
+    var body: some Coding<Cursor, UInt8, [UInt8], ByteMismatch> {
+        ByteMarker(0x28)
+        ByteDigit()
+        ByteMarker(0x29)
+    }
+}

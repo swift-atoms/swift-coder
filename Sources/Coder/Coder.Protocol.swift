@@ -18,7 +18,7 @@ extension Coder.`Protocol`
 where
     Self: ~Copyable,
     Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & Escapable,
+    Output: ~Copyable & ~Escapable,
     Buffer: ~Copyable & ~Escapable,
     Body: Coder.`Protocol`<Input, Output, Buffer, Failure>
 {
