@@ -1,3 +1,6 @@
+public import Parser
+public import Serializer
+
 extension Coder {
 
     public struct Witness<
@@ -23,7 +26,7 @@ extension Coder {
     }
 }
 
-extension Coder.Witness: Coder.`Protocol` {
+extension Coder.Witness: Coder.`Protocol` where Input: ~Copyable & ~Escapable {
 
     public typealias Body = Never
 

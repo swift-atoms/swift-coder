@@ -1,7 +1,11 @@
 public import Parser
 public import Serializer
 
-extension Parser.`Protocol` where Self: ~Copyable {
+extension Parser.`Protocol`
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable
+{
 
     @inlinable
     @usableFromInline
@@ -10,7 +14,11 @@ extension Parser.`Protocol` where Self: ~Copyable {
     }
 }
 
-extension Coder.`Protocol` where Self: ~Copyable {
+extension Coder.`Protocol`
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable
+{
 
     @inlinable
     @_implements(Serializer.`Protocol`,body)
@@ -19,7 +27,12 @@ extension Coder.`Protocol` where Self: ~Copyable {
     }
 }
 
-extension Coder.`Protocol` where Self: ~Copyable, Body == Never {
+extension Coder.`Protocol`
+where
+    Self: ~Copyable,
+    Input: ~Copyable & ~Escapable,
+    Body == Never
+{
 
     @inlinable
     @_implements(Parser.`Protocol`,body)

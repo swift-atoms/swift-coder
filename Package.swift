@@ -13,24 +13,12 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Coder Primitive",
-            targets: ["Coder Primitive"]
-        ),
-        .library(
-            name: "Coder Witness",
-            targets: ["Coder Witness"]
-        ),
-        .library(
             name: "Coder",
             targets: ["Coder"]
         ),
         .library(
-            name: "Coder Parser",
-            targets: ["Coder Parser"]
-        ),
-        .library(
-            name: "Coder Test Support",
-            targets: ["Coder Test Support"]
+            name: "Coder Standard Library Integration",
+            targets: ["Coder Standard Library Integration"]
         ),
     ],
     dependencies: [
@@ -42,151 +30,54 @@ let package = Package(
             url: "https://github.com/swift-atoms/swift-serializer.git",
             branch: "main"
         ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-either.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-product.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-pair.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-checkpoint.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-cursor.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-iterator.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-atoms/swift-always.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-always-parser.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-pair-parser.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-cursor-parser.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-collection-parser.git",
-            branch: "main"
-        ),
-        .package(
-            url: "https://github.com/swift-molecules/swift-collection-serializer.git",
-            branch: "main"
-        ),
     ],
     targets: [
         .target(
-            name: "Coder Primitive",
-            dependencies: [
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Serializer", package: "swift-serializer"),
-                .product(
-                    name: "Collection Serializer Buffer",
-                    package: "swift-collection-serializer"
-                ),
-            ]
-        ),
-
-        .target(
-            name: "Coder Witness",
-            dependencies: [
-                .target(name: "Coder Primitive")
-            ]
-        ),
-
-        .target(
             name: "Coder",
             dependencies: [
-                .target(name: "Coder Primitive"),
-                .target(name: "Coder Witness"),
-            ]
-        ),
-
-        .target(
-            name: "Coder Parser",
-            dependencies: [
-                "Coder",
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Parser Error", package: "swift-parser"),
                 .product(name: "Parser Skip", package: "swift-parser"),
                 .product(name: "Parser Take", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+            ]
+        ),
+        .target(
+            name: "Coder Standard Library Integration",
+            dependencies: [
+                .target(name: "Coder"),
+                .product(name: "Parser", package: "swift-parser"),
                 .product(
                     name: "Parser Standard Library Integration",
                     package: "swift-parser"
                 ),
                 .product(name: "Serializer", package: "swift-serializer"),
-                .product(name: "Either", package: "swift-either"),
-                .product(name: "Product", package: "swift-product"),
-                .product(name: "Pair", package: "swift-pair"),
-                .product(name: "Checkpoint", package: "swift-checkpoint"),
-                .product(name: "Cursor", package: "swift-cursor"),
-                .product(name: "Iterator", package: "swift-iterator"),
-                .product(name: "Iterator Protocol", package: "swift-iterator"),
-                .product(name: "Always", package: "swift-always"),
-                .product(name: "Always Parser", package: "swift-always-parser"),
-                .product(name: "Pair Parser", package: "swift-pair-parser"),
-                .product(name: "Cursor Parser First", package: "swift-cursor-parser"),
-                .product(name: "Cursor Parser Many", package: "swift-cursor-parser"),
-                .product(name: "Cursor Parser OneOf", package: "swift-cursor-parser"),
-                .product(name: "Cursor Parser Optionally", package: "swift-cursor-parser"),
-                .product(name: "Collection Parser End", package: "swift-collection-parser"),
-                .product(name: "Collection Parser Prefix", package: "swift-collection-parser"),
-                .product(name: "Collection Parser Rest", package: "swift-collection-parser"),
-            ]
-        ),
-
-        .target(
-            name: "Coder Test Support",
-            dependencies: ["Coder"],
-            path: "Tests/Support"
-        ),
-        .testTarget(
-            name: "Coder Parser Tests",
-            dependencies: [
-                "Coder Parser",
-                .product(name: "Pair", package: "swift-pair"),
-                .product(name: "Pair Parser", package: "swift-pair-parser"),
-                .product(name: "Parser Match", package: "swift-parser"),
-                .product(name: "Parser Skip", package: "swift-parser"),
-            ],
-            path: "Tests/Coder Parser Tests"
-        ),
-        .target(
-            name: "Coder Module Boundary Control",
-            dependencies: [.target(name: "Coder")],
-            path: "Tests/Coder Module Boundary Control",
-            swiftSettings: [
-
-                .unsafeFlags([
-                    "-Xfrontend", "-sil-verify-all",
-                    "-Xfrontend", "-whole-module-optimization",
-                ])
             ]
         ),
         .testTarget(
-            name: "Coder Module Boundary Tests",
+            name: "Coder Tests",
             dependencies: [
-                .target(name: "Coder Module Boundary Control"),
                 .target(name: "Coder"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Parser Skip", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
             ],
-            path: "Tests/Coder Module Boundary Tests"
+            path: "Tests/Coder Tests"
+        ),
+        .testTarget(
+            name: "Coder Standard Library Integration Tests",
+            dependencies: [
+                .target(name: "Coder"),
+                .target(name: "Coder Standard Library Integration"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Parser Skip", package: "swift-parser"),
+                .product(
+                    name: "Parser Standard Library Integration",
+                    package: "swift-parser"
+                ),
+                .product(name: "Serializer", package: "swift-serializer"),
+            ],
+            path: "Tests/Coder Standard Library Integration Tests"
         ),
     ],
     swiftLanguageModes: [.v6]

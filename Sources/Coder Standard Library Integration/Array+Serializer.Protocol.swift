@@ -1,9 +1,10 @@
 import Parser
+import Parser_Standard_Library_Integration
 public import Serializer
 
-extension Swift.String: @retroactive Serializer.`Protocol` {
+extension Swift.Array: @retroactive Serializer.`Protocol` where Element: Equatable {
 
-    public typealias Buffer = Substring
+    public typealias Buffer = ArraySlice<Element>
 
     @inlinable
     public var body: Never {
@@ -13,7 +14,7 @@ extension Swift.String: @retroactive Serializer.`Protocol` {
     }
 
     @inlinable
-    public func serialize(_ output: Void, into buffer: inout Substring) {
+    public func serialize(_ output: Void, into buffer: inout ArraySlice<Element>) {
         buffer.append(contentsOf: self)
     }
 }

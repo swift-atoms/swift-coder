@@ -1,6 +1,11 @@
-import Coder_Parser
-import Parser_Match
+import Coder
+import Parser
+import Serializer
 import Testing
+
+enum MatchError: Swift.Error {
+    case literalMismatch(expected: String, found: String)
+}
 
 @Suite
 struct `Coder Witness Dispatch` {
@@ -19,7 +24,7 @@ struct `Coder Witness Dispatch` {
     private static func parseViaWitness<P: Parser.`Protocol`>(
         _ parser: borrowing P,
         _ input: inout P.Input
-    ) throws -> P.Output where P.Output: Escapable {
+    ) throws -> P.Output where P.Input: ~Copyable & ~Escapable, P.Output: Escapable {
         try parser.parse(&input)
     }
 
@@ -58,7 +63,7 @@ extension `Coder Witness Dispatch`.Leaf {
     typealias Buffer = Substring
     typealias Output = Void
 
-    typealias Failure = Parser.Match.Error
+    typealias Failure = MatchError
 
     func parse(_ input: inout Substring) throws(Failure) {
         guard input.hasPrefix("leaf") else {
@@ -78,9 +83,9 @@ extension `Coder Witness Dispatch`.Router {
 
     typealias Output = Void
 
-    typealias Failure = Parser.Match.Error
+    typealias Failure = MatchError
 
-    var body: some Parser.Bidirectional<Substring, Void, Parser.Match.Error> {
+    var body: some Parser.Bidirectional<Substring, Void, MatchError> {
         `Coder Witness Dispatch`.Leaf()
     }
 }

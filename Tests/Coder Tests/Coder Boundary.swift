@@ -1,5 +1,6 @@
 public import Coder
-public import Coder_Primitive
+public import Parser
+public import Serializer
 
 extension Coder {
 
@@ -9,7 +10,7 @@ extension Coder {
     }
 }
 
-extension Coder.Boundary: Coder_Primitive::Coder.`Protocol` {
+extension Coder.Boundary: Coder::Coder.`Protocol` {
 
     public typealias Input = Void
 

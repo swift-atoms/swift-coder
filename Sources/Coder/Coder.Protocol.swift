@@ -3,7 +3,7 @@ public import Serializer
 
 extension Coder {
 
-    public protocol `Protocol`:
+    public protocol `Protocol`<Input, Output, Buffer, Failure>:
         Parser.`Protocol`,
         Serializer.`Protocol`,
         ~Copyable
