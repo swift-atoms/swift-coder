@@ -38,6 +38,35 @@ struct `Coder Protocol Tests` {
     }
 
     @Test
+    func `Append round-trips a flat tuple`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try KeyValue().serialize(("k", "v"), into: &buffer)
+        #expect(buffer == "k=v")
+        var cursor = buffer
+        let parsed = try KeyValue().parse(&cursor)
+        #expect(parsed.0 == "k")
+        #expect(parsed.1 == "v")
+        #expect(cursor.isEmpty)
+    }
+
+    @Test
+    func `Append splits differently sized elements by layout`() throws(any Swift.Error) {
+        let inner = Parser.Builder<Substring>.buildPartialBlock(accumulated: Wide(), next: Narrow())
+        let node = Parser.Builder<Substring>.buildPartialBlock(accumulated: inner, next: Wide())
+        #expect(type(of: inner).splitsByLayout)
+        #expect(type(of: node).splitsByLayout)
+        var buffer: Substring = ""
+        try node.serialize((1, 2, 3), into: &buffer)
+        #expect(buffer == "123")
+        var cursor = buffer
+        let parsed = try node.parse(&cursor)
+        #expect(parsed.0 == 1)
+        #expect(parsed.1 == 2)
+        #expect(parsed.2 == 3)
+        #expect(cursor.isEmpty)
+    }
+
+    @Test
     func `Sequence round-trips`() throws(any Swift.Error) {
         try roundTrip(Bracketed(), "tag", expecting: "<tag>")
     }
@@ -68,6 +97,7 @@ struct `Coder Protocol Tests` {
     @Test
     func `equally typed failures collapse through the whole body`() {
         requireFailure(Bracketed(), Mismatch.self)
+        requireFailure(KeyValue(), Mismatch.self)
         requireFailure(Boxed.Coder(), Mismatch.self)
     }
 
@@ -202,6 +232,42 @@ private struct TrailingMarker: Coder.`Protocol` {
     var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
         Constant("tag")
         Marker(">")
+    }
+}
+
+private struct KeyValue: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, (String, String), Substring, Mismatch> {
+        Constant("k")
+        Marker("=")
+        Constant("v")
+    }
+}
+
+private struct Wide: Coder.`Protocol` {
+    func parse(_ input: inout Substring) throws(Mismatch) -> Int32 {
+        guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
+        input = input.dropFirst()
+        return Int32(digit)
+    }
+
+    func serialize(_ output: Int32, into buffer: inout Substring) throws(Mismatch) {
+        guard (0...9).contains(output) else { throw .mismatch }
+        buffer.append(contentsOf: String(output))
+    }
+}
+
+private struct Narrow: Coder.`Protocol` {
+    func parse(_ input: inout Substring) throws(Mismatch) -> Int8 {
+        guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
+        input = input.dropFirst()
+        return Int8(digit)
+    }
+
+    func serialize(_ output: Int8, into buffer: inout Substring) throws(Mismatch) {
+        guard (0...9).contains(output) else { throw .mismatch }
+        buffer.append(contentsOf: String(output))
     }
 }
 
