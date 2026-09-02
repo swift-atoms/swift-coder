@@ -1,9 +1,6 @@
 import Coder
-import Either
-import Pair
 import Parser
 import Parser_Error
-import Parser_Product
 import Parser_Sequence
 import Parser_Skip
 import Serializer
@@ -41,18 +38,6 @@ struct `Coder Protocol Tests` {
     }
 
     @Test
-    func `Product round-trips`() throws(any Swift.Error) {
-        var buffer: Substring = ""
-        try KeyValue().serialize(Pair("k", "v"), into: &buffer)
-        #expect(buffer == "k=v")
-        var cursor = buffer
-        let parsed = try KeyValue().parse(&cursor)
-        #expect(parsed.first == "k")
-        #expect(parsed.second == "v")
-        #expect(cursor.isEmpty)
-    }
-
-    @Test
     func `Sequence round-trips`() throws(any Swift.Error) {
         try roundTrip(Bracketed(), "tag", expecting: "<tag>")
     }
@@ -73,18 +58,17 @@ struct `Coder Protocol Tests` {
     @Test
     func `Map round-trips through an isomorphism`() throws(any Swift.Error) {
         var buffer: Substring = ""
-        try Point.Coder().serialize(Point(x: "1", y: "2"), into: &buffer)
-        #expect(buffer == "(1,2)")
+        try Boxed.Coder().serialize(Boxed(value: "1"), into: &buffer)
+        #expect(buffer == "(1)")
         var cursor = buffer
-        #expect(try Point.Coder().parse(&cursor) == Point(x: "1", y: "2"))
+        #expect(try Boxed.Coder().parse(&cursor) == Boxed(value: "1"))
         #expect(cursor.isEmpty)
     }
 
     @Test
     func `equally typed failures collapse through the whole body`() {
         requireFailure(Bracketed(), Mismatch.self)
-        requireFailure(KeyValue(), Mismatch.self)
-        requireFailure(Point.Coder(), Mismatch.self)
+        requireFailure(Boxed.Coder(), Mismatch.self)
     }
 
     @Test
@@ -106,10 +90,10 @@ struct `Coder Protocol Tests` {
     @Test
     func `Codable adopters encode and decode through their coder`() throws(any Swift.Error) {
         var buffer: Substring = ""
-        try Point(x: "3", y: "4").encode(into: &buffer)
-        #expect(buffer == "(3,4)")
+        try Boxed(value: "3").encode(into: &buffer)
+        #expect(buffer == "(3)")
         var cursor = buffer
-        #expect(try Point(decoding: &cursor) == Point(x: "3", y: "4"))
+        #expect(try Boxed(decoding: &cursor) == Boxed(value: "3"))
     }
 }
 
@@ -221,16 +205,6 @@ private struct TrailingMarker: Coder.`Protocol` {
     }
 }
 
-private struct KeyValue: Coder.`Protocol` {
-    typealias Failure = Mismatch
-
-    var body: some Coder.`Protocol`<Substring, Pair<String, String>, Substring, Mismatch> {
-        Constant("k")
-        Marker("=")
-        Constant("v")
-    }
-}
-
 private struct Bracketed: Coder.`Protocol` {
     typealias Failure = Mismatch
 
@@ -251,28 +225,25 @@ private struct Renamed: Coder.`Protocol` {
     }
 }
 
-private struct Point: Equatable {
-    var x: Character
-    var y: Character
+private struct Boxed: Equatable {
+    var value: Character
 }
 
-extension Point {
+extension Boxed {
     struct Coder: Coding {
         typealias Failure = Mismatch
 
-        var body: some Coding<Substring, Point, Substring, Mismatch> {
+        var body: some Coding<Substring, Boxed, Substring, Mismatch> {
             Parser.Sequence(Substring.self) {
                 Marker("(")
                 Digit()
-                Marker(",")
-                Digit()
                 Marker(")")
             }
-            .map(to: { Point(x: $0.first, y: $0.second) }, from: { Pair($0.x, $0.y) })
+            .map(to: { Boxed(value: $0) }, from: { $0.value })
         }
     }
 }
 
-extension Point: Coder.Codable {
+extension Boxed: Coder.Codable {
     static var coder: Coder { Coder() }
 }
