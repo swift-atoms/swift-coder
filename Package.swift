@@ -86,6 +86,10 @@ let package = Package(
             url: "https://github.com/swift-molecules/swift-collection-parser.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-molecules/swift-collection-serializer.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -93,6 +97,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(
+                    name: "Collection Serializer Buffer",
+                    package: "swift-collection-serializer"
+                ),
             ]
         ),
 
