@@ -5,30 +5,30 @@ extension Coder {
 
     public protocol Codable {
 
-        associatedtype Coding: Coder::Coder.`Protocol`
+        associatedtype Coder: Coding
         where
-            Coding.Input: ~Copyable & ~Escapable,
-            Coding.Output: ~Copyable & ~Escapable,
-            Coding.Buffer: ~Copyable & ~Escapable
+            Coder.Input: ~Copyable & ~Escapable,
+            Coder.Output: ~Copyable & ~Escapable,
+            Coder.Buffer: ~Copyable & ~Escapable
 
-        static var coder: Coding { get }
+        static var coder: Coder { get }
     }
 }
 
 extension Coder.Codable
 where
-    Coding.Output == Self,
-    Coding.Input: ~Copyable & ~Escapable,
-    Coding.Buffer: ~Copyable & ~Escapable
+    Coder.Output == Self,
+    Coder.Input: ~Copyable & ~Escapable,
+    Coder.Buffer: ~Copyable & ~Escapable
 {
 
     @inlinable
-    public func encode(into buffer: inout Coding.Buffer) throws(Coding.Failure) {
+    public func encode(into buffer: inout Coder.Buffer) throws(Coder.Failure) {
         try Self.coder.serialize(self, into: &buffer)
     }
 
     @inlinable
-    public init(decoding input: inout Coding.Input) throws(Coding.Failure) {
+    public init(decoding input: inout Coder.Input) throws(Coder.Failure) {
         self = try Self.coder.parse(&input)
     }
 }

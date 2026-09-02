@@ -84,13 +84,13 @@ private struct Label: Equatable {
 }
 
 extension Label: Coder.Codable {
-    struct Coding: Coder.`Protocol` {
+    struct Coder: Coding {
         typealias Failure = Either<Parser.Literal.Error, Mismatch>
 
-        var body: some Coder.`Protocol`<Substring, Label, Substring, Either<Parser.Literal.Error, Mismatch>> {
+        var body: some Coding<Substring, Label, Substring, Either<Parser.Literal.Error, Mismatch>> {
             Tagged().map(to: { Label($0) }, from: { $0.text })
         }
     }
 
-    static var coder: Coding { Coding() }
+    static var coder: Coder { Coder() }
 }

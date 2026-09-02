@@ -73,10 +73,10 @@ struct `Coder Protocol Tests` {
     @Test
     func `Map round-trips through an isomorphism`() throws(any Swift.Error) {
         var buffer: Substring = ""
-        try Point.Coding().serialize(Point(x: "1", y: "2"), into: &buffer)
+        try Point.Coder().serialize(Point(x: "1", y: "2"), into: &buffer)
         #expect(buffer == "(1,2)")
         var cursor = buffer
-        #expect(try Point.Coding().parse(&cursor) == Point(x: "1", y: "2"))
+        #expect(try Point.Coder().parse(&cursor) == Point(x: "1", y: "2"))
         #expect(cursor.isEmpty)
     }
 
@@ -84,7 +84,7 @@ struct `Coder Protocol Tests` {
     func `equally typed failures collapse through the whole body`() {
         requireFailure(Bracketed(), Mismatch.self)
         requireFailure(KeyValue(), Mismatch.self)
-        requireFailure(Point.Coding(), Mismatch.self)
+        requireFailure(Point.Coder(), Mismatch.self)
     }
 
     @Test
@@ -257,10 +257,10 @@ private struct Point: Equatable {
 }
 
 extension Point {
-    struct Coding: Coder.`Protocol` {
+    struct Coder: Coding {
         typealias Failure = Mismatch
 
-        var body: some Coder.`Protocol`<Substring, Point, Substring, Mismatch> {
+        var body: some Coding<Substring, Point, Substring, Mismatch> {
             Parser.Sequence(Substring.self) {
                 Marker("(")
                 Digit()
@@ -274,5 +274,5 @@ extension Point {
 }
 
 extension Point: Coder.Codable {
-    static var coder: Coding { Coding() }
+    static var coder: Coder { Coder() }
 }
