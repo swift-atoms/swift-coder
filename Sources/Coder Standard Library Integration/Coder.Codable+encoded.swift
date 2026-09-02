@@ -1,11 +1,16 @@
-public import Serializer
 public import Coder
+public import Serializer
 
-extension Coder.Codable where Coder.Output == Self, Coder.Buffer: RangeReplaceableCollection {
+extension Coder.Codable
+where
+    Coding.Output == Self,
+    Coding.Input: ~Copyable & ~Escapable,
+    Coding.Buffer: RangeReplaceableCollection
+{
 
     @inlinable
-    public func encoded() throws(Coder.Failure) -> Coder.Buffer {
-        var buffer = Coder.Buffer()
+    public func encoded() throws(Coding.Failure) -> Coding.Buffer {
+        var buffer = Coding.Buffer()
         try Self.coder.serialize(self, into: &buffer)
         return buffer
     }

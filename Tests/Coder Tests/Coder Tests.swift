@@ -1,116 +1,278 @@
 import Coder
+import Either
+import Pair
 import Parser
+import Parser_Error
+import Parser_Product
+import Parser_Sequence
 import Parser_Skip
 import Serializer
 import Testing
 
 @Suite
-struct Test {
+struct `Coder Protocol Tests` {
 
-    struct Constant: Coder.`Protocol`, Parser.Bidirectional {
+    @Test
+    func `a leaf coder round-trips`() throws(any Swift.Error) {
+        try roundTrip(Constant("abc"), "abc", expecting: "abc")
+    }
 
-        typealias Body = Never
+    @Test
+    func `a witness coder round-trips`() throws(any Swift.Error) {
+        let witness = Coder.Witness<Substring, Character, Substring, Mismatch>(
+            parse: { input throws(Mismatch) in
+                guard let first = input.first else { throw .mismatch }
+                input = input.dropFirst()
+                return first
+            },
+            serialize: { output, buffer in buffer.append(output) }
+        )
+        try roundTrip(witness, "x", expecting: "x")
+    }
 
-        let text: String
+    @Test
+    func `Skip.First round-trips`() throws(any Swift.Error) {
+        try roundTrip(LeadingMarker(), "tag", expecting: "<tag")
+    }
 
-        init(_ text: String) {
-            self.text = text
+    @Test
+    func `Skip.Second round-trips`() throws(any Swift.Error) {
+        try roundTrip(TrailingMarker(), "tag", expecting: "tag>")
+    }
+
+    @Test
+    func `Product round-trips`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try KeyValue().serialize(Pair("k", "v"), into: &buffer)
+        #expect(buffer == "k=v")
+        var cursor = buffer
+        let parsed = try KeyValue().parse(&cursor)
+        #expect(parsed.first == "k")
+        #expect(parsed.second == "v")
+        #expect(cursor.isEmpty)
+    }
+
+    @Test
+    func `Sequence round-trips`() throws(any Swift.Error) {
+        try roundTrip(Bracketed(), "tag", expecting: "<tag>")
+    }
+
+    @Test
+    func `Error.Map round-trips and maps both directions`() throws(any Swift.Error) {
+        try roundTrip(Renamed(), "tag", expecting: "tag")
+        var buffer: Substring = ""
+        #expect(throws: Domain.malformed) {
+            try Renamed().serialize("other", into: &buffer)
         }
-
-        enum Failure: Swift.Error {
-            case mismatch
-        }
-
-        func parse(_ input: inout Substring) throws(Failure) -> String {
-            guard input.hasPrefix(text) else { throw .mismatch }
-            input = input.dropFirst(text.count)
-            return text
-        }
-
-        func serialize(_ output: String, into buffer: inout Substring) throws(Failure) {
-            guard output == text else { throw .mismatch }
-            buffer.append(contentsOf: text)
+        var cursor: Substring = "other"
+        #expect(throws: Domain.malformed) {
+            try Renamed().parse(&cursor)
         }
     }
 
-    struct Marker: Coder.`Protocol`, Parser.Bidirectional {
-
-        typealias Body = Never
-
-        let text: String
-
-        init(_ text: String) {
-            self.text = text
-        }
-
-        enum Failure: Swift.Error {
-            case mismatch
-        }
-
-        func parse(_ input: inout Substring) throws(Failure) {
-            guard input.hasPrefix(text) else { throw .mismatch }
-            input = input.dropFirst(text.count)
-        }
-
-        func serialize(_ output: Void, into buffer: inout Substring) throws(Failure) {
-            buffer.append(contentsOf: text)
-        }
+    @Test
+    func `Map round-trips through an isomorphism`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try Point.Coding().serialize(Point(x: "1", y: "2"), into: &buffer)
+        #expect(buffer == "(1,2)")
+        var cursor = buffer
+        #expect(try Point.Coding().parse(&cursor) == Point(x: "1", y: "2"))
+        #expect(cursor.isEmpty)
     }
 
-    @Suite
-    struct Unit {
-        @Test
-        func `a constant coder carries a value through check-then-emit`() throws {
-            let coder = Test.Constant("abc")
-            var buffer: Substring = ""
-            try coder.serialize("abc", into: &buffer)
-            #expect(buffer == "abc")
-            var cursor = buffer
-            #expect(try coder.parse(&cursor) == "abc")
-            #expect(cursor.isEmpty)
-        }
-
-        @Test
-        func `Skip pair round-trips`() throws {
-            let coder = Parser.Skip.First(Test.Marker("<"), Test.Constant("tag"))
-            var buffer: Substring = ""
-            try coder.serialize("tag", into: &buffer)
-            #expect(buffer == "<tag")
-            var cursor = buffer
-            let parsed = try coder.parse(&cursor)
-            #expect(parsed == "tag")
-            #expect(cursor.isEmpty)
-        }
+    @Test
+    func `equally typed failures collapse through the whole body`() {
+        requireFailure(Bracketed(), Mismatch.self)
+        requireFailure(KeyValue(), Mismatch.self)
+        requireFailure(Point.Coding(), Mismatch.self)
     }
 
-    @Suite
-    struct `Edge Case` {
-        @Test
-        func `serialize mismatch throws and appends nothing`() throws {
+    @Test
+    func `a coder body infers Input Output and Buffer from its body`() throws(any Swift.Error) {
+        let _: Bracketed.Input.Type = Substring.self
+        let _: Bracketed.Output.Type = String.self
+        let _: Bracketed.Buffer.Type = Substring.self
+    }
 
-            let coder = Test.Constant("a")
-            var buffer: Substring = "prefix:"
-            #expect(throws: (any Swift.Error).self) {
-                try coder.serialize("b", into: &buffer)
+    @Test
+    func `a serialize mismatch throws and appends nothing`() {
+        var buffer: Substring = "prefix:"
+        #expect(throws: Mismatch.mismatch) {
+            try Constant("a").serialize("b", into: &buffer)
+        }
+        #expect(buffer == "prefix:")
+    }
+
+    @Test
+    func `Codable adopters encode and decode through their coder`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try Point(x: "3", y: "4").encode(into: &buffer)
+        #expect(buffer == "(3,4)")
+        var cursor = buffer
+        #expect(try Point(decoding: &cursor) == Point(x: "3", y: "4"))
+    }
+}
+
+private func roundTrip<C: Coder.`Protocol`>(
+    _ coder: C,
+    _ value: String,
+    expecting text: Substring
+) throws(any Swift.Error) where C.Input == Substring, C.Output == String, C.Buffer == Substring {
+    var buffer: Substring = ""
+    try coder.serialize(value, into: &buffer)
+    #expect(buffer == text)
+    var cursor = buffer
+    let parsed = try coder.parse(&cursor)
+    #expect(parsed == value)
+    #expect(cursor.isEmpty)
+}
+
+private func roundTrip<C: Coder.`Protocol`>(
+    _ coder: C,
+    _ value: Character,
+    expecting text: Substring
+) throws(any Swift.Error) where C.Input == Substring, C.Output == Character, C.Buffer == Substring {
+    var buffer: Substring = ""
+    try coder.serialize(value, into: &buffer)
+    #expect(buffer == text)
+    var cursor = buffer
+    let parsed = try coder.parse(&cursor)
+    #expect(parsed == value)
+    #expect(cursor.isEmpty)
+}
+
+private func requireFailure<C: Coder.`Protocol`, Failure: Swift.Error>(
+    _: borrowing C,
+    _: Failure.Type
+) where C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & ~Escapable, C.Buffer: ~Copyable & ~Escapable, C.Failure == Failure {}
+
+private enum Mismatch: Swift.Error, Equatable {
+    case mismatch
+}
+
+private enum Domain: Swift.Error, Equatable {
+    case malformed
+}
+
+private struct Constant: Coder.`Protocol` {
+    let text: String
+
+    init(_ text: String) {
+        self.text = text
+    }
+
+    func parse(_ input: inout Substring) throws(Mismatch) -> String {
+        guard input.hasPrefix(text) else { throw .mismatch }
+        input = input.dropFirst(text.count)
+        return text
+    }
+
+    func serialize(_ output: String, into buffer: inout Substring) throws(Mismatch) {
+        guard output == text else { throw .mismatch }
+        buffer.append(contentsOf: text)
+    }
+}
+
+private struct Marker: Coder.`Protocol` {
+    let text: String
+
+    init(_ text: String) {
+        self.text = text
+    }
+
+    func parse(_ input: inout Substring) throws(Mismatch) {
+        guard input.hasPrefix(text) else { throw .mismatch }
+        input = input.dropFirst(text.count)
+    }
+
+    func serialize(_ output: Void, into buffer: inout Substring) throws(Mismatch) {
+        buffer.append(contentsOf: text)
+    }
+}
+
+private struct Digit: Coder.`Protocol` {
+    func parse(_ input: inout Substring) throws(Mismatch) -> Character {
+        guard let first = input.first, first.isNumber else { throw .mismatch }
+        input = input.dropFirst()
+        return first
+    }
+
+    func serialize(_ output: Character, into buffer: inout Substring) throws(Mismatch) {
+        guard output.isNumber else { throw .mismatch }
+        buffer.append(output)
+    }
+}
+
+private struct LeadingMarker: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
+        Marker("<")
+        Constant("tag")
+    }
+}
+
+private struct TrailingMarker: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
+        Constant("tag")
+        Marker(">")
+    }
+}
+
+private struct KeyValue: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, Pair<String, String>, Substring, Mismatch> {
+        Constant("k")
+        Marker("=")
+        Constant("v")
+    }
+}
+
+private struct Bracketed: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
+        Parser.Sequence(Substring.self) {
+            Marker("<")
+            Constant("tag")
+            Marker(">")
+        }
+    }
+}
+
+private struct Renamed: Coder.`Protocol` {
+    typealias Failure = Domain
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Domain> {
+        Constant("tag").error.map { _ in Domain.malformed }
+    }
+}
+
+private struct Point: Equatable {
+    var x: Character
+    var y: Character
+}
+
+extension Point {
+    struct Coding: Coder.`Protocol` {
+        typealias Failure = Mismatch
+
+        var body: some Coder.`Protocol`<Substring, Point, Substring, Mismatch> {
+            Parser.Sequence(Substring.self) {
+                Marker("(")
+                Digit()
+                Marker(",")
+                Digit()
+                Marker(")")
             }
-            #expect(buffer == "prefix:")
+            .map(to: { Point(x: $0.first, y: $0.second) }, from: { Pair($0.x, $0.y) })
         }
     }
+}
 
-    @Suite
-    struct Integration {
-        @Test
-        func `Bidirectional refinement resolves for the Skip set`() throws {
-
-            func requiresBidirectional<C: Parser.Bidirectional>(_ coder: C) -> C { coder }
-            let skip = requiresBidirectional(
-                Parser.Skip.First(Test.Marker("<"), Test.Constant("x"))
-            )
-            var buffer: Substring = ""
-            try skip.serialize("x", into: &buffer)
-            var cursor = buffer
-            #expect(try skip.parse(&cursor) == "x")
-            #expect(cursor.isEmpty)
-        }
-    }
+extension Point: Coder.Codable {
+    static var coder: Coding { Coding() }
 }

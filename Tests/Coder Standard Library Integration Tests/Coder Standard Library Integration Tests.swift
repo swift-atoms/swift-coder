@@ -3,77 +3,94 @@ import Coder_Standard_Library_Integration
 import Parser
 import Parser_Skip
 import Parser_Standard_Library_Integration
+import Either
 import Serializer
 import Testing
 
 @Suite
 struct `Coder Standard Library Integration` {
 
-    struct Constant: Coder.`Protocol`, Parser.Bidirectional {
+    @Test
+    func `a String literal serializes by appending`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try "id=".serialize((), into: &buffer)
+        #expect(buffer == "id=")
+    }
 
-        typealias Body = Never
+    @Test
+    func `a String literal round-trips as a void coder`() throws(any Swift.Error) {
+        var buffer: Substring = ""
+        try "id=".serialize((), into: &buffer)
+        var cursor = buffer
+        try "id=".parse(&cursor)
+        #expect(cursor.isEmpty)
+    }
 
-        let text: String
+    @Test
+    func `a String literal skips into a constant coder and round-trips`() throws(any Swift.Error) {
+        let coder = Tagged()
+        var buffer: Substring = ""
+        try coder.serialize("tag", into: &buffer)
+        #expect(buffer == "<tag")
+        var cursor = buffer
+        #expect(try coder.parse(&cursor) == "tag")
+        #expect(cursor.isEmpty)
+    }
 
-        init(_ text: String) {
-            self.text = text
-        }
+    @Test
+    func `Codable adopters encode into a fresh buffer`() throws(any Swift.Error) {
+        #expect(try Label("tag").encoded() == "<tag")
+    }
+}
 
-        enum Failure: Swift.Error {
-            case mismatch
-        }
+private enum Mismatch: Swift.Error {
+    case mismatch
+}
 
-        func parse(_ input: inout Substring) throws(Failure) -> String {
-            guard input.hasPrefix(text) else { throw .mismatch }
-            input = input.dropFirst(text.count)
-            return text
-        }
+private struct Constant: Coder.`Protocol` {
+    let text: String
 
-        func serialize(_ output: String, into buffer: inout Substring) throws(Failure) {
-            guard output == text else { throw .mismatch }
-            buffer.append(contentsOf: text)
+    init(_ text: String) {
+        self.text = text
+    }
+
+    func parse(_ input: inout Substring) throws(Mismatch) -> String {
+        guard input.hasPrefix(text) else { throw .mismatch }
+        input = input.dropFirst(text.count)
+        return text
+    }
+
+    func serialize(_ output: String, into buffer: inout Substring) throws(Mismatch) {
+        guard output == text else { throw .mismatch }
+        buffer.append(contentsOf: text)
+    }
+}
+
+private struct Tagged: Coder.`Protocol` {
+    typealias Failure = Either<Parser.Literal.Error, Mismatch>
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Either<Parser.Literal.Error, Mismatch>> {
+        "<"
+        Constant("tag")
+    }
+}
+
+private struct Label: Equatable {
+    let text: String
+
+    init(_ text: String) {
+        self.text = text
+    }
+}
+
+extension Label: Coder.Codable {
+    struct Coding: Coder.`Protocol` {
+        typealias Failure = Either<Parser.Literal.Error, Mismatch>
+
+        var body: some Coder.`Protocol`<Substring, Label, Substring, Either<Parser.Literal.Error, Mismatch>> {
+            Tagged().map(to: { Label($0) }, from: { $0.text })
         }
     }
 
-    @Suite
-    struct Unit {
-        @Test
-        func `String literal serializes by appending`() throws {
-            var buffer: Substring = ""
-            "id=".serialize((), into: &buffer)
-            #expect(buffer == "id=")
-        }
-
-        @Test
-        func `Array literal serializes by appending`() throws {
-            var buffer: ArraySlice<Int> = []
-            [1, 2, 3].serialize((), into: &buffer)
-            #expect(buffer == [1, 2, 3])
-        }
-    }
-
-    @Suite
-    struct `Edge Case` {
-        @Test
-        func `a nil Optional serializer emits nothing`() throws {
-            let serializer: `Coder Standard Library Integration`.Constant? = nil
-            var buffer: Substring = "kept"
-            try serializer.serialize("anything", into: &buffer)
-            #expect(buffer == "kept")
-        }
-    }
-
-    @Suite
-    struct Integration {
-        @Test
-        func `a String literal skips into a constant coder and round-trips`() throws {
-            let coder = Parser.Skip.First("<", `Coder Standard Library Integration`.Constant("tag"))
-            var buffer: Substring = ""
-            try coder.serialize("tag", into: &buffer)
-            #expect(buffer == "<tag")
-            var cursor = buffer
-            #expect(try coder.parse(&cursor) == "tag")
-            #expect(cursor.isEmpty)
-        }
-    }
+    static var coder: Coding { Coding() }
 }

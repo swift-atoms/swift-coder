@@ -30,6 +30,14 @@ let package = Package(
             url: "https://github.com/swift-atoms/swift-serializer.git",
             branch: "main"
         ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-either.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-pair.git",
+            branch: "main"
+        ),
     ],
     targets: [
         .target(
@@ -38,8 +46,11 @@ let package = Package(
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Parser Error", package: "swift-parser"),
                 .product(name: "Parser Skip", package: "swift-parser"),
-                .product(name: "Parser Take", package: "swift-parser"),
+                .product(name: "Parser Product", package: "swift-parser"),
+                .product(name: "Parser Sequence", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Pair", package: "swift-pair"),
             ]
         ),
         .target(
@@ -59,8 +70,13 @@ let package = Package(
             dependencies: [
                 .target(name: "Coder"),
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Parser Error", package: "swift-parser"),
                 .product(name: "Parser Skip", package: "swift-parser"),
+                .product(name: "Parser Product", package: "swift-parser"),
+                .product(name: "Parser Sequence", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Pair", package: "swift-pair"),
             ],
             path: "Tests/Coder Tests"
         ),
