@@ -15,16 +15,8 @@ struct `Coder Protocol Tests` {
     }
 
     @Test
-    func `a witness coder round-trips`() throws(any Swift.Error) {
-        let witness = Coder.Witness<Substring, Character, Substring, Mismatch>(
-            parse: { input throws(Mismatch) in
-                guard let first = input.first else { throw .mismatch }
-                input = input.dropFirst()
-                return first
-            },
-            serialize: { output, buffer in buffer.append(output) }
-        )
-        try roundTrip(witness, "x", expecting: "x")
+    func `a coder body backed by a witness round-trips`() throws(any Swift.Error) {
+        try roundTrip(WitnessLeaf(), "x", expecting: "x")
     }
 
     @Test
@@ -69,6 +61,11 @@ struct `Coder Protocol Tests` {
     @Test
     func `Sequence round-trips`() throws(any Swift.Error) {
         try roundTrip(Bracketed(), "tag", expecting: "<tag>")
+    }
+
+    @Test
+    func `Coder Sequence round-trips a nested body`() throws(any Swift.Error) {
+        try roundTrip(NativelySequenced(), "tag", expecting: "<tag>")
     }
 
     @Test
@@ -204,6 +201,21 @@ private struct Marker: Coder.`Protocol` {
     }
 }
 
+private struct WitnessLeaf: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, Character, Substring, Mismatch> {
+        Coder.Witness<Substring, Character, Substring, Mismatch>(
+            parse: { input throws(Mismatch) in
+                guard let first = input.first else { throw .mismatch }
+                input = input.dropFirst()
+                return first
+            },
+            serialize: { output, buffer in buffer.append(output) }
+        )
+    }
+}
+
 private struct Digit: Coder.`Protocol` {
     func parse(_ input: inout Substring) throws(Mismatch) -> Character {
         guard let first = input.first, first.isNumber else { throw .mismatch }
@@ -276,6 +288,18 @@ private struct Bracketed: Coder.`Protocol` {
 
     var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
         Parser.Sequence(Substring.self) {
+            Marker("<")
+            Constant("tag")
+            Marker(">")
+        }
+    }
+}
+
+private struct NativelySequenced: Coder.`Protocol` {
+    typealias Failure = Mismatch
+
+    var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
+        Coder.Sequence(Substring.self, Substring.self) {
             Marker("<")
             Constant("tag")
             Marker(">")
