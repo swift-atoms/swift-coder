@@ -5,7 +5,7 @@ import Serializer
 import Testing
 
 @Suite
-struct `Optional Coder` {
+struct `Optional coders preserve presence and distinguish missing unexpected and wrapped failures` {
 
     @Test
     func `a present coder with a present value round-trips`() throws(any Swift.Error) {

@@ -4,7 +4,7 @@ import Serializer
 import Testing
 
 @Suite
-struct `Coder Protocol Tests` {
+struct `Coders preserve round trips composition and typed failure behavior` {
 
     @Test
     func `a leaf coder round-trips`() throws(any Swift.Error) {
@@ -336,7 +336,7 @@ extension Boxed: Coder.Codable {
 }
 
 @Suite
-struct `Coder Nonescapable Input` {
+struct `Coders parse and serialize nonescaping inputs with typed failures` {
 
     @Test
     func `a coder body parses from a nonescapable cursor and serializes into a buffer`() throws(any Swift.Error) {

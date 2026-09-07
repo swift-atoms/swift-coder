@@ -5,7 +5,7 @@ import Serializer
 import Testing
 
 @Suite
-struct `Coder.Builder Tests` {
+struct `Coder builders sequence skipped and appended outputs with shared failures` {
 
     @Test
     func `a coder body skips a trailing marker`() throws(any Swift.Error) {
