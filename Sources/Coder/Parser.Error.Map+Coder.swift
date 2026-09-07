@@ -1,5 +1,4 @@
 public import Parser
-public import Parser_Error
 public import Serializer
 
 extension Parser.Error.Map: Serializer.`Protocol`

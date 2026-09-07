@@ -1,6 +1,5 @@
 public import Either
 public import Parser
-public import Parser_Skip
 public import Serializer
 
 extension Coder.Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {

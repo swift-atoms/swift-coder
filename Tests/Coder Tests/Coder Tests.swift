@@ -1,8 +1,5 @@
 import Coder
 import Parser
-import Parser_Error
-import Parser_Sequence
-import Parser_Skip
 import Serializer
 import Testing
 

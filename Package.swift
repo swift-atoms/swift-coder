@@ -12,14 +12,10 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        .library(
-            name: "Coder",
-            targets: ["Coder"]
-        ),
-        .library(
-            name: "Coder Standard Library Integration",
-            targets: ["Coder Standard Library Integration"]
-        ),
+        .library(name: "Coder", targets: ["Coder"]),
+        .library(name: "Coder Standard Library Integration", targets: ["Coder Standard Library Integration"]),
+        .library(name: "Coder Foundation Library Integration", targets: ["Coder Foundation Library Integration"]),
+        .library(name: "Coder Test Support", targets: ["Coder Test Support"]),
     ],
     dependencies: [
         .package(
@@ -40,61 +36,57 @@ let package = Package(
             name: "Coder",
             dependencies: [
                 .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Error", package: "swift-parser"),
-                .product(name: "Parser Skip", package: "swift-parser"),
-                .product(name: "Parser Sequence", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
-            ]
+            ],
+            path: "Sources/Coder"
         ),
         .target(
             name: "Coder Standard Library Integration",
             dependencies: [
                 .target(name: "Coder"),
                 .product(name: "Parser", package: "swift-parser"),
-                .product(
-                    name: "Parser Standard Library Integration",
-                    package: "swift-parser"
-                ),
+                .product(name: "Parser Standard Library Integration", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
-            ]
+            ],
+            path: "Sources/Coder Standard Library Integration"
+        ),
+        .target(
+            name: "Coder Foundation Library Integration",
+            dependencies: [
+                .target(name: "Coder"),
+                .target(name: "Coder Standard Library Integration"),
+            ],
+            path: "Sources/Coder Foundation Library Integration"
+        ),
+        .target(
+            name: "Coder Test Support",
+            dependencies: [
+                .target(name: "Coder"),
+            ],
+            path: "Tests/Support"
         ),
         .testTarget(
             name: "Coder Tests",
             dependencies: [
                 .target(name: "Coder"),
                 .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Error", package: "swift-parser"),
-                .product(name: "Parser Skip", package: "swift-parser"),
-                .product(name: "Parser Sequence", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
+                .target(name: "Coder Standard Library Integration"),
+                .product(name: "Parser Standard Library Integration", package: "swift-parser"),
+                .target(name: "Coder Test Support"),
+                .target(name: "Coder Foundation Library Integration"),
             ],
             path: "Tests/Coder Tests"
-        ),
-        .testTarget(
-            name: "Coder Standard Library Integration Tests",
-            dependencies: [
-                .target(name: "Coder"),
-                .target(name: "Coder Standard Library Integration"),
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Skip", package: "swift-parser"),
-                .product(
-                    name: "Parser Standard Library Integration",
-                    package: "swift-parser"
-                ),
-                .product(name: "Serializer", package: "swift-serializer"),
-                .product(name: "Either", package: "swift-either"),
-            ],
-            path: "Tests/Coder Standard Library Integration Tests"
         ),
     ],
     swiftLanguageModes: [.v6]
 )
 
-for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let ecosystem: [SwiftSetting] = [
+for target in package.targets {
+    target.swiftSettings = [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
@@ -103,8 +95,4 @@ for target in package.targets where ![.system, .binary, .plugin, .macro].contain
         .enableExperimentalFeature("Lifetimes"),
         .enableUpcomingFeature("InferIsolatedConformances"),
     ]
-
-    let package: [SwiftSetting] = []
-
-    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

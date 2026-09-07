@@ -1,5 +1,4 @@
 public import Parser
-public import Parser_Sequence
 public import Serializer
 
 extension Parser.Sequence: Serializer.`Protocol`
