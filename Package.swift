@@ -13,8 +13,8 @@ let package = Package(
     ],
     products: [
         .library(name: "Coder", targets: ["Coder"]),
-        .library(name: "Coder Standard Library Integration", targets: ["Coder Standard Library Integration"]),
-        .library(name: "Coder Foundation Library Integration", targets: ["Coder Foundation Library Integration"]),
+
+        .library(name: "Coder Foundation Integration", targets: ["Coder Foundation Integration"]),
         .library(name: "Coder Test Support", targets: ["Coder Test Support"]),
     ],
     dependencies: [
@@ -41,24 +41,13 @@ let package = Package(
             ],
             path: "Sources/Coder"
         ),
+        
         .target(
-            name: "Coder Standard Library Integration",
+            name: "Coder Foundation Integration",
             dependencies: [
                 .target(name: "Coder"),
-                .product(name: "Parser", package: "swift-parser"),
-                .product(name: "Parser Standard Library Integration", package: "swift-parser"),
-                .product(name: "Serializer", package: "swift-serializer"),
-                .product(name: "Either", package: "swift-either"),
             ],
-            path: "Sources/Coder Standard Library Integration"
-        ),
-        .target(
-            name: "Coder Foundation Library Integration",
-            dependencies: [
-                .target(name: "Coder"),
-                .target(name: "Coder Standard Library Integration"),
-            ],
-            path: "Sources/Coder Foundation Library Integration"
+            path: "Sources/Coder Foundation Integration"
         ),
         .target(
             name: "Coder Test Support",
@@ -74,10 +63,8 @@ let package = Package(
                 .product(name: "Parser", package: "swift-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
-                .target(name: "Coder Standard Library Integration"),
-                .product(name: "Parser Standard Library Integration", package: "swift-parser"),
                 .target(name: "Coder Test Support"),
-                .target(name: "Coder Foundation Library Integration"),
+                .target(name: "Coder Foundation Integration"),
             ],
             path: "Tests/Coder Tests"
         ),

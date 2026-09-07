@@ -1,4 +1,3 @@
-public import Coder
 public import Serializer
 
 extension Coder.Codable
