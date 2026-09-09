@@ -18,6 +18,9 @@ let package = Package(
         .library(name: "Coder Test Support", targets: ["Coder Test Support"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-molecules/swift-skip-parser.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-append-parser.git", branch: "main"),
+        .package(url: "https://github.com/swift-molecules/swift-map-parser.git", branch: "main"),
         .package(
             url: "https://github.com/swift-atoms/swift-parser.git",
             branch: "main"
@@ -35,7 +38,10 @@ let package = Package(
         .target(
             name: "Coder",
             dependencies: [
+                .product(name: "Skip Parser", package: "swift-skip-parser"),
+                .product(name: "Append Parser", package: "swift-append-parser"),
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Map Parser", package: "swift-map-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
             ],
@@ -61,6 +67,7 @@ let package = Package(
             dependencies: [
                 .target(name: "Coder"),
                 .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Map Parser", package: "swift-map-parser"),
                 .product(name: "Serializer", package: "swift-serializer"),
                 .product(name: "Either", package: "swift-either"),
                 .target(name: "Coder Test Support"),

@@ -2,7 +2,7 @@ import Either
 public import Parser
 public import Serializer
 
-extension Parser::Parser.Builder where Input: ~Copyable & ~Escapable {
+extension Parser::Builder where Input: ~Copyable & ~Escapable {
 
     @inlinable
     public static func buildIf<P: Coding>(

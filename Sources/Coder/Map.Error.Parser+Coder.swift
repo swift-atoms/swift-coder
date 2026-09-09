@@ -1,7 +1,8 @@
+public import Map_Parser
 public import Parser
 public import Serializer
 
-extension Parser.Error.Map: Serializer.`Protocol`
+extension Map::Map.Error.Parser: Serializer.`Protocol`
 where
     Upstream: Serializer.`Protocol`,
     Upstream.Input: ~Copyable & ~Escapable,
@@ -12,16 +13,16 @@ where
     public typealias Buffer = Upstream.Buffer
 
     @inlinable
-    public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(NewFailure) {
+    public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Target) {
         do throws(Upstream.Failure) {
             try upstream.serialize(output, into: &buffer)
         } catch {
-            throw transform(error)
+            throw base(error)
         }
     }
 }
 
-extension Parser.Error.Map: Coder.`Protocol`
+extension Map::Map.Error.Parser: Coder.`Protocol`
 where
     Upstream: Coder.`Protocol`,
     Upstream.Input: ~Copyable & ~Escapable,

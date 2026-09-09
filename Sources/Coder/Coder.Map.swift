@@ -28,7 +28,7 @@ extension Coder {
     }
 }
 
-extension Coder.Map: Parser.`Protocol`
+extension Coder.Map: Parsing
 where
     Upstream.Input: ~Copyable & ~Escapable,
     Upstream.Output: ~Copyable & Escapable,

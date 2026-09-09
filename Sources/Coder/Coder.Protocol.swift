@@ -4,7 +4,7 @@ public import Serializer
 extension Coder {
 
     public protocol `Protocol`<Input, Output, Buffer, Failure>:
-        Parser.`Protocol`,
+        Parsing,
         Serializer.`Protocol`,
         ~Copyable
     where

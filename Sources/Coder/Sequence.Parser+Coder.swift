@@ -1,7 +1,7 @@
 public import Parser
 public import Serializer
 
-extension Parser.Sequence: Serializer.`Protocol`
+extension Parser::Sequence.Parser: Serializer.`Protocol`
 where
     Body: Serializer.`Protocol`,
     Input: ~Copyable & ~Escapable,
@@ -13,11 +13,11 @@ where
 
     @inlinable
     public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Failure) {
-        try body.serialize(output, into: &buffer)
+        try base.body.serialize(output, into: &buffer)
     }
 }
 
-extension Parser.Sequence: Coder.`Protocol`
+extension Parser::Sequence.Parser: Coder.`Protocol`
 where
     Body: Coder.`Protocol`,
     Input: ~Copyable & ~Escapable,
