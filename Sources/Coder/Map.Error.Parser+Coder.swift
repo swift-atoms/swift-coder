@@ -1,4 +1,3 @@
-public import Map_Parser
 public import Parser
 public import Serializer
 

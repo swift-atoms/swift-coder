@@ -1,4 +1,3 @@
-public import Append_Parser
 public import Parser
 
 extension Coder {
