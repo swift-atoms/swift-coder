@@ -11,7 +11,10 @@ extension Coder {
         Input: ~Copyable & ~Escapable,
         Output: ~Copyable & ~Escapable,
         Buffer: ~Copyable & ~Escapable
-    {}
+    {
+        @Coder.Builder<Input, Buffer>
+        var body: Body { borrowing get }
+    }
 }
 
 extension Coder.`Protocol`

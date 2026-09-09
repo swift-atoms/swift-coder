@@ -40,8 +40,8 @@ struct `Coders preserve round trips composition and typed failure behavior` {
 
     @Test
     func `Append splits differently sized elements by layout`() throws(any Swift.Error) {
-        let inner = Builder<Substring>.buildPartialBlock(accumulated: Wide(), next: Narrow())
-        let node = Builder<Substring>.buildPartialBlock(accumulated: inner, next: Wide())
+        let inner = Coder.Builder<Substring, Substring>.buildPartialBlock(accumulated: Wide(), next: Narrow())
+        let node = Coder.Builder<Substring, Substring>.buildPartialBlock(accumulated: inner, next: Wide())
         #expect(type(of: inner).splitsByLayout)
         #expect(type(of: node).splitsByLayout)
         var buffer: Substring = ""
@@ -284,7 +284,7 @@ private struct Bracketed: Coder.`Protocol` {
     typealias Failure = Mismatch
 
     var body: some Coder.`Protocol`<Substring, String, Substring, Mismatch> {
-        Parser::Sequence.Parser(Substring.self) {
+        Coder::Coder.Sequence(Substring.self, Substring.self) {
             Marker("<")
             Constant("tag")
             Marker(">")
@@ -321,7 +321,7 @@ extension Boxed {
         typealias Failure = Mismatch
 
         var body: some Coding<Substring, Boxed, Substring, Mismatch> {
-            Parser::Sequence.Parser(Substring.self) {
+            Coder::Coder.Sequence(Substring.self, Substring.self) {
                 Marker("(")
                 Digit()
                 Marker(")")
