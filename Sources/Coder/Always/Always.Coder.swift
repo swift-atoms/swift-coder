@@ -2,8 +2,7 @@
     public import Always
 
     extension Always where Value == Void {
-        /// The unit grammar: no input or output, exactly Never failure.
-        /// Arbitrary Always values remain one-way; no discarded value is invented.
+
         public struct Coder<Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable>: Coding {
             public typealias Output = Void
             public typealias Failure = Never

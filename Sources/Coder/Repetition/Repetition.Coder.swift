@@ -9,8 +9,7 @@
         Operation.Input: Restorable & ~Copyable & ~Escapable, Operation.Input.Checkpoint: Equatable,
         Operation.Output: Copyable & Escapable, Operation.Buffer: ~Copyable & ~Escapable
     {
-        /// Repeats complete elements, restoring a rejected separator+element attempt.
-        /// Fatal failures preserve the cursor and buffer at the point of failure.
+
         public struct Coder<Separator: Coding & ~Copyable>: Coding, ~Copyable
         where
             Separator.Input == Operation.Input, Separator.Output == Void,

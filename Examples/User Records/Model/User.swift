@@ -1,7 +1,5 @@
 @_exported public import Coder
 
-/// The model and grammar mirror swift-parser/Examples/User Records (2026-09-09).
-/// This sibling adds borrowed serialization and canonical decimal spelling.
 public struct User: Equatable, Sendable {
     public let name: String
     public let age: Int
@@ -61,7 +59,6 @@ public enum RecordFailure: Error, Equatable {
             }, serialize: { _, buffer throws(RecordFailure) in buffer.append(contentsOf: text) })
     }
 
-    /// Example-local lexical leaf, symmetric on the accepted token language.
     private func text(while accepts: @escaping (Character) -> Bool) -> Coder<
         Substring, String, String, RecordFailure
     > {
@@ -78,8 +75,6 @@ public enum RecordFailure: Error, Equatable {
             })
     }
 
-    /// A rejected iteration restores the complete record. Fatal age conversion is
-    /// deliberately after LF and propagates with that complete record consumed.
     #if Repetition
         public struct UserRecords: Coding {
             public init() {}

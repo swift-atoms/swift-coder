@@ -129,8 +129,6 @@ extension Node {
   }
 }
 
-/// Exercises the copyable dynamic-member key-path convenience supplied by
-/// `@Prisms`. Noncopyable sources use the consuming `Node.prisms.case.extract` API.
 public func extractedLeaf(_ node: Node) -> Int? {
   func apply(_ node: Node, extract: (Node) -> Int?) -> Int? {
     extract(node)

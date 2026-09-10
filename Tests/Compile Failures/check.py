@@ -1,4 +1,3 @@
-"""Run after building Coder; argument is the directory containing Coder.swiftmodule."""
 from pathlib import Path
 import os
 import subprocess

@@ -7,16 +7,13 @@
         Self: ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
         Buffer: ~Copyable & ~Escapable
     {
-        /// A consuming optic backward arrow requires a copyable new domain value.
-        /// Use map(to:from:) with a borrowed projection for noncopyable values.
+
         @inlinable public consuming func map<Focus>(
             _ isomorphism: Optic<Output, Output, Focus, Focus>.Isomorphism
         ) -> Map<Output, Focus, Failure>.Coder<Self> {
             map(to: { isomorphism.forward($0) }, from: { isomorphism.backward(copy $0) })
         }
 
-        /// Explicitly maps forward and backward conversion failures into the shared
-        /// grammar failure. An Adapter may normalize; it need not obey inverse laws.
         @inlinable
         public consuming func map<Focus, ForwardFailure: Swift.Error, BackwardFailure: Swift.Error>(
             _ adapter: Optic<Output, Output, Focus, Focus>.Adapter<ForwardFailure, BackwardFailure>,

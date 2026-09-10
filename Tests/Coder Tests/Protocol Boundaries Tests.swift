@@ -3,8 +3,7 @@ import Testing
 import User_Records_Model
 
 #if Pair && Skip && Map
-/// A focused request-parts fixture. This is not an HTTP wire parser and does not
-/// claim that the separate HTTP Router package compiles with this stack.
+
 private enum RequestExample {
     struct Header: Equatable { var name: String; var value: String }
     struct Request: Equatable {
@@ -99,7 +98,7 @@ private enum RequestExample {
         )
         var input = original
         let route = try RequestExample.Route().parse(&input)
-        // Selection consumes content, not the unrelated header/trailer fields.
+
         #expect(input.headers == original.headers)
         #expect(input.trailers == original.trailers)
         let canonical = try RequestExample.request(for: route)
@@ -135,9 +134,6 @@ private enum RequestExample {
 }
 #endif
 
-/// RFC 3986 section 2.1 grammar expressed on standard-library bytes:
-/// pct-encoded = "%" HEXDIG HEXDIG. Each digit is validated independently.
-/// This focused fixture isolates the representation from the full URI graph.
 private enum PercentExample {
     enum Failure: Error, Equatable { case percent, hexDigit, trailingInput }
 
@@ -152,7 +148,7 @@ private enum PercentExample {
 
     static var coder: Coder<ArraySlice<UInt8>, UInt8, [UInt8], Failure> {
         Coder(parse: { input throws(Failure) in
-            // Commit only a complete token. Failures preserve the input slice.
+
             var remaining = input
             guard remaining.popFirst() == 0x25 else { throw .percent }
             guard let first = remaining.popFirst(), let high = hex(first),

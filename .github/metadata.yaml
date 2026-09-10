@@ -1,5 +1,3 @@
-# .github/metadata.yaml
-# Triaged 2026-04-29 — anomaly-fix pass after wave-4 PR-branch triage didn't apply.
 description: "Bidirectional codec protocol that unifies parsing and serialization into one type with a single typed-throws failure for Swift."
 topics:
   - molecules

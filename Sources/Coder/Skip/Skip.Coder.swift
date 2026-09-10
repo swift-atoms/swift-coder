@@ -2,7 +2,7 @@
     public import Skip
 
     extension Skip where Kept: ~Copyable, Dropped == Void {
-        /// Discards only a Void grammar node, which retains its canonical syntax.
+
         public struct Coder<A: Coding & ~Copyable, N: Coding & ~Copyable, Failure: Swift.Error>: Coding,
             ~Copyable
         where

@@ -16,7 +16,6 @@
                 backward: { value throws(Failure) in backward(value) })
         }
 
-        /// Both arrows are retained. A one-way Parsing.map remains parse-only.
         @_disfavoredOverload
         @inlinable public consuming func map<New: ~Copyable>(
             to forward: @escaping (consuming Output) throws(Failure) -> New,
@@ -25,7 +24,6 @@
             .init(upstream: self, forward: forward, backward: backward)
         }
 
-        /// Maps the same shared failure in both directions, retaining ownership.
         @inlinable public consuming func mapFailure<E: Swift.Error>(_ transform: @escaping (Failure) -> E)
             -> Map<Failure, E, Never>.Error.Coder<Self>
         {

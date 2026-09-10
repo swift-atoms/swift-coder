@@ -1,5 +1,3 @@
-/// A bidirectional grammar represented by two typed functions.
-/// Parsing consumes its cursor; serialization borrows its value and writes forward.
 public struct Coder<
     Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable,
     Buffer: ~Copyable & ~Escapable, Failure: Swift.Error
@@ -16,7 +14,6 @@ public struct Coder<
         self._serialize = serialize
     }
 
-    /// An infallible borrowed writer shares the parser's exact failure type.
     @inlinable public init(
         parse: @escaping @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output,
         serialize: @escaping (borrowing Output, inout Buffer) -> Void
@@ -40,8 +37,7 @@ where
     Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
     Buffer: ~Copyable & ~Escapable
 {
-    /// Retains a copyable composition in both directions. Concrete Coding bodies
-    /// also support noncopyable components without this closure representation.
+
     @inlinable public init<C: Coding>(@Builder<Input, Buffer> _ build: () -> C)
     where
         C.Input == Input, C.Output == Output, C.Buffer == Buffer, C.Failure == Failure,
@@ -53,7 +49,6 @@ where
             serialize: { output, buffer throws(Failure) in try composition.serialize(output, into: &buffer) })
     }
 
-    /// Supplies cursor/buffer context when a unit grammar cannot infer them.
     @inlinable public init<C: Coding>(
         _ input: Input.Type, _ buffer: Buffer.Type,
         @Builder<Input, Buffer> _ build: () -> C
@@ -79,8 +74,6 @@ where
             from: { value throws(Failure) in backward(value) }, build)
     }
 
-    /// Construction has an explicit borrowed reverse projection; an initializer
-    /// alone is deliberately insufficient to construct a coder.
     @_disfavoredOverload
     @inlinable public init<C: Coding>(
         _ forward: @escaping (consuming C.Output) throws(Failure) -> Output,

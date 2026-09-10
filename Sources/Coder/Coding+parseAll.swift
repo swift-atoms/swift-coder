@@ -3,7 +3,7 @@ where
     Self: ~Copyable, Input: Swift.Collection, Output: ~Copyable & Escapable,
     Buffer: ~Copyable & ~Escapable
 {
-    /// Parses one complete representation. Ordinary parse leaves a prefix remainder.
+
     public borrowing func parseAll(_ input: consuming Input, or failure: Failure) throws(Failure) -> Output {
         var cursor = input
         let output = try parse(&cursor)

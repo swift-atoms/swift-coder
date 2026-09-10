@@ -23,9 +23,6 @@
 
         public let content: Content
 
-        /// A case coder over a source that may be noncopyable: the prism embeds
-        /// a parsed focus, the fold lends the focus of a borrowed source to the
-        /// serializer.
         @inlinable
         public init<Buffer: ~Copyable & ~Escapable>(
             _ prism: Optic::Optic<Source, Source, Focus, Focus>.Prism,
@@ -48,8 +45,7 @@
         Content: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
-        /// A case coder over a copyable source, whose fold is the prism's own
-        /// weakening.
+
         @inlinable
         public init<Buffer: ~Copyable & ~Escapable>(
             _ prism: Optic::Optic<Source, Source, Focus, Focus>.Prism,

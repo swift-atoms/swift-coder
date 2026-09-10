@@ -2,8 +2,7 @@
     public import Checkpoint
 
     extension OneOf {
-        /// Input-driven optional value. A present value must serialize successfully.
-        /// Swift.Optional<Content>.Coder instead models optional grammar construction.
+
         public struct Optional<Content: Coding & ~Copyable>: Coding, ~Copyable
         where
             Content.Input: Restorable & ~Copyable & ~Escapable,

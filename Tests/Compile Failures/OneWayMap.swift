@@ -1,4 +1,3 @@
-// Expected failure: a one-way transformation has no inverse serialization rule.
 import Coder
 
 func requireCoding<C: Coding>(_ value: C) {}
