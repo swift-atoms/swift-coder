@@ -1,101 +1,104 @@
-import Coder
-import Either
-import Parser
-import Serializer
-import Testing
+#if Either && Pair && Skip && Map
+    import Coder
+    import Either
+    import Parser
+    import Serializer
+    import Testing
 
-@Suite
-struct `Coder builders sequence skipped and appended outputs with shared failures` {
+    @Suite
+    struct `Coder builders sequence skipped and appended outputs with shared failures` {
 
-    @Test
-    func `a coder body skips a trailing marker`() throws(any Swift.Error) {
-        var buffer = ""
-        try Trailing().serialize("tag", into: &buffer)
-        #expect(buffer == "tag>")
+        @Test
+        func `a coder body skips a trailing marker`() throws(any Swift.Error) {
+            var buffer = ""
+            try Trailing().serialize("tag", into: &buffer)
+            #expect(buffer == "tag>")
 
-        var input: Substring = "tag>"
-        #expect(try Trailing().parse(&input) == "tag")
-        #expect(input.isEmpty)
-    }
+            var input: Substring = "tag>"
+            #expect(try Trailing().parse(&input) == "tag")
+            #expect(input.isEmpty)
+        }
 
-    @Test
-    func `a coder body appends two outputs`() throws(any Swift.Error) {
-        var buffer = ""
-        try Pairing().serialize(("a", "b"), into: &buffer)
-        #expect(buffer == "ab")
+        @Test
+        func `a coder body appends two outputs`() throws(any Swift.Error) {
+            var buffer = ""
+            try Pairing().serialize(Pair("a", "b"), into: &buffer)
+            #expect(buffer == "ab")
 
-        var input: Substring = "ab"
-        let (first, second) = try Pairing().parse(&input)
-        #expect(first == "a")
-        #expect(second == "b")
-        #expect(input.isEmpty)
-    }
+            var input: Substring = "ab"
+            let pair = try Pairing().parse(&input)
+            #expect(pair.first == "a")
+            #expect(pair.second == "b")
+            #expect(input.isEmpty)
+        }
 
-    @Test
-    func `a coder body keeps a shared failure`() {
-        var input: Substring = "tag)"
-        #expect(throws: Mismatch.mismatch) {
-            try Trailing().parse(&input)
+        @Test
+        func `a coder body keeps a shared failure`() {
+            var input: Substring = "tag)"
+            #expect(throws: Mismatch.mismatch) {
+                try Trailing().parse(&input)
+            }
         }
     }
-}
 
-private enum Mismatch: Swift.Error, Equatable {
-    case mismatch
-}
-
-private struct Text: Coder.`Protocol` {
-    let text: String
-
-    init(_ text: String) {
-        self.text = text
+    private enum Mismatch: Swift.Error, Equatable {
+        case mismatch
     }
 
-    func parse(_ input: inout Substring) throws(Mismatch) -> String {
-        guard input.hasPrefix(text) else { throw .mismatch }
-        input.removeFirst(text.count)
-        return text
+    private struct Text: Coding {
+        let text: String
+
+        init(_ text: String) {
+            self.text = text
+        }
+
+        func parse(_ input: inout Substring) throws(Mismatch) -> String {
+            guard input.hasPrefix(text) else { throw .mismatch }
+            input.removeFirst(text.count)
+            return text
+        }
+
+        func serialize(_ output: String, into buffer: inout String) throws(Mismatch) {
+            guard output == text else { throw .mismatch }
+            buffer.append(contentsOf: text)
+        }
     }
 
-    func serialize(_ output: String, into buffer: inout String) throws(Mismatch) {
-        guard output == text else { throw .mismatch }
-        buffer.append(contentsOf: text)
+    private struct Marker: Coding {
+        let text: String
+
+        init(_ text: String) {
+            self.text = text
+        }
+
+        func parse(_ input: inout Substring) throws(Mismatch) {
+            guard input.hasPrefix(text) else { throw .mismatch }
+            input.removeFirst(text.count)
+        }
+
+        func serialize(_ output: Void, into buffer: inout String) throws(Mismatch) {
+            buffer.append(contentsOf: text)
+        }
     }
-}
 
-private struct Marker: Coder.`Protocol` {
-    let text: String
+    private struct Trailing: Coding {
+        typealias Failure = Mismatch
 
-    init(_ text: String) {
-        self.text = text
+        @Coder::Builder<Substring, String>
+        var body: some Coding<Substring, String, String, Mismatch> {
+            Text("tag")
+            Marker(">")
+        }
     }
 
-    func parse(_ input: inout Substring) throws(Mismatch) {
-        guard input.hasPrefix(text) else { throw .mismatch }
-        input.removeFirst(text.count)
+    private struct Pairing: Coding {
+        typealias Failure = Mismatch
+
+        @Coder::Builder<Substring, String>
+        var body: some Coding<Substring, Pair<String, String>, String, Mismatch> {
+            Text("a")
+            Text("b")
+        }
     }
 
-    func serialize(_ output: Void, into buffer: inout String) throws(Mismatch) {
-        buffer.append(contentsOf: text)
-    }
-}
-
-private struct Trailing: Coder.`Protocol` {
-    typealias Failure = Mismatch
-
-    @Coder.Builder<Substring, String>
-    var body: some Coding<Substring, String, String, Mismatch> {
-        Text("tag")
-        Marker(">")
-    }
-}
-
-private struct Pairing: Coder.`Protocol` {
-    typealias Failure = Mismatch
-
-    @Coder.Builder<Substring, String>
-    var body: some Coding<Substring, (String, String), String, Mismatch> {
-        Text("a")
-        Text("b")
-    }
-}
+#endif
