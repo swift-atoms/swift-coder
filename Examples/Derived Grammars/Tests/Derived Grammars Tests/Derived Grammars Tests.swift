@@ -1,5 +1,5 @@
 import Derived_Grammars
-import Prism_Derivation
+import Prism_Macro
 import Testing
 
 @Test

@@ -1,6 +1,6 @@
 public import Coder
-public import Isomorphism_Derivation
-public import Prism_Derivation
+public import Isomorphism_Macro
+public import Prism_Macro
 
 public enum GrammarFailure: Error, Equatable {
   case rejected

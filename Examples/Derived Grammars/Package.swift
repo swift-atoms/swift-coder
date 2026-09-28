@@ -22,8 +22,8 @@ let package = Package(
             name: "Derived Grammars",
             dependencies: [
                 .product(name: "Coder", package: "swift-coder"),
-                .product(name: "Isomorphism Derivation", package: "swift-isomorphism-derivation"),
-                .product(name: "Prism Derivation", package: "swift-prism-derivation"),
+                .product(name: "Isomorphism Macro", package: "swift-optic"),
+                .product(name: "Prism Macro", package: "swift-optic"),
             ]
         ),
         .executableTarget(
@@ -34,7 +34,7 @@ let package = Package(
             name: "Derived Grammars Tests",
             dependencies: [
                 "Derived Grammars",
-                .product(name: "Prism Derivation", package: "swift-prism-derivation"),
+                .product(name: "Prism Macro", package: "swift-optic"),
             ]
         ),
     ],
