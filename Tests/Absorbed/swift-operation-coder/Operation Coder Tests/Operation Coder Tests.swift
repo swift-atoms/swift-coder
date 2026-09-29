@@ -118,6 +118,10 @@ enum Fixture {
         case echo(Fixture.Operations.Echo.Application)
         case shout(Fixture.Operations.Shout.Application)
 
+        typealias Owner = Void
+
+        static func run(_ owner: Void, _ call: consuming Self) async throws {}
+
         static func echo(_ word: Word) -> Self {
             .echo(Fixture.Operations.Echo.Application(word))
         }
