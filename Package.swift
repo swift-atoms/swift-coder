@@ -37,12 +37,12 @@ let package = Package(
             .trait(name: "Always", condition: .when(traits: ["Always"])),
             .trait(name: "Predicate", condition: .when(traits: ["Predicate"])),
             .trait(name: "Repetition", condition: .when(traits: ["Repetition"])),
-
             .trait(name: "Either", condition: .when(traits: ["Either", "IteratorLeaves", "Pair", "Skip"])),
             .trait(name: "Pair", condition: .when(traits: ["Pair"])),
             .trait(name: "Skip", condition: .when(traits: ["Skip"])),
             .trait(name: "Map", condition: .when(traits: ["Map", "Carrier", "Operation", "Optic"])),
             .trait(name: "Optic", condition: .when(traits: ["Optic", "Operation"])),
+            .trait(name: "Iterator", condition: .when(traits: ["IteratorLeaves"])),
         ]),
         .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main", traits: [
             .trait(name: "Byte", condition: .when(traits: ["Byte"])),
