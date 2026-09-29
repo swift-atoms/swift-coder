@@ -30,7 +30,7 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-always.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-repetition.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-predicate.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-predicate.git", branch: "main", traits: [.trait(name: "Always", condition: .when(traits: ["Repetition"]))]),
         .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [
             .trait(name: "Choice", condition: .when(traits: ["Choice"])),
             .trait(name: "IteratorLeaves", condition: .when(traits: ["IteratorLeaves"])),
@@ -63,7 +63,7 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-byte.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-carrier.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-operation.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-iterator.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-iterator.git", branch: "main", traits: [.trait(name: "Repetition", condition: .when(traits: ["Repetition"]))]),
     ],
     targets: [
         .target(name: "Coder", dependencies: [
