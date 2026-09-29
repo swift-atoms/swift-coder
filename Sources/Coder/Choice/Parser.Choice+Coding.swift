@@ -10,8 +10,6 @@ where P0: Coding, P1: Coding, P0.Buffer == P1.Buffer,
       P0.Output: ~Copyable & Escapable, P1.Output: ~Copyable & Escapable {
     public typealias Buffer = P0.Buffer
 
-    /// Each alternative appends to a fresh staging buffer. Rejection discards its
-    /// bytes; success or committed failure appends them to the caller's buffer.
     public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Error) {
         var staged = Buffer()
         let first: P0.Failure

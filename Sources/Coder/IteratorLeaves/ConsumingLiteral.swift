@@ -3,8 +3,6 @@ public import Iterator
 public import Parser
 public import Serializer
 
-/// Explicit consuming iterator parse plus literal serialization. Never implicitly
-/// lifts arrays, so collection builders retain their existing nonconsuming mismatch.
 public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable,
                                OutputBuffer: RangeReplaceableCollection>: Coding
 where Input.Element: Equatable & Copyable & Escapable,
