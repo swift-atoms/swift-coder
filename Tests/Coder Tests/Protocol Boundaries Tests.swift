@@ -23,6 +23,12 @@ private enum RequestExample {
     }
 
     struct Method: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
+
         var expected: String
         func parse(_ input: inout Request) throws(Failure) {
             guard input.method == expected else { throw .mismatch }
@@ -32,6 +38,12 @@ private enum RequestExample {
         }
     }
     struct Target: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
+
         var expected: String
         func parse(_ input: inout Request) throws(Failure) {
             guard input.target == expected else { throw .mismatch }
@@ -41,6 +53,12 @@ private enum RequestExample {
         }
     }
     struct Content: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
+
         func parse(_ input: inout Request) throws(Failure) -> User {
             guard let bytes = input.content else { throw .missingBody }
             guard let text = String(validating: bytes, as: UTF8.self) else { throw .invalidUTF8 }

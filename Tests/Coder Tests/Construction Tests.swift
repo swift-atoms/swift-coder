@@ -4,6 +4,12 @@
 
     private enum ChosenFailure: Error, Equatable { case mismatch }
     private struct Chosen: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
+
         let character: Character
         func parse(_ input: inout Substring) throws(ChosenFailure) -> Character {
             guard input.first == character else { throw .mismatch }

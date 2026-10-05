@@ -4,6 +4,12 @@
     extension Always where Value == Void {
 
         public struct Coder<Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable>: Coding {
+            public var body: Never {
+                borrowing get {
+                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
+                }
+            }
+
             public typealias Output = Void
             public typealias Failure = Never
             public init() {}
