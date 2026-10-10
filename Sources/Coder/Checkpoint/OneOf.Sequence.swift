@@ -1,4 +1,5 @@
 #if Checkpoint
+    public import Coder_Core
     public import Checkpoint
     public import Parser
     public import Serializer

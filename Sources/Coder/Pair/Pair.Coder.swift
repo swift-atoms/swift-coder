@@ -1,4 +1,5 @@
 #if Pair
+    public import Coder_Core
     public import Either
     public import Pair
     public import Parser
@@ -19,11 +20,6 @@
     {
 
         public struct Coder<Failure: Swift.Error>: Coding, ~Copyable {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
 
             public typealias Buffer = First.Buffer

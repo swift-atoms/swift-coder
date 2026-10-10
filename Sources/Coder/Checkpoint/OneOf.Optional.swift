@@ -1,4 +1,5 @@
 #if Checkpoint
+    public import Coder_Core
     public import Checkpoint
 
     extension OneOf {
@@ -8,11 +9,6 @@
             Content.Input: Restorable & ~Copyable & ~Escapable,
             Content.Output: ~Copyable & Escapable, Content.Buffer: ~Copyable & ~Escapable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Input = Content.Input
             public typealias Output = Content.Output?

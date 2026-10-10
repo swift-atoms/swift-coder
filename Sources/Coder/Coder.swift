@@ -1,12 +1,8 @@
+public import Coder_Core
 public struct Coder<
     Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable,
     Buffer: ~Copyable & ~Escapable, Failure: Swift.Error
 >: Coding {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-        }
-    }
 
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
     public var _serialize: (borrowing Output, inout Buffer) throws(Failure) -> Void
@@ -44,7 +40,7 @@ where
     Buffer: ~Copyable & ~Escapable
 {
 
-    @inlinable public init<C: Coding>(@Builder<Input, Buffer> _ build: () -> C)
+    @inlinable public init<C: Coding>(@Coder_Core::Builder<Input, Buffer> _ build: () -> C)
     where
         C.Input == Input, C.Output == Output, C.Buffer == Buffer, C.Failure == Failure,
         C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable, C.Buffer: ~Copyable & ~Escapable
@@ -57,7 +53,7 @@ where
 
     @inlinable public init<C: Coding>(
         _ input: Input.Type, _ buffer: Buffer.Type,
-        @Builder<Input, Buffer> _ build: () -> C
+        @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
         C.Input == Input, C.Output == Output, C.Buffer == Buffer, C.Failure == Failure,
@@ -69,7 +65,7 @@ where
     @inlinable public init<C: Coding>(
         _ forward: @escaping (consuming C.Output) -> Output,
         from backward: @escaping (borrowing Output) -> C.Output,
-        @Builder<Input, Buffer> _ build: () -> C
+        @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
         C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,
@@ -84,7 +80,7 @@ where
     @inlinable public init<C: Coding>(
         _ forward: @escaping (consuming C.Output) throws(Failure) -> Output,
         from backward: @escaping (borrowing Output) throws(Failure) -> C.Output,
-        @Builder<Input, Buffer> _ build: () -> C
+        @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
         C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,

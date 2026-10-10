@@ -1,4 +1,5 @@
 #if Either
+    public import Coder_Core
     public import Either
 
     extension Either
@@ -16,11 +17,6 @@
         Right.Output: ~Copyable & ~Escapable
     {
         public struct Coder: Coding, ~Copyable {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Buffer = Left.Buffer
             public typealias Input = Left.Input

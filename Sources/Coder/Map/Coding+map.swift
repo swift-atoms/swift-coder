@@ -1,4 +1,5 @@
 #if Map
+    public import Coder_Core
     public import Map
 
     extension Coding

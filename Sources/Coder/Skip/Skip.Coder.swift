@@ -1,4 +1,5 @@
 #if Skip
+    public import Coder_Core
     public import Skip
 
     extension Skip where Kept: ~Copyable, Dropped == Void {
@@ -11,11 +12,6 @@
             A.Output: ~Copyable & Escapable,
             A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Input = A.Input
             public typealias Output = A.Output

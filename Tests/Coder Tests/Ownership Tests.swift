@@ -8,11 +8,6 @@ private struct Resource: ~Copyable {
     deinit { counter.count += 1 }
 }
 private struct LinearCoder: Coding, ~Copyable {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     let resource: Resource
     borrowing func parse(_ input: inout ArraySlice<UInt8>) -> LinearValue {
@@ -96,11 +91,6 @@ private struct LinearCoder: Coding, ~Copyable {
 
 #if Repetition
     private struct LinearByteCoder: Coding, ~Copyable {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         enum Failure: Error { case absent, invalid }
         let resource: Resource
@@ -136,11 +126,6 @@ private struct LinearCoder: Coding, ~Copyable {
 #if Checkpoint && Optic
     private enum OwnedChoiceFailure: Error, Equatable { case absent }
     private struct OwnedChoice: Coding, ~Copyable {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let resource: Resource
         let byte: UInt8

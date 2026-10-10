@@ -1,6 +1,7 @@
 #if Skip
+    public import Coder_Core
     public import Skip
-    extension Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
         @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
             accumulated: consuming A, next: consuming N
         ) -> Skip<A.Output, Void>.Coder<A, N, N.Failure>

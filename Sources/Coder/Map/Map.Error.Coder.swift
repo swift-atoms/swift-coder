@@ -1,4 +1,5 @@
 #if Map
+    public import Coder_Core
     public import Map
 
     extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == Never {
@@ -7,11 +8,6 @@
             Upstream.Failure == Source, Upstream.Input: ~Copyable & ~Escapable,
             Upstream.Output: ~Copyable & Escapable, Upstream.Buffer: ~Copyable & ~Escapable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Input = Upstream.Input
             public typealias Output = Upstream.Output

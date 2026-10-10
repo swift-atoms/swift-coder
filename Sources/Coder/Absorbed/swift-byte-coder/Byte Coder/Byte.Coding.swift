@@ -1,4 +1,5 @@
 #if Byte
+public import Coder_Core
 public import Byte
 
 extension Byte {

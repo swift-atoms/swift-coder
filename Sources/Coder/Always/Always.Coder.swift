@@ -1,14 +1,10 @@
 #if Always
+    public import Coder_Core
     public import Always
 
     extension Always where Value == Void {
 
         public struct Coder<Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable>: Coding {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Output = Void
             public typealias Failure = Never
@@ -21,7 +17,7 @@
         ) -> Coder<Input, Buffer> { .init() }
     }
 
-    extension Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
         public static func buildExpression(_ unit: Always<Void>) -> Always<Void>.Coder<Input, Buffer> {
             .init()
         }

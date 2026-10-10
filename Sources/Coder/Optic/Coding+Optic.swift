@@ -1,4 +1,5 @@
 #if Optic
+    public import Coder_Core
     public import Optic
     public import Map
 

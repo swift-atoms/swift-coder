@@ -1,4 +1,5 @@
 #if Predicate
+    public import Coder_Core
     public import Predicate
 
     extension Predicate where T: ~Copyable & Escapable {
@@ -7,11 +8,6 @@
             Upstream.Output == T, Upstream.Output: ~Copyable & Escapable,
             Upstream.Input: ~Copyable & ~Escapable, Upstream.Buffer: ~Copyable & ~Escapable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Input = Upstream.Input
             public typealias Output = Upstream.Output

@@ -1,4 +1,5 @@
 #if Optic
+    public import Coder_Core
     import Either
     public import Optic
     public import Parser
@@ -28,7 +29,7 @@
             _ prism: Optic::Optic<Source, Source, Focus, Focus>.Prism,
             _ fold: Optic::Optic<Source, Source, Focus, Focus>.Fold,
             absent: Content.Failure,
-            @Builder<Input, Buffer> content: () -> Content
+            @Coder_Core::Builder<Input, Buffer> content: () -> Content
         ) where Content.Buffer == Buffer {
             self.prism = prism
             self.fold = fold
@@ -50,7 +51,7 @@
         public init<Buffer: ~Copyable & ~Escapable>(
             _ prism: Optic::Optic<Source, Source, Focus, Focus>.Prism,
             absent: Content.Failure,
-            @Builder<Input, Buffer> content: () -> Content
+            @Coder_Core::Builder<Input, Buffer> content: () -> Content
         ) where Content.Buffer == Buffer {
             self.init(prism, .init(prism), absent: absent, content: content)
         }
@@ -64,11 +65,6 @@
         Content: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-            }
-        }
 
 
         public typealias Output = Source

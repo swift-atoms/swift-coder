@@ -1,4 +1,5 @@
 #if IteratorLeaves
+public import Coder_Core
 public import Iterator
 public import Parser
 import Serializer
@@ -10,11 +11,6 @@ extension Coder::First {
         OutputBuffer: RangeReplaceableCollection
     >: Coding
     where Input.Element: Copyable & Escapable, Input.Failure == Never, OutputBuffer.Element == Input.Element {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-            }
-        }
 
 
         public typealias Buffer = OutputBuffer

@@ -1,7 +1,8 @@
 #if Either
+    public import Coder_Core
     public import Either
 
-    extension Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
         @inlinable
         public static func buildExpression<L: Coding & ~Copyable, R: Coding & ~Copyable>(
             _ either: consuming Either<L, R>

@@ -1,4 +1,5 @@
 #if Operation
+public import Coder_Core
 public import Operation
 public import Optic
 public import Parser
@@ -26,7 +27,7 @@ where
     public init<Buffer: ~Copyable & ~Escapable>(
         _ case: Optic::Optic<Source, Source, Focus, Focus>.Case,
         absent: Content.Failure,
-        @Coder::Builder<Input, Buffer> content: () -> Content
+        @Coder_Core::Builder<Input, Buffer> content: () -> Content
     ) where Content.Buffer == Buffer {
         self.init(`case`.prism, `case`.fold, absent: absent, content: content)
     }
@@ -53,7 +54,7 @@ where
     public init<Buffer: ~Copyable & ~Escapable>(
         _ keyPath: KeyPath<Source.Cases, Optic::Optic<Source, Source, Focus, Focus>.Case>,
         absent: Content.Failure,
-        @Coder::Builder<Input, Buffer> content: () -> Content
+        @Coder_Core::Builder<Input, Buffer> content: () -> Content
     ) where Content.Buffer == Buffer {
         self.init(Source.cases[keyPath: keyPath], absent: absent, content: content)
     }
@@ -101,7 +102,7 @@ where
         _ prism: Optic::Optic<Source, Source, Focus, Focus>.Prism,
         _ fold: Optic::Optic<Source, Source, Focus, Focus>.Fold,
         absent: Content.Failure,
-        @Coder::Builder<Input, Buffer> content: () -> Inner
+        @Coder_Core::Builder<Input, Buffer> content: () -> Inner
     )
     where
         Focus == Operation.Application<Index>,
@@ -140,7 +141,7 @@ where
     public init<Index: Operation.Symbol, Inner: Coding, Buffer: ~Copyable & ~Escapable>(
         _ case: Optic::Optic<Source, Source, Focus, Focus>.Case,
         absent: Content.Failure,
-        @Coder::Builder<Input, Buffer> content: () -> Inner
+        @Coder_Core::Builder<Input, Buffer> content: () -> Inner
     )
     where
         Focus == Operation.Application<Index>,
@@ -188,7 +189,7 @@ where
     public init<Index: Operation.Symbol, Inner: Coding, Buffer: ~Copyable & ~Escapable>(
         _ keyPath: KeyPath<Source.Cases, Optic::Optic<Source, Source, Focus, Focus>.Case>,
         absent: Content.Failure,
-        @Coder::Builder<Input, Buffer> content: () -> Inner
+        @Coder_Core::Builder<Input, Buffer> content: () -> Inner
     )
     where
         Focus == Operation.Application<Index>,

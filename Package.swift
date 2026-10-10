@@ -66,7 +66,15 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-iterator.git", branch: "main", traits: [.trait(name: "Repetition", condition: .when(traits: ["Repetition"]))]),
     ],
     targets: [
+        .target(
+            name: "Coder Core",
+            dependencies: [
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+            ]
+        ),
         .target(name: "Coder", dependencies: [
+            .target(name: "Coder Core"),
             .product(name: "Always", package: "swift-always"),
             .product(name: "Repetition", package: "swift-repetition"),
             .product(name: "Cardinal", package: "swift-cardinal"),

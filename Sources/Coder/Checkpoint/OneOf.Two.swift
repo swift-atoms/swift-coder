@@ -1,4 +1,5 @@
 #if Checkpoint
+    public import Coder_Core
     public import Checkpoint
     public import Parser
     public import Serializer
@@ -19,11 +20,6 @@
             P1.Buffer: ~Copyable & ~Escapable,
             P0.Failure: Equatable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
 
             public typealias Input = P0.Input

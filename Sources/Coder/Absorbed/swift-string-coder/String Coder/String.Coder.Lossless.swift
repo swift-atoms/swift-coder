@@ -1,4 +1,5 @@
 #if Byte
+public import Coder_Core
 public import Byte
 
 
@@ -10,11 +11,6 @@ extension Swift.String.Coder {
     public struct Lossless<
         Value: LosslessStringConvertible
     >: Byte.Coding<Value, Swift.String.Coder.Error> {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-            }
-        }
 
 
         public let text: Swift.String.Coder

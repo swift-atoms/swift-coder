@@ -1,4 +1,5 @@
 #if Carrier
+public import Coder_Core
 public import Map
 public import Carrier
 
