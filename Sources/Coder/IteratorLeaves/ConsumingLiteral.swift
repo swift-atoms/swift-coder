@@ -7,6 +7,11 @@ public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapab
                                OutputBuffer: RangeReplaceableCollection>: Coding
 where Input.Element: Equatable & Copyable & Escapable,
       Input.Failure == Never, OutputBuffer.Element == Input.Element {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
+        }
+    }
 
     public typealias Buffer = OutputBuffer
         public typealias Output = Void

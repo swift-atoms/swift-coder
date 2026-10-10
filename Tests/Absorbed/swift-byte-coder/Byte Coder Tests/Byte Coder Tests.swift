@@ -68,6 +68,11 @@ struct Digit: Equatable {
     }
 
     struct Coder: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
 
 
         typealias Input = ArraySlice<Byte>

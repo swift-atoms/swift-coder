@@ -4,6 +4,11 @@
 
     private enum PrecisionFailure: Error, Equatable { case mismatch }
     private struct FallibleValue: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
 
         func parse(_ input: inout Substring) throws(PrecisionFailure) -> Int { 7 }
         func serialize(_ output: Int, into buffer: inout String) throws(PrecisionFailure) {
@@ -12,11 +17,21 @@
         }
     }
     private struct InfallibleValue: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
 
         func parse(_ input: inout Substring) -> Int { 1 }
         func serialize(_ output: Int, into buffer: inout String) { buffer += String(output) }
     }
     private struct FallibleMarker: Coding {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+            }
+        }
 
         func parse(_ input: inout Substring) throws(PrecisionFailure) {}
         func serialize(_ output: Void, into buffer: inout String) throws(PrecisionFailure) {}

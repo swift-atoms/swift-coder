@@ -11,6 +11,11 @@ extension Coder::First {
         Buffer: RangeReplaceableCollection
     >: Coding
     where Input.Element: Copyable & Escapable, Input.Failure == Never, Buffer.Element == Input.Element {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
+            }
+        }
 
 
         public typealias Output = Input.Element

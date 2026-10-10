@@ -74,6 +74,11 @@ private enum Mismatch: Swift.Error, Equatable {
 }
 
 private struct Constant: Coding {
+    public var body: Never {
+        borrowing get {
+            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
+        }
+    }
 
     let text: String
 

@@ -8,6 +8,11 @@ import Serializer
 extension Swift.String {
 
     public struct Coder: Byte.Coding<Swift.String, Swift.String.Coder.Error> {
+        public var body: Never {
+            borrowing get {
+                return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
+            }
+        }
 
 
         public typealias Buffer = [Byte]
