@@ -2,11 +2,6 @@ public struct Coder<
     Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable,
     Buffer: ~Copyable & ~Escapable, Failure: Swift.Error
 >: Coding {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-        }
-    }
 
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
     public var _serialize: (borrowing Output, inout Buffer) throws(Failure) -> Void

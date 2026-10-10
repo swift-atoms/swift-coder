@@ -7,11 +7,6 @@
             case absent, fatal, insufficient, excessive, empty, noProgress, overflow, trailing
         }
         struct Digit: Coding {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-                }
-            }
 
             func parse(_ input: inout Substring) throws(Failure) -> Int {
                 guard let first = input.first else { throw .absent }
@@ -26,11 +21,6 @@
             }
         }
         struct Comma: Coding {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-                }
-            }
 
             func parse(_ input: inout Substring) throws(Failure) {
                 guard input.first == "," else { throw .absent }

@@ -8,12 +8,6 @@ where P0: Coding, P1: Coding, P0.Buffer == P1.Buffer,
       P0.Buffer: RangeReplaceableCollection,
       P0.Input: Restorable & ~Copyable & ~Escapable, P1.Input: ~Copyable & ~Escapable,
       P0.Output: ~Copyable & Escapable, P1.Output: ~Copyable & Escapable {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse(_:) and serialize(_:into:) directly")
-        }
-    }
 
     public typealias Buffer = P0.Buffer
 
@@ -48,12 +42,6 @@ where P0: Coding, P1: Coding, P0.Buffer == P1.Buffer,
 extension Parser::Optionally: @retroactive Serializing, Coding
 where Wrapped: Coding, Wrapped.Input: Restorable & ~Copyable & ~Escapable,
       Wrapped.Output: ~Copyable & Escapable, Wrapped.Buffer: ~Copyable & ~Escapable {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse(_:) and serialize(_:into:) directly")
-        }
-    }
 
     public typealias Buffer = Wrapped.Buffer
     public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Failure) {

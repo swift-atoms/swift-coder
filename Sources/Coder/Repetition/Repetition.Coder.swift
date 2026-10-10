@@ -16,11 +16,6 @@
             Separator.Buffer == Operation.Buffer, Separator.Failure == Operation.Failure,
             Separator.Input: ~Copyable & ~Escapable, Separator.Buffer: ~Copyable & ~Escapable
         {
-            public var body: Never {
-                borrowing get {
-                    return fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly")
-                }
-            }
 
             public typealias Input = Operation.Input
             public typealias Output = [Operation.Output]

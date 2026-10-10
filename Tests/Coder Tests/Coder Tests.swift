@@ -170,11 +170,6 @@
     }
 
     private struct Constant: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let text: String
 
@@ -195,11 +190,6 @@
     }
 
     private struct Marker: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let text: String
 
@@ -234,11 +224,6 @@
     }
 
     private struct Digit: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         func parse(_ input: inout Substring) throws(Mismatch) -> Character {
             guard let first = input.first, first.isNumber else { throw .mismatch }
@@ -284,11 +269,6 @@
     }
 
     private struct Wide: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         func parse(_ input: inout Substring) throws(Mismatch) -> Int32 {
             guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
@@ -303,11 +283,6 @@
     }
 
     private struct Narrow: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         func parse(_ input: inout Substring) throws(Mismatch) -> Int8 {
             guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
@@ -424,11 +399,6 @@
     }
 
     private struct ByteMarker: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let expected: UInt8
 
@@ -448,11 +418,6 @@
     }
 
     private struct ByteDigit: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         borrowing func parse(_ input: inout Cursor) throws(ByteMismatch) -> UInt8 {
             guard input.index < input.span.count else { throw .endOfInput }

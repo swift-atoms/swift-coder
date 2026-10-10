@@ -23,11 +23,6 @@ private enum RequestExample {
     }
 
     struct Method: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         var expected: String
         func parse(_ input: inout Request) throws(Failure) {
@@ -38,11 +33,6 @@ private enum RequestExample {
         }
     }
     struct Target: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         var expected: String
         func parse(_ input: inout Request) throws(Failure) {
@@ -53,11 +43,6 @@ private enum RequestExample {
         }
     }
     struct Content: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         func parse(_ input: inout Request) throws(Failure) -> User {
             guard let bytes = input.content else { throw .missingBody }

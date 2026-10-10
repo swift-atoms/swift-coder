@@ -6,12 +6,6 @@ public import Checkpoint
 extension Parser::Many: @retroactive Serializing, Coding
 where Source: Restorable & ~Copyable & ~Escapable, Element: Coding,
       Element.Input: ~Copyable & ~Escapable, Element.Buffer: ~Copyable & ~Escapable {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse(_:) and serialize(_:into:) directly")
-        }
-    }
 
     public typealias Buffer = Element.Buffer
     public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Error) {
@@ -31,12 +25,6 @@ where Source: Restorable & ~Copyable & ~Escapable,
       Element.Input: ~Copyable & ~Escapable, Separator.Input: ~Copyable & ~Escapable,
       Element.Buffer == Separator.Buffer, Element.Buffer: ~Copyable & ~Escapable,
       Separator.Buffer: ~Copyable & ~Escapable {
-    @inlinable
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf coder: implement parse(_:) and serialize(_:into:) directly")
-        }
-    }
 
     public typealias Buffer = Element.Buffer
     public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer) throws(Error) {

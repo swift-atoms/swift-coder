@@ -192,11 +192,6 @@ struct Word: Equatable {
     }
 
     struct Coder: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
 
         typealias Input = Substring
@@ -251,11 +246,6 @@ extension `Operation Coder` {
 private struct OwnedCursor: ~Copyable { var text: Substring }
 private struct OwnedBuffer: ~Copyable { var text: String = "" }
 private struct OwnedStorageCoder: Coding {
-    public var body: Never {
-        borrowing get {
-            return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-        }
-    }
 
     borrowing func parse(_ input: inout OwnedCursor) -> Word {
         let value = Word(String(input.text))

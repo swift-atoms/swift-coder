@@ -7,3 +7,12 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Co
     var body: Body { borrowing get }
 }
 
+extension Coding
+where
+    Self: ~Copyable, Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable, Body == Never
+{
+    @inlinable @_optimize(none) public var body: Never {
+        borrowing get { fatalError("\(Self.self) is a leaf coder: implement parse and serialize directly") }
+    }
+}

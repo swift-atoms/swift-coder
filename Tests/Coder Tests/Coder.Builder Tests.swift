@@ -46,11 +46,6 @@
     }
 
     private struct Text: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let text: String
 
@@ -71,11 +66,6 @@
     }
 
     private struct Marker: Coding {
-        public var body: Never {
-            borrowing get {
-                return fatalError("\(Self.self) is a leaf: implement its conformance requirements directly")
-            }
-        }
 
         let text: String
 
