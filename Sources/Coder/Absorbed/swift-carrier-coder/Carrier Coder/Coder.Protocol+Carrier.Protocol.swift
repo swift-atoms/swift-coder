@@ -3,8 +3,8 @@ public import Coder_Core
 public import Map
 public import Carrier
 
-public import Parser
-public import Serializer
+import Parser
+import Serializer
 
 extension Coding
 where

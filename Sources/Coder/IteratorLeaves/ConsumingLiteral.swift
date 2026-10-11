@@ -2,7 +2,7 @@
 public import Coder_Core
 public import Iterator
 public import Parser
-public import Serializer
+import Serializer
 
 public struct ConsumingLiteral<Input: Iterator.`Protocol` & ~Copyable & ~Escapable,
                                OutputBuffer: RangeReplaceableCollection>: Coding

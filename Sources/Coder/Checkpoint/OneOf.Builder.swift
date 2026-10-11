@@ -1,8 +1,8 @@
 #if Checkpoint
     public import Coder_Core
     public import Checkpoint
-    public import Parser
-    public import Serializer
+    import Parser
+    import Serializer
 
     extension OneOf {
 

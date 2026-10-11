@@ -2,8 +2,8 @@
 public import Coder_Core
 public import Operation
 public import Optic
-public import Parser
-public import Serializer
+import Parser
+import Serializer
 
 extension Coder::Case
 where

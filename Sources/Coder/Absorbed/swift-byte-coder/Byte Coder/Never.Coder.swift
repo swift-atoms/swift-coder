@@ -30,9 +30,7 @@ extension Swift::Never {
         public borrowing func serialize<Buffer: RangeReplaceableCollection>(
             _ output: Swift::Never,
             into buffer: inout Buffer
-        ) throws(Swift::Never.Coder.Error) where Buffer.Element == Byte {
-            switch output {}
-        }
+        ) throws(Swift::Never.Coder.Error) where Buffer.Element == Byte {}
     }
 }
 #endif

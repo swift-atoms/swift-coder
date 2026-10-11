@@ -34,7 +34,7 @@
             A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable, A.Failure == Never,
             N.Failure == Never
         {
-            .init(accumulated, next, { $0 }, { $0 })
+            .init(accumulated, next, \.self, \.self)
         }
     }
 #endif

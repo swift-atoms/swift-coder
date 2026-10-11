@@ -2,8 +2,8 @@
     public import Coder_Core
     import Either
     public import Optic
-    public import Parser
-    public import Serializer
+    import Parser
+    import Serializer
 
     public struct Case<
         Input: ~Copyable & ~Escapable,

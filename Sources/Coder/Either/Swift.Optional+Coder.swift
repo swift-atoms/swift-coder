@@ -1,8 +1,8 @@
 #if Either
     public import Coder_Core
     public import Either
-    public import Parser
-    public import Serializer
+    import Parser
+    import Serializer
 
     extension Swift::Optional
     where

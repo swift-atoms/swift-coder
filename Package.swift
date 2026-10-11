@@ -104,8 +104,8 @@ let package = Package(
     ],
     swiftLanguageModes: [.v6]
 )
-for target in package.targets {
-    target.swiftSettings = [
+for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
+    target.swiftSettings = (target.swiftSettings ?? []) + [
         .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
@@ -113,6 +113,6 @@ for target in package.targets {
         .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
         .enableUpcomingFeature("InferIsolatedConformances"),
         .enableExperimentalFeature("Lifetimes"),
-        .enableExperimentalFeature("MoveOnlyTuples"),
+        .treatAllWarnings(as: .error),
     ]
 }

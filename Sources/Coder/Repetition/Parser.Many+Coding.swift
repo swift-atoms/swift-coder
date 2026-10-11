@@ -1,7 +1,7 @@
 #if Repetition
 public import Coder_Core
 public import Parser
-public import Serializer
+import Serializer
 public import Checkpoint
 
 extension Parser::Many: @retroactive Serializing, Coding

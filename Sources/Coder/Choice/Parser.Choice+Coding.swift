@@ -1,7 +1,7 @@
 #if Choice
 public import Coder_Core
 public import Parser
-public import Serializer
+import Serializer
 public import Checkpoint
 
 extension Parser::OneOf.Two: @retroactive Serializing, Coding

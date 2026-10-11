@@ -1,8 +1,8 @@
 #if Operation
 public import Coder_Core
 public import Operation
-public import Parser
-public import Serializer
+import Parser
+import Serializer
 
 extension Operation._Application where Input: ~Copyable & Escapable {
 

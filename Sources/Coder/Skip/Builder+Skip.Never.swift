@@ -36,7 +36,7 @@
             A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable, N.Output == Void,
             A.Failure == Never, N.Failure == Never
         {
-            .init(accumulated, next, { $0 }, { $0 })
+            .init(accumulated, next, \.self, \.self)
         }
         @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
             accumulated: consuming A, next: consuming N
@@ -72,7 +72,7 @@
             A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable, A.Output == Void,
             A.Failure == Never, N.Failure == Never
         {
-            .init(next, accumulated, leading: true, { $0 }, { $0 })
+            .init(next, accumulated, leading: true, \.self, \.self)
         }
         @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
             accumulated: consuming A, next: consuming N
@@ -108,7 +108,7 @@
             A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable, A.Output == Void,
             N.Output == Void, A.Failure == Never, N.Failure == Never
         {
-            .init(accumulated, next, { $0 }, { $0 })
+            .init(accumulated, next, \.self, \.self)
         }
     }
 #endif

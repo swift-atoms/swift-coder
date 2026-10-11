@@ -2,8 +2,8 @@
     public import Coder_Core
     public import Either
     public import Pair
-    public import Parser
-    public import Serializer
+    import Parser
+    import Serializer
 
     extension Pair::Pair
     where
@@ -97,7 +97,7 @@
         where Second.Failure == Never { .init(first, second, { $0 }, { $0 }) }
 
         @inlinable public consuming func coder() -> Pair::Pair<First, Second>.Coder<Never>
-        where First.Failure == Never, Second.Failure == Never { .init(first, second, { $0 }, { $0 }) }
+        where First.Failure == Never, Second.Failure == Never { .init(first, second, \.self, \.self) }
 
     }
 
