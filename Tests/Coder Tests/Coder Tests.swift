@@ -8,27 +8,27 @@
     struct `Coders preserve round trips composition and typed failure behavior` {
 
         @Test
-        func `a leaf coder round-trips`() throws(any Swift.Error) {
+        func `a leaf coder round-trips`() throws(any Swift::Error) {
             try roundTrip(Constant("abc"), "abc", expecting: "abc")
         }
 
         @Test
-        func `a coder body backed by a witness round-trips`() throws(any Swift.Error) {
+        func `a coder body backed by a witness round-trips`() throws(any Swift::Error) {
             try roundTrip(WitnessLeaf(), "x", expecting: "x")
         }
 
         @Test
-        func `Skip.First round-trips`() throws(any Swift.Error) {
+        func `Skip.First round-trips`() throws(any Swift::Error) {
             try roundTrip(LeadingMarker(), "tag", expecting: "<tag")
         }
 
         @Test
-        func `Skip.Second round-trips`() throws(any Swift.Error) {
+        func `Skip.Second round-trips`() throws(any Swift::Error) {
             try roundTrip(TrailingMarker(), "tag", expecting: "tag>")
         }
 
         @Test
-        func `Append round-trips a flat tuple`() throws(any Swift.Error) {
+        func `Append round-trips a flat tuple`() throws(any Swift::Error) {
             var buffer: Substring = ""
             try KeyValue().serialize(Pair("k", "v"), into: &buffer)
             #expect(buffer == "k=v")
@@ -40,7 +40,7 @@
         }
 
         @Test
-        func `Pair composition safely retains differently sized elements`() throws(any Swift.Error) {
+        func `Pair composition safely retains differently sized elements`() throws(any Swift::Error) {
             let inner = Coder::Builder<Substring, Substring>.buildPartialBlock(
                 accumulated: Wide(), next: Narrow())
             let node = Coder::Builder<Substring, Substring>.buildPartialBlock(
@@ -57,17 +57,17 @@
         }
 
         @Test
-        func `Sequence round-trips`() throws(any Swift.Error) {
+        func `Sequence round-trips`() throws(any Swift::Error) {
             try roundTrip(Bracketed(), "tag", expecting: "<tag>")
         }
 
         @Test
-        func `Coder Sequence round-trips a nested body`() throws(any Swift.Error) {
+        func `Coder Sequence round-trips a nested body`() throws(any Swift::Error) {
             try roundTrip(NativelySequenced(), "tag", expecting: "<tag>")
         }
 
         @Test
-        func `Error.Map round-trips and maps both directions`() throws(any Swift.Error) {
+        func `Error.Map round-trips and maps both directions`() throws(any Swift::Error) {
             try roundTrip(Renamed(), "tag", expecting: "tag")
             var buffer: Substring = ""
             #expect(throws: Domain.malformed) {
@@ -80,7 +80,7 @@
         }
 
         @Test
-        func `Map round-trips through an isomorphism`() throws(any Swift.Error) {
+        func `Map round-trips through an isomorphism`() throws(any Swift::Error) {
             var buffer: Substring = ""
             try Boxed.Coder().serialize(Boxed(value: "1"), into: &buffer)
             #expect(buffer == "(1)")
@@ -97,7 +97,7 @@
         }
 
         @Test
-        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift.Error) {
+        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift::Error) {
             let _: Bracketed.Input.Type = Substring.self
             let _: Bracketed.Output.Type = String.self
             let _: Bracketed.Buffer.Type = Substring.self
@@ -113,7 +113,7 @@
         }
 
         @Test
-        func `a model uses its explicit representation to serialize and parse`() throws(any Swift.Error) {
+        func `a model uses its explicit representation to serialize and parse`() throws(any Swift::Error) {
             let coder = Boxed.Coder()
             var buffer: Substring = ""
             try coder.serialize(Boxed(value: "3"), into: &buffer)
@@ -128,7 +128,7 @@
         _ coder: C,
         _ value: String,
         expecting text: Substring
-    ) throws(any Swift.Error) where C.Input == Substring, C.Output == String, C.Buffer == Substring {
+    ) throws(any Swift::Error) where C.Input == Substring, C.Output == String, C.Buffer == Substring {
         var buffer: Substring = ""
         try coder.serialize(value, into: &buffer)
         #expect(buffer == text)
@@ -142,7 +142,7 @@
         _ coder: C,
         _ value: Character,
         expecting text: Substring
-    ) throws(any Swift.Error) where C.Input == Substring, C.Output == Character, C.Buffer == Substring {
+    ) throws(any Swift::Error) where C.Input == Substring, C.Output == Character, C.Buffer == Substring {
         var buffer: Substring = ""
         try coder.serialize(value, into: &buffer)
         #expect(buffer == text)
@@ -152,7 +152,7 @@
         #expect(cursor.isEmpty)
     }
 
-    private func requireFailure<C: Coding, Failure: Swift.Error>(
+    private func requireFailure<C: Coding, Failure: Swift::Error>(
         _: borrowing C,
         _: Failure.Type
     )
@@ -161,11 +161,11 @@
         C.Failure == Failure
     {}
 
-    private enum Mismatch: Swift.Error, Equatable {
+    private enum Mismatch: Swift::Error, Equatable {
         case mismatch
     }
 
-    private enum Domain: Swift.Error, Equatable {
+    private enum Domain: Swift::Error, Equatable {
         case malformed
     }
 
@@ -355,8 +355,7 @@
     struct `Coders parse and serialize nonescaping inputs with typed failures` {
 
         @Test
-        func `a coder body parses from a nonescapable cursor and serializes into a buffer`() throws(any Swift
-            .Error)
+        func `a coder body parses from a nonescapable cursor and serializes into a buffer`() throws(any Swift::Error)
         {
             var buffer: [UInt8] = []
             try FramedDigit().serialize(0x37, into: &buffer)
@@ -393,7 +392,7 @@
         }
     }
 
-    private enum ByteMismatch: Swift.Error, Equatable {
+    private enum ByteMismatch: Swift::Error, Equatable {
         case expected(UInt8)
         case endOfInput
     }

@@ -10,9 +10,13 @@ private struct Resource: ~Copyable {
 private struct LinearCoder: Coding, ~Copyable {
 
     let resource: Resource
+}
+
+extension LinearCoder {
     borrowing func parse(_ input: inout ArraySlice<UInt8>) -> LinearValue {
         LinearValue(value: input.removeFirst())
     }
+
     borrowing func serialize(_ output: borrowing LinearValue, into buffer: inout [UInt8]) {
         buffer.append(output.value)
     }
@@ -94,14 +98,18 @@ private struct LinearCoder: Coding, ~Copyable {
 
         enum Failure: Error { case absent, invalid }
         let resource: Resource
-        borrowing func parse(_ input: inout ArraySlice<UInt8>) throws(Failure) -> UInt8 {
-            guard !input.isEmpty else { throw .absent }
-            return input.removeFirst()
-        }
-        borrowing func serialize(_ output: UInt8, into buffer: inout [UInt8]) throws(Failure) {
-            buffer.append(output)
-        }
     }
+
+extension LinearByteCoder {
+    borrowing func parse(_ input: inout ArraySlice<UInt8>) throws(Failure) -> UInt8 {
+        guard !input.isEmpty else { throw .absent }
+        return input.removeFirst()
+    }
+
+    borrowing func serialize(_ output: UInt8, into buffer: inout [UInt8]) throws(Failure) {
+        buffer.append(output)
+    }
+}
     extension OwnershipTests {
         @Test func repetitionRetainsNoncopyableOperation() throws {
             let counter = Destructions()
@@ -129,17 +137,21 @@ private struct LinearCoder: Coding, ~Copyable {
 
         let resource: Resource
         let byte: UInt8
-        borrowing func parse(_ input: inout Substring) throws(OwnedChoiceFailure) -> UInt8 {
-            guard let first = input.first else { throw .absent }
-            input.removeFirst()
-            guard first.wholeNumberValue == Int(byte) else { throw .absent }
-            return byte
-        }
-        borrowing func serialize(_ output: UInt8, into buffer: inout Substring) throws(OwnedChoiceFailure) {
-            buffer.append(contentsOf: String(output))
-            guard output == byte else { throw .absent }
-        }
     }
+
+extension OwnedChoice {
+    borrowing func parse(_ input: inout Substring) throws(OwnedChoiceFailure) -> UInt8 {
+        guard let first = input.first else { throw .absent }
+        input.removeFirst()
+        guard first.wholeNumberValue == Int(byte) else { throw .absent }
+        return byte
+    }
+
+    borrowing func serialize(_ output: UInt8, into buffer: inout Substring) throws(OwnedChoiceFailure) {
+        buffer.append(contentsOf: String(output))
+        guard output == byte else { throw .absent }
+    }
+}
     private enum LinearCase: ~Copyable {
         case leaf(UInt8)
         case empty

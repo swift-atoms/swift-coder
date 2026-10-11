@@ -19,7 +19,7 @@
         Second.Output: ~Copyable & Escapable
     {
 
-        public struct Coder<Failure: Swift.Error>: Coding, ~Copyable {
+        public struct Coder<Failure: Swift::Error>: Coding, ~Copyable {
 
 
             public typealias Buffer = First.Buffer

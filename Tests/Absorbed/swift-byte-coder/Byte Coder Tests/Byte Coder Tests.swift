@@ -9,7 +9,7 @@ import Testing
 struct `Byte Coder` {
 
     @Test
-    func `an explicit byte coder round trips over the canonical carrier`() throws(any Swift.Error) {
+    func `an explicit byte coder round trips over the canonical carrier`() throws(any Swift::Error) {
         let coder = Digit.Coder()
         var buffer: [Byte] = []
         try coder.serialize(Digit(7), into: &buffer)
@@ -21,7 +21,7 @@ struct `Byte Coder` {
     }
 
     @Test
-    func `a byte coding is spelled with its output and failure alone`() throws(any Swift.Error) {
+    func `a byte coding is spelled with its output and failure alone`() throws(any Swift::Error) {
         let coder: some Byte.Coding<Digit, Digit.Error> = Digit.Coder()
         var buffer: [Byte] = []
         try coder.serialize(Digit(4), into: &buffer)
@@ -31,17 +31,17 @@ struct `Byte Coder` {
     @Test
     func `the never coder rejects every input and consumes nothing`() {
         var input: ArraySlice<Byte> = "anything"
-        #expect(throws: Swift.Never.Coder.Error.absent) {
-            try Swift.Never.Coder().parse(&input)
+        #expect(throws: Swift::Never.Coder.Error.absent) {
+            try Swift::Never.Coder().parse(&input)
         }
         #expect(input == "anything")
     }
 
     @Test
     func `the never coder is reachable through the canonical carrier`() {
-        let coder: some Byte.Coding<Swift.Never, Swift.Never.Coder.Error> = Swift.Never.Coder()
+        let coder: some Byte.Coding<Swift::Never, Swift::Never.Coder.Error> = Swift::Never.Coder()
         var input: ArraySlice<Byte> = []
-        #expect(throws: Swift.Never.Coder.Error.absent) {
+        #expect(throws: Swift::Never.Coder.Error.absent) {
             try coder.parse(&input)
         }
     }
@@ -63,7 +63,7 @@ struct Digit: Equatable {
         self.value = value
     }
 
-    enum Error: Swift.Error, Equatable {
+    enum Error: Swift::Error, Equatable {
         case notADigit
     }
 

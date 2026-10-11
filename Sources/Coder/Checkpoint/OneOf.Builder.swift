@@ -11,7 +11,7 @@
             Input: Restorable & ~Copyable & ~Escapable,
             Output: ~Copyable & Escapable,
             Buffer: Restorable & ~Copyable & ~Escapable,
-            Failure: Swift.Error & Equatable
+            Failure: Swift::Error & Equatable
         > {}
     }
 

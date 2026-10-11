@@ -25,7 +25,7 @@
             .init(upstream: self, forward: forward, backward: backward)
         }
 
-        @inlinable public consuming func mapFailure<E: Swift.Error>(_ transform: @escaping (Failure) -> E)
+        @inlinable public consuming func mapFailure<E: Swift::Error>(_ transform: @escaping (Failure) -> E)
             -> Map<Failure, E, Never>.Error.Coder<Self>
         {
             .init(self, transform)

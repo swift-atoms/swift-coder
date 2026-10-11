@@ -10,7 +10,7 @@ import Testing
 struct `Operation Coder` {
 
     @Test
-    func `a case keyed by its key path round trips a call`() throws(any Swift.Error) {
+    func `a case keyed by its key path round trips a call`() throws(any Swift::Error) {
         let coder = Coder::Case(\Fixture.Call.Cases.echo, absent: Mismatch.absent) {
             Word.Coder()
         }
@@ -28,7 +28,7 @@ struct `Operation Coder` {
     }
 
     @Test
-    func `each case of a coproduct keys its own coder`() throws(any Swift.Error) {
+    func `each case of a coproduct keys its own coder`() throws(any Swift::Error) {
         let coder = Coder::Case(\Fixture.Call.Cases.shout, absent: Mismatch.absent) {
             Word.Coder()
         }
@@ -46,7 +46,7 @@ struct `Operation Coder` {
     }
 
     @Test
-    func `a case keyed by its optic case takes its content as a value`() throws(any Swift.Error) {
+    func `a case keyed by its optic case takes its content as a value`() throws(any Swift::Error) {
         let coder = Coder::Case(
             Fixture.Call.cases.echo,
             absent: Mismatch.absent,
@@ -73,7 +73,7 @@ struct `Operation Coder` {
 
     @Test
     func `an application coder lifts a content coder to the operation's application`()
-        throws(any Swift.Error)
+        throws(any Swift::Error)
     {
         let coder = Operation.Application<Fixture.Operations.Echo>.Coder(Word.Coder())
 
@@ -206,7 +206,7 @@ struct Word: Equatable {
             guard input.hasPrefix("word:") else { throw .absent }
             let text = input.dropFirst("word:".count)
             input = ""
-            return Word(Swift.String(text))
+            return Word(Swift::String(text))
         }
 
         func serialize(_ output: Word, into buffer: inout Substring) throws(Mismatch) {
@@ -216,7 +216,7 @@ struct Word: Equatable {
     }
 }
 
-enum Mismatch: Swift.Error, Equatable {
+enum Mismatch: Swift::Error, Equatable {
     case absent
     case malformed
 }

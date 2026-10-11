@@ -10,7 +10,7 @@
             Input: Restorable & ~Copyable & ~Escapable,
             Output: ~Copyable & Escapable,
             Buffer: Restorable & ~Copyable & ~Escapable,
-            Failure: Swift.Error & Equatable,
+            Failure: Swift::Error & Equatable,
             Body: Coding
         >: Coding
         where
@@ -32,27 +32,29 @@
                 self.absent = absent
                 self.body = build()(absent: absent)
             }
-
-            @inlinable
-            public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-                let checkpoint = input.checkpoint
-                do throws(Failure) { return try body.parse(&input) } catch {
-                    if error == absent { input.seek(to: checkpoint) }
-                    throw error
-                }
-            }
-
-            @inlinable
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
-                throws(Failure)
-            {
-                let checkpoint = buffer.checkpoint
-                do throws(Failure) { try body.serialize(output, into: &buffer) } catch {
-                    if error == absent { buffer.seek(to: checkpoint) }
-                    throw error
-                }
-            }
         }
     }
+
+extension OneOf.Sequence where Input: ~Copyable & ~Escapable, Output: ~Copyable, Buffer: ~Copyable & ~Escapable {
+    @inlinable
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        let checkpoint = input.checkpoint
+        do throws(Failure) { return try body.parse(&input) } catch {
+            if error == absent { input.seek(to: checkpoint) }
+            throw error
+        }
+    }
+
+    @inlinable
+    public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+        throws(Failure)
+    {
+        let checkpoint = buffer.checkpoint
+        do throws(Failure) { try body.serialize(output, into: &buffer) } catch {
+            if error == absent { buffer.seek(to: checkpoint) }
+            throw error
+        }
+    }
+}
 
 #endif

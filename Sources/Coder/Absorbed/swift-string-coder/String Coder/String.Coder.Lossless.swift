@@ -6,14 +6,14 @@ public import Byte
 import Parser
 import Serializer
 
-extension Swift.String.Coder {
+extension Swift::String.Coder {
 
     public struct Lossless<
         Value: LosslessStringConvertible
-    >: Byte.Coding<Value, Swift.String.Coder.Error> {
+    >: Byte.Coding<Value, Swift::String.Coder.Error> {
 
 
-        public let text: Swift.String.Coder
+        public let text: Swift::String.Coder
 
         public typealias Buffer = [Byte]
 
@@ -25,7 +25,7 @@ extension Swift.String.Coder {
         @inlinable
         public borrowing func parse(
             _ input: inout ArraySlice<Byte>
-        ) throws(Swift.String.Coder.Error) -> Value {
+        ) throws(Swift::String.Coder.Error) -> Value {
             let description = try text.parse(&input)
             guard let value = Value(description) else {
                 throw .malformed
@@ -37,7 +37,7 @@ extension Swift.String.Coder {
         public borrowing func serialize<Buffer: RangeReplaceableCollection>(
             _ output: Value,
             into buffer: inout Buffer
-        ) throws(Swift.String.Coder.Error) where Buffer.Element == Byte {
+        ) throws(Swift::String.Coder.Error) where Buffer.Element == Byte {
             try text.serialize(output.description, into: &buffer)
         }
     }

@@ -4,7 +4,7 @@
 
     extension Skip where Kept: ~Copyable, Dropped == Void {
 
-        public struct Coder<A: Coding & ~Copyable, N: Coding & ~Copyable, Failure: Swift.Error>: Coding,
+        public struct Coder<A: Coding & ~Copyable, N: Coding & ~Copyable, Failure: Swift::Error>: Coding,
             ~Copyable
         where
             A.Input == N.Input, A.Buffer == N.Buffer, A.Output == Kept, N.Output == Void,

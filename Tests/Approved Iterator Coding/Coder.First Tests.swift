@@ -19,7 +19,7 @@ struct `Coder::First Tests` {
     }
 
     @Test
-    func `Element parses the first element`() throws(any Swift.Error) {
+    func `Element parses the first element`() throws(any Swift::Error) {
         var input = Characters("ab")
         #expect(try Coder::First.Element<Characters, String>().parse(&input) == "a")
         #expect(input.remainder == "b")
@@ -35,7 +35,7 @@ struct `Coder::First Tests` {
     }
 
     @Test
-    func `a coder body lifts a literal and infers the leaves from the builder`() throws(any Swift.Error) {
+    func `a coder body lifts a literal and infers the leaves from the builder`() throws(any Swift::Error) {
         var buffer = ""
         try Framed().serialize("x", into: &buffer)
         #expect(buffer == "[x]")
@@ -60,13 +60,17 @@ private struct Characters: Iterator.`Protocol` {
     init(_ text: String) {
         remainder = text[...]
     }
+}
 
+extension Characters {
     mutating func next() -> Character? {
         remainder.popFirst()
     }
 }
 
-private struct Framed: Coding {
+private struct Framed: Coding {}
+
+extension Framed {
     typealias Failure = Either<
         Either<Parser::ConsumingLiteral<Characters>.Error, Parser::EndOfInput.Error>,
         Parser::ConsumingLiteral<Characters>.Error

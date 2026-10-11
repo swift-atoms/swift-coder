@@ -4,7 +4,7 @@
     public import Parser
     public import Serializer
 
-    extension Swift.Optional
+    extension Swift::Optional
     where
         Wrapped: Coding,
         Wrapped.Input: ~Copyable & ~Escapable,
@@ -15,7 +15,7 @@
         public struct Coder: Coding {
 
 
-            public enum Error: Swift.Error, Equatable {
+            public enum Error: Swift::Error, Equatable {
 
                 case missingValue
 
@@ -30,10 +30,10 @@
 
             public typealias Failure = Either<Wrapped.Failure, Error>
 
-            public let wrapped: Swift.Optional<Wrapped>
+            public let wrapped: Swift::Optional<Wrapped>
 
             @inlinable
-            public init(_ wrapped: Swift.Optional<Wrapped>) {
+            public init(_ wrapped: Swift::Optional<Wrapped>) {
                 self.wrapped = wrapped
             }
 

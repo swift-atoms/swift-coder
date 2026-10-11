@@ -2,7 +2,7 @@
     public import Coder_Core
     public import Map
 
-    extension Map.Error where Source: Swift.Error, Target: Swift.Error, Failure == Never {
+    extension Map.Error where Source: Swift::Error, Target: Swift::Error, Failure == Never {
         public struct Coder<Upstream: Coding & ~Copyable>: Coding, ~Copyable
         where
             Upstream.Failure == Source, Upstream.Input: ~Copyable & ~Escapable,
@@ -37,7 +37,7 @@
     }
     extension Map.Error.Coder: Copyable
     where
-        Source: Swift.Error, Target: Swift.Error, Failure == Never,
+        Source: Swift::Error, Target: Swift::Error, Failure == Never,
         Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure> & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable, Upstream.Buffer: ~Copyable & ~Escapable

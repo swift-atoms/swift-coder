@@ -13,14 +13,14 @@ import Testing
 struct `Swift.Array+Coder Tests` {
 
     @Test
-    func `an array coder serializes by appending`() throws(any Swift.Error) {
+    func `an array coder serializes by appending`() throws(any Swift::Error) {
         var buffer = ""
         Coder::ConsumingLiteral<Characters, String>(["i", "d", "="]).serialize((), into: &buffer)
         #expect(buffer == "id=")
     }
 
     @Test
-    func `an array coder round-trips as a void coder`() throws(any Swift.Error) {
+    func `an array coder round-trips as a void coder`() throws(any Swift::Error) {
         let coder = Coder::ConsumingLiteral<Characters, String>(["i", "d", "="])
         var buffer = ""
         coder.serialize((), into: &buffer)
@@ -30,7 +30,7 @@ struct `Swift.Array+Coder Tests` {
     }
 
     @Test
-    func `an array coder skips into a constant coder and round-trips`() throws(any Swift.Error) {
+    func `an array coder skips into a constant coder and round-trips`() throws(any Swift::Error) {
         let coder = Tagged()
         var buffer = ""
         try coder.serialize("tag", into: &buffer)
@@ -52,7 +52,7 @@ struct `Swift.Array+Coder Tests` {
     }
 
     @Test
-    func `Codable adopters encode into a fresh buffer`() throws(any Swift.Error) {
+    func `Codable adopters encode into a fresh buffer`() throws(any Swift::Error) {
         #expect(try Label.Coder().serialize(Label("tag")) == "<tag")
     }
 }
@@ -69,7 +69,7 @@ private struct Characters: Iterator.`Protocol` {
     }
 }
 
-private enum Mismatch: Swift.Error, Equatable {
+private enum Mismatch: Swift::Error, Equatable {
     case mismatch
 }
 

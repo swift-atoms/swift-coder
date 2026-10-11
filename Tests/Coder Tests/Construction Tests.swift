@@ -6,23 +6,30 @@
     private struct Chosen: Coding {
 
         let character: Character
-        func parse(_ input: inout Substring) throws(ChosenFailure) -> Character {
-            guard input.first == character else { throw .mismatch }
-            input.removeFirst()
-            return character
-        }
-        func serialize(_ output: Character, into buffer: inout String) throws(ChosenFailure) {
-            guard output == character else { throw .mismatch }
-            buffer.append(output)
-        }
     }
+
+extension Chosen {
+    func parse(_ input: inout Substring) throws(ChosenFailure) -> Character {
+        guard input.first == character else { throw .mismatch }
+        input.removeFirst()
+        return character
+    }
+
+    func serialize(_ output: Character, into buffer: inout String) throws(ChosenFailure) {
+        guard output == character else { throw .mismatch }
+        buffer.append(output)
+    }
+}
     private struct ConditionalBranch: Coding {
         let first: Bool
-        @Coder::Builder<Substring, String>
-        var body: some Coding<Substring, Character, String, Either<ChosenFailure, ChosenFailure>> {
-            if first { Chosen(character: "a") } else { Chosen(character: "b") }
-        }
     }
+
+extension ConditionalBranch {
+    @Coder::Builder<Substring, String>
+    var body: some Coding<Substring, Character, String, Either<ChosenFailure, ChosenFailure>> {
+        if first { Chosen(character: "a") } else { Chosen(character: "b") }
+    }
+}
     @Suite struct ConstructionTests {
         @Test func selectedBranchIsFixedAtConstruction() throws {
             let coder = ConditionalBranch(first: false)

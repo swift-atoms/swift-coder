@@ -3,24 +3,28 @@
     import Testing
 
     private enum PrecisionFailure: Error, Equatable { case mismatch }
-    private struct FallibleValue: Coding {
+    private struct FallibleValue: Coding {}
 
-        func parse(_ input: inout Substring) throws(PrecisionFailure) -> Int { 7 }
-        func serialize(_ output: Int, into buffer: inout String) throws(PrecisionFailure) {
-            guard output == 7 else { throw .mismatch }
-            buffer += "7"
-        }
-    }
-    private struct InfallibleValue: Coding {
+extension FallibleValue {
+    func parse(_ input: inout Substring) throws(PrecisionFailure) -> Int { 7 }
 
-        func parse(_ input: inout Substring) -> Int { 1 }
-        func serialize(_ output: Int, into buffer: inout String) { buffer += String(output) }
+    func serialize(_ output: Int, into buffer: inout String) throws(PrecisionFailure) {
+        guard output == 7 else { throw .mismatch }
+        buffer += "7"
     }
-    private struct FallibleMarker: Coding {
+}
+    private struct InfallibleValue: Coding {}
 
-        func parse(_ input: inout Substring) throws(PrecisionFailure) {}
-        func serialize(_ output: Void, into buffer: inout String) throws(PrecisionFailure) {}
-    }
+extension InfallibleValue {
+    func parse(_ input: inout Substring) -> Int { 1 }
+    func serialize(_ output: Int, into buffer: inout String) { buffer += String(output) }
+}
+    private struct FallibleMarker: Coding {}
+
+extension FallibleMarker {
+    func parse(_ input: inout Substring) throws(PrecisionFailure) {}
+    func serialize(_ output: Void, into buffer: inout String) throws(PrecisionFailure) {}
+}
     @Suite struct FailurePrecisionTests {
         @Test func mixedNeverPairsKeepOnlyThePossibleFailure() throws {
             let first = Coder {

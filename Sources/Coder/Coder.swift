@@ -1,7 +1,7 @@
 public import Coder_Core
 public struct Coder<
     Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable,
-    Buffer: ~Copyable & ~Escapable, Failure: Swift.Error
+    Buffer: ~Copyable & ~Escapable, Failure: Swift::Error
 >: Coding {
 
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
@@ -23,7 +23,9 @@ public struct Coder<
         self._parse = parse
         self._serialize = { value, buffer throws(Failure) in serialize(value, &buffer) }
     }
+}
 
+extension Coder where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
     @inlinable @_lifetime(borrow self, &input)
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output { try _parse(&input) }
 
