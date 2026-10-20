@@ -11,49 +11,105 @@ let package = Package(
         .executable(name: "CoderUserRecords", targets: ["User Records Example"]),
     ],
     traits: [
-        .trait(name: "Choice", description: "Classified parser choice coding", enabledTraits: ["Checkpoint"]),
+        .trait(
+            name: "Choice",
+            description: "Classified parser choice coding",
+            enabledTraits: ["Checkpoint"]
+        ),
         .trait(name: "Always", description: "The infallible Void unit grammar"),
         .trait(name: "Either", description: "Conditional coder construction"),
-        .trait(name: "Pair", description: "Safe structural product composition", enabledTraits: ["Either"]),
-        .trait(name: "Skip", description: "Canonical Void grammar composition", enabledTraits: ["Either"]),
+        .trait(
+            name: "Pair",
+            description: "Safe structural product composition",
+            enabledTraits: ["Either"]
+        ),
+        .trait(
+            name: "Skip",
+            description: "Canonical Void grammar composition",
+            enabledTraits: ["Either"]
+        ),
         .trait(name: "Map", description: "Bidirectional conversion and failure mapping"),
-        .trait(name: "Optic", description: "Optic conversion and explicit case branches", enabledTraits: ["Map"]),
-        .trait(name: "Repetition", description: "Bounded, rejection-aware element and separator composition", enabledTraits: ["Checkpoint"]),
+        .trait(
+            name: "Optic",
+            description: "Optic conversion and explicit case branches",
+            enabledTraits: ["Map"]
+        ),
+        .trait(
+            name: "Repetition",
+            description: "Bounded, rejection-aware element and separator composition",
+            enabledTraits: ["Checkpoint"]
+        ),
         .trait(name: "Predicate", description: "Borrowed value validation in both directions"),
         .trait(name: "Checkpoint", description: "Rejection-aware alternatives and repetition"),
         .trait(name: "Byte", description: "Absorbed Byte integration"),
-        .trait(name: "Carrier", description: "Absorbed Carrier integration", enabledTraits: ["Map"]),
-        .trait(name: "Operation", description: "Absorbed Operation integration", enabledTraits: ["Optic"]),
-        .trait(name: "IteratorLeaves", description: "Approved IteratorLeaves integration", enabledTraits: ["Either"]),
+        .trait(
+            name: "Carrier",
+            description: "Absorbed Carrier integration",
+            enabledTraits: ["Map"]
+        ),
+        .trait(
+            name: "Operation",
+            description: "Absorbed Operation integration",
+            enabledTraits: ["Optic"]
+        ),
+        .trait(
+            name: "IteratorLeaves",
+            description: "Approved IteratorLeaves integration",
+            enabledTraits: ["Either"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/swift-atoms/swift-always.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-repetition.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-cardinal.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-predicate.git", branch: "main", traits: [.trait(name: "Always", condition: .when(traits: ["Repetition"]))]),
-        .package(url: "https://github.com/swift-atoms/swift-parser.git", branch: "main", traits: [
-            .trait(name: "Choice", condition: .when(traits: ["Choice"])),
-            .trait(name: "IteratorLeaves", condition: .when(traits: ["IteratorLeaves"])),
-            .trait(name: "Always", condition: .when(traits: ["Always"])),
-            .trait(name: "Predicate", condition: .when(traits: ["Predicate"])),
-            .trait(name: "Repetition", condition: .when(traits: ["Repetition"])),
-            .trait(name: "Either", condition: .when(traits: ["Either", "IteratorLeaves", "Pair", "Skip"])),
-            .trait(name: "Pair", condition: .when(traits: ["Pair"])),
-            .trait(name: "Skip", condition: .when(traits: ["Skip"])),
-            .trait(name: "Map", condition: .when(traits: ["Map", "Carrier", "Operation", "Optic"])),
-            .trait(name: "Optic", condition: .when(traits: ["Optic", "Operation"])),
-            .trait(name: "Iterator", condition: .when(traits: ["IteratorLeaves"])),
-        ]),
-        .package(url: "https://github.com/swift-atoms/swift-serializer.git", branch: "main", traits: [
-            .trait(name: "Byte", condition: .when(traits: ["Byte"])),
-            .trait(name: "Always", condition: .when(traits: ["Always"])),
-            .trait(name: "Repetition", condition: .when(traits: ["Repetition"])),
+        .package(
+            url: "https://github.com/swift-atoms/swift-predicate.git",
+            branch: "main",
+            traits: [.trait(name: "Always", condition: .when(traits: ["Repetition"]))]
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-parser.git",
+            branch: "main",
+            traits: [
+                .trait(name: "Choice", condition: .when(traits: ["Choice"])),
+                .trait(name: "IteratorLeaves", condition: .when(traits: ["IteratorLeaves"])),
+                .trait(name: "Always", condition: .when(traits: ["Always"])),
+                .trait(name: "Predicate", condition: .when(traits: ["Predicate"])),
+                .trait(name: "Repetition", condition: .when(traits: ["Repetition"])),
+                .trait(
+                    name: "Either",
+                    condition: .when(traits: ["Either", "IteratorLeaves", "Pair", "Skip"])
+                ),
+                .trait(name: "Pair", condition: .when(traits: ["Pair"])),
+                .trait(name: "Skip", condition: .when(traits: ["Skip"])),
+                .trait(
+                    name: "Map",
+                    condition: .when(traits: ["Map", "Carrier", "Operation", "Optic"])
+                ),
+                .trait(name: "Optic", condition: .when(traits: ["Optic", "Operation"])),
+                .trait(name: "Iterator", condition: .when(traits: ["IteratorLeaves"])),
+            ]
+        ),
+        .package(
+            url: "https://github.com/swift-atoms/swift-serializer.git",
+            branch: "main",
+            traits: [
+                .trait(name: "Byte", condition: .when(traits: ["Byte"])),
+                .trait(name: "Always", condition: .when(traits: ["Always"])),
+                .trait(name: "Repetition", condition: .when(traits: ["Repetition"])),
 
-            .trait(name: "Either", condition: .when(traits: ["Either", "IteratorLeaves", "Pair", "Skip"])),
-            .trait(name: "Pair", condition: .when(traits: ["Pair"])),
-            .trait(name: "Map", condition: .when(traits: ["Map", "Carrier", "Operation", "Optic"])),
-            .trait(name: "Optic", condition: .when(traits: ["Optic", "Operation"])),
-        ]),
+                .trait(
+                    name: "Either",
+                    condition: .when(traits: ["Either", "IteratorLeaves", "Pair", "Skip"])
+                ),
+                .trait(name: "Pair", condition: .when(traits: ["Pair"])),
+                .trait(
+                    name: "Map",
+                    condition: .when(traits: ["Map", "Carrier", "Operation", "Optic"])
+                ),
+                .trait(name: "Optic", condition: .when(traits: ["Optic", "Operation"])),
+            ]
+        ),
         .package(url: "https://github.com/swift-atoms/swift-either.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-pair.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-skip.git", branch: "main"),
@@ -63,7 +119,11 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-byte.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-carrier.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-operation.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-iterator.git", branch: "main", traits: [.trait(name: "Repetition", condition: .when(traits: ["Repetition"]))]),
+        .package(
+            url: "https://github.com/swift-atoms/swift-iterator.git",
+            branch: "main",
+            traits: [.trait(name: "Repetition", condition: .when(traits: ["Repetition"]))]
+        ),
     ],
     targets: [
         .target(
@@ -73,46 +133,98 @@ let package = Package(
                 .product(name: "Serializer", package: "swift-serializer"),
             ]
         ),
-        .target(name: "Coder", dependencies: [
-            .target(name: "Coder Core"),
-            .product(name: "Always", package: "swift-always"),
-            .product(name: "Repetition", package: "swift-repetition"),
-            .product(name: "Cardinal", package: "swift-cardinal"),
-            .product(name: "Predicate", package: "swift-predicate"),
-            .product(name: "Parser", package: "swift-parser"),
-            .product(name: "Serializer", package: "swift-serializer"),
-            .product(name: "Either", package: "swift-either"),
-            .product(name: "Pair", package: "swift-pair"),
-            .product(name: "Skip", package: "swift-skip"),
-            .product(name: "Map", package: "swift-map"),
-            .product(name: "Optic", package: "swift-optic"),
-            .product(name: "Checkpoint", package: "swift-checkpoint"),
+        .target(
+            name: "Coder",
+            dependencies: [
+                .target(name: "Coder Core"),
+                .product(name: "Always", package: "swift-always"),
+                .product(name: "Repetition", package: "swift-repetition"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Predicate", package: "swift-predicate"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Either", package: "swift-either"),
+                .product(name: "Pair", package: "swift-pair"),
+                .product(name: "Skip", package: "swift-skip"),
+                .product(name: "Map", package: "swift-map"),
+                .product(name: "Optic", package: "swift-optic"),
+                .product(name: "Checkpoint", package: "swift-checkpoint"),
                 .product(name: "Byte", package: "swift-byte"),
                 .product(name: "Carrier", package: "swift-carrier"),
                 .product(name: "Operation", package: "swift-operation"),
                 .product(name: "Iterator", package: "swift-iterator"),
-            ]),
+            ]
+        ),
         .target(name: "Coder Foundation Integration", dependencies: [.target(name: "Coder")]),
-        .target(name: "Coder Test Support", dependencies: [.target(name: "Coder")], path: "Tests/Support"),
-        .testTarget(name: "Coder Tests", dependencies: [.target(name: "Coder"), .target(name: "Coder Test Support"), .target(name: "User Records Model")]),
-        .target(name: "User Records Model", dependencies: [.target(name: "Coder")], path: "Examples/User Records/Model"),
-        .executableTarget(name: "User Records Example", dependencies: [.target(name: "User Records Model")], path: "Examples/User Records/Executable"),
-        .testTarget(name: "Absorbed swift-byte-coder Byte Coder Tests", dependencies: [.product(name: "Byte", package: "swift-byte"), .target(name: "Coder"), .product(name: "Parser", package: "swift-parser"), .product(name: "Serializer", package: "swift-serializer")], path: "Tests/Absorbed/swift-byte-coder/Byte Coder Tests"),
-        .testTarget(name: "Absorbed swift-string-coder String Coder Tests", dependencies: [.product(name: "Byte", package: "swift-byte"), .target(name: "Coder")], path: "Tests/Absorbed/swift-string-coder/String Coder Tests"),
-        .testTarget(name: "Absorbed swift-operation-coder Operation Coder Tests", dependencies: [.target(name: "Coder"), .product(name: "Operation", package: "swift-operation"), .product(name: "Optic", package: "swift-optic"), .product(name: "Parser", package: "swift-parser"), .product(name: "Serializer", package: "swift-serializer")], path: "Tests/Absorbed/swift-operation-coder/Operation Coder Tests"),
-        .testTarget(name: "Approved Iterator Coding Tests", dependencies: [.target(name: "Coder"), .product(name: "Parser", package: "swift-parser"), .product(name: "Serializer", package: "swift-serializer"), .product(name: "Iterator", package: "swift-iterator"), .product(name: "Either", package: "swift-either")], path: "Tests/Approved Iterator Coding"),
+        .target(
+            name: "Coder Test Support",
+            dependencies: [.target(name: "Coder")],
+            path: "Tests/Support"
+        ),
+        .testTarget(
+            name: "Coder Tests",
+            dependencies: [
+                .target(name: "Coder"), .target(name: "Coder Test Support"),
+                .target(name: "User Records Model"),
+            ]
+        ),
+        .target(
+            name: "User Records Model",
+            dependencies: [.target(name: "Coder")],
+            path: "Examples/User Records/Model"
+        ),
+        .executableTarget(
+            name: "User Records Example",
+            dependencies: [.target(name: "User Records Model")],
+            path: "Examples/User Records/Executable"
+        ),
+        .testTarget(
+            name: "Absorbed swift-byte-coder Byte Coder Tests",
+            dependencies: [
+                .product(name: "Byte", package: "swift-byte"), .target(name: "Coder"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+            ],
+            path: "Tests/Absorbed/swift-byte-coder/Byte Coder Tests"
+        ),
+        .testTarget(
+            name: "Absorbed swift-string-coder String Coder Tests",
+            dependencies: [.product(name: "Byte", package: "swift-byte"), .target(name: "Coder")],
+            path: "Tests/Absorbed/swift-string-coder/String Coder Tests"
+        ),
+        .testTarget(
+            name: "Absorbed swift-operation-coder Operation Coder Tests",
+            dependencies: [
+                .target(name: "Coder"), .product(name: "Operation", package: "swift-operation"),
+                .product(name: "Optic", package: "swift-optic"),
+                .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+            ],
+            path: "Tests/Absorbed/swift-operation-coder/Operation Coder Tests"
+        ),
+        .testTarget(
+            name: "Approved Iterator Coding Tests",
+            dependencies: [
+                .target(name: "Coder"), .product(name: "Parser", package: "swift-parser"),
+                .product(name: "Serializer", package: "swift-serializer"),
+                .product(name: "Iterator", package: "swift-iterator"),
+                .product(name: "Either", package: "swift-either"),
+            ],
+            path: "Tests/Approved Iterator Coding"
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    target.swiftSettings = (target.swiftSettings ?? []) + [
-        .strictMemorySafety(),
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
-        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableExperimentalFeature("Lifetimes"),
-        .treatAllWarnings(as: .error),
-    ]
+    target.swiftSettings =
+        (target.swiftSettings ?? []) + [
+            .strictMemorySafety(),
+            .enableUpcomingFeature("ExistentialAny"),
+            .enableUpcomingFeature("InternalImportsByDefault"),
+            .enableUpcomingFeature("MemberImportVisibility"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableExperimentalFeature("Lifetimes"),
+            .treatAllWarnings(as: .error),
+        ]
 }

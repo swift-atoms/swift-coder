@@ -6,7 +6,9 @@
     import Testing
 
     @Suite
-    struct `Optional coders preserve presence and distinguish missing unexpected and wrapped failures` {
+    struct
+        `Optional coders preserve presence and distinguish missing unexpected and wrapped failures`
+    {
 
         @Test
         func `a present coder with a present value round-trips`() throws(any Swift::Error) {
@@ -31,7 +33,9 @@
         @Test
         func `a present coder with a nil value is a missing value`() {
             var buffer: Substring = ""
-            #expect(throws: Either<Mismatch, Swift::Optional<Digit>.Coder.Error>.right(.missingValue)) {
+            #expect(
+                throws: Either<Mismatch, Swift::Optional<Digit>.Coder.Error>.right(.missingValue)
+            ) {
                 try Conditional(present: true).serialize(nil, into: &buffer)
             }
             #expect(buffer.isEmpty)
@@ -40,7 +44,9 @@
         @Test
         func `an absent coder with a present value is an unexpected value`() {
             var buffer: Substring = ""
-            #expect(throws: Either<Mismatch, Swift::Optional<Digit>.Coder.Error>.right(.unexpectedValue)) {
+            #expect(
+                throws: Either<Mismatch, Swift::Optional<Digit>.Coder.Error>.right(.unexpectedValue)
+            ) {
                 try Conditional(present: false).serialize("7", into: &buffer)
             }
             #expect(buffer.isEmpty)
@@ -61,34 +67,37 @@
 
     private struct Digit: Coding {}
 
-extension Digit {
-    func parse(_ input: inout Substring) throws(Mismatch) -> Character {
-        guard let first = input.first, first.isNumber else { throw .mismatch }
-        input = input.dropFirst()
-        return first
-    }
+    extension Digit {
+        func parse(_ input: inout Substring) throws(Mismatch) -> Character {
+            guard let first = input.first, first.isNumber else { throw .mismatch }
+            input = input.dropFirst()
+            return first
+        }
 
-    func serialize(_ output: Character, into buffer: inout Substring) throws(Mismatch) {
-        guard output.isNumber else { throw .mismatch }
-        buffer.append(output)
+        func serialize(_ output: Character, into buffer: inout Substring) throws(Mismatch) {
+            guard output.isNumber else { throw .mismatch }
+            buffer.append(output)
+        }
     }
-}
 
     private struct Conditional: Coding {
         let present: Bool
     }
 
-extension Conditional {
-    typealias Failure = Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
+    extension Conditional {
+        typealias Failure = Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
 
-    @Coder::Builder<Substring, Substring>
-    var body:
-        some Coding<Substring, Character?, Substring, Either<Mismatch, Swift::Optional<Digit>.Coder.Error>>
-    {
-        if present {
-            Digit()
+        @Coder::Builder<Substring, Substring>
+        var body:
+            some Coding<
+                Substring, Character?, Substring,
+                Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
+            >
+        {
+            if present {
+                Digit()
+            }
         }
     }
-}
 
 #endif

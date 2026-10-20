@@ -100,24 +100,28 @@ extension LinearCoder {
         let resource: Resource
     }
 
-extension LinearByteCoder {
-    borrowing func parse(_ input: inout ArraySlice<UInt8>) throws(Failure) -> UInt8 {
-        guard !input.isEmpty else { throw .absent }
-        return input.removeFirst()
-    }
+    extension LinearByteCoder {
+        borrowing func parse(_ input: inout ArraySlice<UInt8>) throws(Failure) -> UInt8 {
+            guard !input.isEmpty else { throw .absent }
+            return input.removeFirst()
+        }
 
-    borrowing func serialize(_ output: UInt8, into buffer: inout [UInt8]) throws(Failure) {
-        buffer.append(output)
+        borrowing func serialize(_ output: UInt8, into buffer: inout [UInt8]) throws(Failure) {
+            buffer.append(output)
+        }
     }
-}
     extension OwnershipTests {
         @Test func repetitionRetainsNoncopyableOperation() throws {
             let counter = Destructions()
             func scope() throws {
                 let coder = Repetition(
-                    (0...), operation: LinearByteCoder(resource: Resource(counter: counter))
+                    (0...),
+                    operation: LinearByteCoder(resource: Resource(counter: counter))
                 )
-                .coder(rejected: { if case .absent = $0 { true } else { false } }, failure: { _ in .invalid })
+                .coder(
+                    rejected: { if case .absent = $0 { true } else { false } },
+                    failure: { _ in .invalid }
+                )
                 var input: ArraySlice<UInt8> = [1, 2]
                 let values = try coder.parse(&input)
                 var output: [UInt8] = []
@@ -139,19 +143,22 @@ extension LinearByteCoder {
         let byte: UInt8
     }
 
-extension OwnedChoice {
-    borrowing func parse(_ input: inout Substring) throws(OwnedChoiceFailure) -> UInt8 {
-        guard let first = input.first else { throw .absent }
-        input.removeFirst()
-        guard first.wholeNumberValue == Int(byte) else { throw .absent }
-        return byte
-    }
+    extension OwnedChoice {
+        borrowing func parse(_ input: inout Substring) throws(OwnedChoiceFailure) -> UInt8 {
+            guard let first = input.first else { throw .absent }
+            input.removeFirst()
+            guard first.wholeNumberValue == Int(byte) else { throw .absent }
+            return byte
+        }
 
-    borrowing func serialize(_ output: UInt8, into buffer: inout Substring) throws(OwnedChoiceFailure) {
-        buffer.append(contentsOf: String(output))
-        guard output == byte else { throw .absent }
+        borrowing func serialize(
+            _ output: UInt8,
+            into buffer: inout Substring
+        ) throws(OwnedChoiceFailure) {
+            buffer.append(contentsOf: String(output))
+            guard output == byte else { throw .absent }
+        }
     }
-}
     private enum LinearCase: ~Copyable {
         case leaf(UInt8)
         case empty
@@ -162,7 +169,8 @@ extension OwnedChoice {
             func scope() throws {
                 let choice = Coder::OneOf.Two(
                     OwnedChoice(resource: Resource(counter: counter), byte: 1),
-                    OwnedChoice(resource: Resource(counter: counter), byte: 2), absent: .absent
+                    OwnedChoice(resource: Resource(counter: counter), byte: 2),
+                    absent: .absent
                 )
                 var input: Substring = "2tail"
                 #expect(try choice.parse(&input) == 2)
@@ -184,7 +192,8 @@ extension OwnedChoice {
                         case .leaf(let byte): .right(byte)
                         case .empty: .left(.empty)
                         }
-                    }, embed: LinearCase.leaf
+                    },
+                    embed: LinearCase.leaf
                 )
                 let fold = Optic<LinearCase, LinearCase, UInt8, UInt8>.Fold { source, visit in
                     switch source {

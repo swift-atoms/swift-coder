@@ -2,14 +2,16 @@
     public import Coder_Core
     public import Either
 
-    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+    extension Coder_Core::Builder
+    where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
         @inlinable
         public static func buildExpression<L: Coding & ~Copyable, R: Coding & ~Copyable>(
             _ either: consuming Either<L, R>
         ) -> Either<L, R>.Coder
         where
             L.Buffer == Buffer, R.Buffer == Buffer, L.Buffer: ~Copyable & ~Escapable,
-            R.Buffer: ~Copyable & ~Escapable, L.Input == Input, R.Input == Input, L.Output == R.Output,
+            R.Buffer: ~Copyable & ~Escapable, L.Input == Input, R.Input == Input,
+            L.Output == R.Output,
             L.Input: ~Copyable & ~Escapable, R.Input: ~Copyable & ~Escapable,
             L.Output: ~Copyable & ~Escapable, R.Output: ~Copyable & ~Escapable
         {

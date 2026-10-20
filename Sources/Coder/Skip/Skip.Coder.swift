@@ -4,7 +4,8 @@
 
     extension Skip where Kept: ~Copyable, Dropped == Void {
 
-        public struct Coder<A: Coding & ~Copyable, N: Coding & ~Copyable, Failure: Swift::Error>: Coding,
+        public struct Coder<A: Coding & ~Copyable, N: Coding & ~Copyable, Failure: Swift::Error>:
+            Coding,
             ~Copyable
         where
             A.Input == N.Input, A.Buffer == N.Buffer, A.Output == Kept, N.Output == Void,
@@ -22,7 +23,9 @@
             public let keptFailure: (A.Failure) -> Failure
             public let droppedFailure: (N.Failure) -> Failure
             @inlinable public init(
-                _ kept: consuming A, _ dropped: consuming N, leading: Bool = false,
+                _ kept: consuming A,
+                _ dropped: consuming N,
+                leading: Bool = false,
                 _ keptFailure: @escaping (A.Failure) -> Failure,
                 _ droppedFailure: @escaping (N.Failure) -> Failure
             ) {
@@ -34,16 +37,25 @@
             }
             @inlinable public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
                 if leading {
-                    do throws(N.Failure) { try dropped.parse(&input) } catch { throw droppedFailure(error) }
+                    do throws(N.Failure) { try dropped.parse(&input) } catch {
+                        throw droppedFailure(error)
+                    }
                 }
                 let output: Output
-                do throws(A.Failure) { output = try kept.parse(&input) } catch { throw keptFailure(error) }
+                do throws(A.Failure) { output = try kept.parse(&input) } catch {
+                    throw keptFailure(error)
+                }
                 if !leading {
-                    do throws(N.Failure) { try dropped.parse(&input) } catch { throw droppedFailure(error) }
+                    do throws(N.Failure) { try dropped.parse(&input) } catch {
+                        throw droppedFailure(error)
+                    }
                 }
                 return output
             }
-            @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            @inlinable public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 if leading {

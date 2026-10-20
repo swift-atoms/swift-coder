@@ -29,7 +29,10 @@
             @inlinable public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
                 try forward(upstream.parse(&input))
             }
-            @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            @inlinable public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 try upstream.serialize(backward(output), into: &buffer)
@@ -39,7 +42,8 @@
     extension Map.Coder: Copyable
     where
         Source: ~Copyable, Target: ~Copyable,
-        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure> & Copyable,
+        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
+            & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable, Upstream.Buffer: ~Copyable & ~Escapable
     {}

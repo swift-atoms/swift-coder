@@ -12,7 +12,9 @@
                 guard let first = input.first else { throw .absent }
                 input.removeFirst()
                 if first == "!" { throw .fatal }
-                guard first >= "0", first <= "9", let value = first.wholeNumberValue else { throw .absent }
+                guard first >= "0", first <= "9", let value = first.wholeNumberValue else {
+                    throw .absent
+                }
                 return value
             }
             func serialize(_ output: Int, into buffer: inout String) throws(Failure) {
@@ -26,7 +28,9 @@
                 guard input.first == "," else { throw .absent }
                 input.removeFirst()
             }
-            func serialize(_ output: Void, into buffer: inout String) throws(Failure) { buffer.append(",") }
+            func serialize(_ output: Void, into buffer: inout String) throws(Failure) {
+                buffer.append(",")
+            }
         }
         static func failure<B, O>(_ error: Repetition<B, O>.Error) -> Failure {
             switch error {
@@ -39,7 +43,9 @@
         }
         static var list: some Coding<Substring, [Int], String, Failure> {
             return Repetition((1...3), operation: Digit()).coder(
-                separatedBy: Comma(), rejected: { $0 == .absent }, failure: failure
+                separatedBy: Comma(),
+                rejected: { $0 == .absent },
+                failure: failure
             )
         }
         @Test func separatedListRoundTrips() throws {
@@ -52,7 +58,9 @@
             #expect(output == "1,2,3")
         }
         @Test func minimumAndMaximumValidateBeforeSerialization() {
-            for (values, failure) in [([], Failure.insufficient), ([1, 2, 3, 4], Failure.excessive)] {
+            for (values, failure) in [
+                ([], Failure.insufficient), ([1, 2, 3, 4], Failure.excessive),
+            ] {
                 var buffer = "prefix:"
                 #expect(throws: failure) { try Self.list.serialize(values, into: &buffer) }
                 #expect(buffer == "prefix:")
@@ -81,17 +89,22 @@
         }
         @Test func zeroWidthElementIsRejectedInsteadOfLooping() {
             let zero = Coder<Substring, Int, String, Failure>(
-                parse: { _ throws(Failure) in 0 }, serialize: { _, _ throws(Failure) in }
+                parse: { _ throws(Failure) in 0 },
+                serialize: { _, _ throws(Failure) in }
             )
             let coder = Repetition((0...), operation: zero).coder(
-                rejected: { $0 == .absent }, failure: Self.failure)
+                rejected: { $0 == .absent },
+                failure: Self.failure
+            )
             var input: Substring = "unchanged"
             #expect(throws: Failure.noProgress) { try coder.parse(&input) }
             #expect(input == "unchanged")
         }
         @Test func emptyBoundsFailBothWays() {
             let coder = Repetition((2..<2), operation: Digit()).coder(
-                rejected: { $0 == .absent }, failure: Self.failure)
+                rejected: { $0 == .absent },
+                failure: Self.failure
+            )
             var input: Substring = "123"
             #expect(throws: Failure.empty) { try coder.parse(&input) }
             #expect(input == "123")

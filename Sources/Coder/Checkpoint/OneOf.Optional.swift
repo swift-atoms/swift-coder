@@ -28,7 +28,10 @@
                     return nil
                 }
             }
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 switch output {
@@ -50,7 +53,9 @@
         Self: ~Copyable, Input: Restorable & ~Copyable & ~Escapable,
         Output: ~Copyable & Escapable, Buffer: ~Copyable & ~Escapable
     {
-        public consuming func optional(rejected: @escaping (Failure) -> Bool) -> OneOf.Optional<Self> {
+        public consuming func optional(
+            rejected: @escaping (Failure) -> Bool
+        ) -> OneOf.Optional<Self> {
             .init(self, rejected: rejected)
         }
     }

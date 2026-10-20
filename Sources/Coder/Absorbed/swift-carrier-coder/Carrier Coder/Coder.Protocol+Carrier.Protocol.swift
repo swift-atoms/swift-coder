@@ -1,24 +1,24 @@
 #if Carrier
-public import Coder_Core
-public import Map
-public import Carrier
+    public import Coder_Core
+    public import Map
+    public import Carrier
 
-import Parser
-import Serializer
+    import Parser
+    import Serializer
 
-extension Coding
-where
-    Input: ~Copyable & ~Escapable,
-    Output: ~Copyable & Escapable,
-    Buffer: ~Copyable & ~Escapable
-{
+    extension Coding
+    where
+        Input: ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
+        Buffer: ~Copyable & ~Escapable
+    {
 
-    @inlinable
-    public consuming func map<Value: Carrier.`Protocol`>(
-        representing _: Value.Type
-    ) -> Map<Output, Value, Failure>.Coder<Self>
-    where Value.Underlying == Output {
-        map(to: { Value($0) }, from: { value in value.underlying })
+        @inlinable
+        public consuming func map<Value: Carrier.`Protocol`>(
+            representing _: Value.Type
+        ) -> Map<Output, Value, Failure>.Coder<Self>
+        where Value.Underlying == Output {
+            map(to: { Value($0) }, from: { value in value.underlying })
+        }
     }
-}
 #endif

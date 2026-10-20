@@ -1,7 +1,10 @@
 public import Coder_Core
+
 public struct Coder<
-    Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable,
-    Buffer: ~Copyable & ~Escapable, Failure: Swift::Error
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & ~Escapable,
+    Buffer: ~Copyable & ~Escapable,
+    Failure: Swift::Error
 >: Coding {
 
     public var _parse: @_lifetime(&input) (_ input: inout Input) throws(Failure) -> Output
@@ -25,11 +28,18 @@ public struct Coder<
     }
 }
 
-extension Coder where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+extension Coder
+where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable
+{
     @inlinable @_lifetime(borrow self, &input)
-    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output { try _parse(&input) }
+    public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
+        try _parse(&input)
+    }
 
-    @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+    @inlinable public borrowing func serialize(
+        _ output: borrowing Output,
+        into buffer: inout Buffer
+    )
         throws(Failure)
     {
         try _serialize(output, &buffer)
@@ -50,11 +60,15 @@ where
         let composition = build()
         self.init(
             parse: { input throws(Failure) in try composition.parse(&input) },
-            serialize: { output, buffer throws(Failure) in try composition.serialize(output, into: &buffer) })
+            serialize: { output, buffer throws(Failure) in
+                try composition.serialize(output, into: &buffer)
+            }
+        )
     }
 
     @inlinable public init<C: Coding>(
-        _ input: Input.Type, _ buffer: Buffer.Type,
+        _ input: Input.Type,
+        _ buffer: Buffer.Type,
         @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
@@ -71,11 +85,14 @@ where
     )
     where
         C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable, C.Buffer: ~Copyable & ~Escapable
+        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable,
+        C.Buffer: ~Copyable & ~Escapable
     {
         self.init(
             { value throws(Failure) in forward(value) },
-            from: { value throws(Failure) in backward(value) }, build)
+            from: { value throws(Failure) in backward(value) },
+            build
+        )
     }
 
     @_disfavoredOverload
@@ -86,13 +103,15 @@ where
     )
     where
         C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable, C.Buffer: ~Copyable & ~Escapable
+        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable,
+        C.Buffer: ~Copyable & ~Escapable
     {
         let composition = build()
         self.init(
             parse: { input throws(Failure) in try forward(composition.parse(&input)) },
             serialize: { output, buffer throws(Failure) in
                 try composition.serialize(backward(output), into: &buffer)
-            })
+            }
+        )
     }
 }

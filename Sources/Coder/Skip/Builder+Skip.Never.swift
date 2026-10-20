@@ -1,9 +1,12 @@
 #if Skip
     public import Coder_Core
     public import Skip
-    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+    extension Coder_Core::Builder
+    where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<A.Output, Void>.Coder<A, N, N.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -14,8 +17,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<A.Output, Void>.Coder<A, N, A.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -26,8 +31,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<A.Output, Void>.Coder<A, N, Never>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -38,8 +45,10 @@
         {
             .init(accumulated, next, \.self, \.self)
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<N.Output, Void>.Coder<N, A, N.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -50,8 +59,10 @@
         {
             .init(next, accumulated, leading: true, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<N.Output, Void>.Coder<N, A, A.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -62,8 +73,10 @@
         {
             .init(next, accumulated, leading: true, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<N.Output, Void>.Coder<N, A, Never>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -74,8 +87,10 @@
         {
             .init(next, accumulated, leading: true, \.self, \.self)
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<Void, Void>.Coder<A, N, N.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -86,8 +101,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<Void, Void>.Coder<A, N, A.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -98,8 +115,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Skip<Void, Void>.Coder<A, N, Never>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,

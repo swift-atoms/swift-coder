@@ -16,12 +16,14 @@
 
         static var leaf: Optic<Node, Node, Int, Int>.Prism {
             Optic<Node, Node, Int, Int>.Prism(
-                embed: Node.leaf, extract: { if case .leaf(let value) = $0 { value } else { nil } }
+                embed: Node.leaf,
+                extract: { if case .leaf(let value) = $0 { value } else { nil } }
             )
         }
         static var word: Optic<Node, Node, String, String>.Prism {
             Optic<Node, Node, String, String>.Prism(
-                embed: Node.word, extract: { if case .word(let value) = $0 { value } else { nil } }
+                embed: Node.word,
+                extract: { if case .word(let value) = $0 { value } else { nil } }
             )
         }
         static func marker(_ text: String) -> Coder<Substring, Void, Substring, Failure> {
@@ -29,7 +31,9 @@
                 parse: { input throws(Failure) in
                     guard input.hasPrefix(text) else { throw .absent }
                     input.removeFirst(text.count)
-                }, serialize: { _, buffer throws(Failure) in buffer.append(contentsOf: text) })
+                },
+                serialize: { _, buffer throws(Failure) in buffer.append(contentsOf: text) }
+            )
         }
         static var integer: Coder<Substring, Int, Substring, Failure> {
             Coder<Substring, Int, Substring, Failure>(
@@ -108,7 +112,9 @@
         }
         @Test func fatalPrintingIsNotRetriedOrSilentlyDiscarded() {
             var buffer: Substring = ""
-            #expect(throws: Failure.malformed) { try Self.grammar.serialize(.leaf(-1), into: &buffer) }
+            #expect(throws: Failure.malformed) {
+                try Self.grammar.serialize(.leaf(-1), into: &buffer)
+            }
             #expect(buffer == "@leaf:")
         }
         @Test func allRejectedPrintingRestoresEvenWhenArmsWrote() {
@@ -146,7 +152,10 @@
         }
         @Test func partialLawsOnSupportedSubset() throws {
             let coder = Self.integer.map(
-                Self.partial, forwardFailure: Failure.conversion, backwardFailure: Failure.conversion)
+                Self.partial,
+                forwardFailure: Failure.conversion,
+                backwardFailure: Failure.conversion
+            )
             for value in 0...99 {
                 let age = try Self.partial.forward(value)
                 #expect(try Self.partial.backward(age) == value)
@@ -167,7 +176,8 @@
         }
         @Test func adapterNormalizationDoesNotPromiseExactSpelling() throws {
             let adapter = Optic<Int, Int, Age, Age>.Adapter<Never, Never>(
-                forward: { Age(value: $0) }, backward: { $0.value }
+                forward: { Age(value: $0) },
+                backward: { $0.value }
             )
             let coder = Self.integer.map(adapter, forwardFailure: { $0 }, backwardFailure: { $0 })
             var source: Substring = "007"

@@ -21,7 +21,6 @@
             P0.Failure: Equatable
         {
 
-
             public typealias Input = P0.Input
 
             public typealias Output = P0.Output
@@ -59,7 +58,10 @@
             }
 
             @inlinable
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 let checkpoint = buffer.checkpoint

@@ -66,7 +66,6 @@
         Content.Buffer: ~Copyable & ~Escapable
     {
 
-
         public typealias Output = Source
 
         public typealias Failure = Content.Failure
@@ -89,8 +88,10 @@
         public typealias Buffer = Content.Buffer
 
         @inlinable
-        public borrowing func serialize(_ output: borrowing Source, into buffer: inout Buffer) throws(Failure)
-        {
+        public borrowing func serialize(
+            _ output: borrowing Source,
+            into buffer: inout Buffer
+        ) throws(Failure) {
             var failure: Failure? = nil
             let visited = fold.visit(output) { focus in
                 do throws(Failure) {

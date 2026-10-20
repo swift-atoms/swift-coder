@@ -40,11 +40,16 @@
         }
 
         @Test
-        func `Pair composition safely retains differently sized elements`() throws(any Swift::Error) {
+        func `Pair composition safely retains differently sized elements`() throws(any Swift::Error)
+        {
             let inner = Coder::Builder<Substring, Substring>.buildPartialBlock(
-                accumulated: Wide(), next: Narrow())
+                accumulated: Wide(),
+                next: Narrow()
+            )
             let node = Coder::Builder<Substring, Substring>.buildPartialBlock(
-                accumulated: inner, next: Wide())
+                accumulated: inner,
+                next: Wide()
+            )
             var buffer: Substring = ""
             try node.serialize(Pair(Pair(1, 2), 3), into: &buffer)
             #expect(buffer == "123")
@@ -97,7 +102,8 @@
         }
 
         @Test
-        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift::Error) {
+        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift::Error)
+        {
             let _: Bracketed.Input.Type = Substring.self
             let _: Bracketed.Output.Type = String.self
             let _: Bracketed.Buffer.Type = Substring.self
@@ -113,7 +119,9 @@
         }
 
         @Test
-        func `a model uses its explicit representation to serialize and parse`() throws(any Swift::Error) {
+        func `a model uses its explicit representation to serialize and parse`()
+            throws(any Swift::Error)
+        {
             let coder = Boxed.Coder()
             var buffer: Substring = ""
             try coder.serialize(Boxed(value: "3"), into: &buffer)
@@ -128,7 +136,8 @@
         _ coder: C,
         _ value: String,
         expecting text: Substring
-    ) throws(any Swift::Error) where C.Input == Substring, C.Output == String, C.Buffer == Substring {
+    ) throws(any Swift::Error)
+    where C.Input == Substring, C.Output == String, C.Buffer == Substring {
         var buffer: Substring = ""
         try coder.serialize(value, into: &buffer)
         #expect(buffer == text)
@@ -142,7 +151,8 @@
         _ coder: C,
         _ value: Character,
         expecting text: Substring
-    ) throws(any Swift::Error) where C.Input == Substring, C.Output == Character, C.Buffer == Substring {
+    ) throws(any Swift::Error)
+    where C.Input == Substring, C.Output == Character, C.Buffer == Substring {
         var buffer: Substring = ""
         try coder.serialize(value, into: &buffer)
         #expect(buffer == text)
@@ -157,7 +167,8 @@
         _: Failure.Type
     )
     where
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & ~Escapable, C.Buffer: ~Copyable & ~Escapable,
+        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & ~Escapable,
+        C.Buffer: ~Copyable & ~Escapable,
         C.Failure == Failure
     {}
 
@@ -271,7 +282,9 @@
     private struct Wide: Coding {
 
         func parse(_ input: inout Substring) throws(Mismatch) -> Int32 {
-            guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
+            guard let first = input.first, let digit = first.wholeNumberValue else {
+                throw .mismatch
+            }
             input = input.dropFirst()
             return Int32(digit)
         }
@@ -285,7 +298,9 @@
     private struct Narrow: Coding {
 
         func parse(_ input: inout Substring) throws(Mismatch) -> Int8 {
-            guard let first = input.first, let digit = first.wholeNumberValue else { throw .mismatch }
+            guard let first = input.first, let digit = first.wholeNumberValue else {
+                throw .mismatch
+            }
             input = input.dropFirst()
             return Int8(digit)
         }
@@ -355,7 +370,8 @@
     struct `Coders parse and serialize nonescaping inputs with typed failures` {
 
         @Test
-        func `a coder body parses from a nonescapable cursor and serializes into a buffer`() throws(any Swift::Error)
+        func `a coder body parses from a nonescapable cursor and serializes into a buffer`()
+            throws(any Swift::Error)
         {
             var buffer: [UInt8] = []
             try FramedDigit().serialize(0x37, into: &buffer)

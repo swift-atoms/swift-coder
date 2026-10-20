@@ -14,7 +14,6 @@
 
         public struct Coder: Coding {
 
-
             public enum Error: Swift::Error, Equatable {
 
                 case missingValue
@@ -30,10 +29,10 @@
 
             public typealias Failure = Either<Wrapped.Failure, Error>
 
-            public let wrapped: Swift::Optional<Wrapped>
+            public let wrapped: Wrapped?
 
             @inlinable
-            public init(_ wrapped: Swift::Optional<Wrapped>) {
+            public init(_ wrapped: Wrapped?) {
                 self.wrapped = wrapped
             }
 
@@ -50,7 +49,10 @@
             }
 
             @inlinable
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 guard let wrapped else {

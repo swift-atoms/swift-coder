@@ -16,7 +16,8 @@
             public let upstream: Upstream
             public let transform: (Upstream.Failure) -> Failure
             @inlinable public init(
-                _ upstream: consuming Upstream, _ transform: @escaping (Upstream.Failure) -> Failure
+                _ upstream: consuming Upstream,
+                _ transform: @escaping (Upstream.Failure) -> Failure
             ) {
                 self.upstream = upstream
                 self.transform = transform
@@ -26,10 +27,14 @@
                     throw transform(error)
                 }
             }
-            @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            @inlinable public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
-                do throws(Upstream.Failure) { try upstream.serialize(output, into: &buffer) } catch {
+                do throws(Upstream.Failure) { try upstream.serialize(output, into: &buffer) } catch
+                {
                     throw transform(error)
                 }
             }
@@ -38,7 +43,8 @@
     extension Map.Error.Coder: Copyable
     where
         Source: Swift::Error, Target: Swift::Error, Failure == Never,
-        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure> & Copyable,
+        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
+            & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable, Upstream.Buffer: ~Copyable & ~Escapable
     {}

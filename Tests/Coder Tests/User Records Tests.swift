@@ -6,7 +6,8 @@ import User_Records_Model
     @Suite struct UserRecordsTests {
         @Test func unicodeNamesAndCanonicalAges() throws {
             for (wire, expected) in [
-                ("Élodie,0042\n", User(name: "Élodie", age: 42)), ("李 明,000\n", User(name: "李 明", age: 0)),
+                ("Élodie,0042\n", User(name: "Élodie", age: 42)),
+                ("李 明,000\n", User(name: "李 明", age: 0)),
                 ("Zoë,130\n", User(name: "Zoë", age: 130)),
             ] {
                 let coder = User.Coder()
@@ -22,11 +23,14 @@ import User_Records_Model
             var input: Substring = "Alice,30\nCarol,25\n"
             #expect(try User.Coder().parse(&input) == User(name: "Alice", age: 30))
             #expect(input == "Carol,25\n")
-            #expect(throws: RecordFailure.trailingInput) { try User.Coder().whole("Alice,30\nextra") }
+            #expect(throws: RecordFailure.trailingInput) {
+                try User.Coder().whole("Alice,30\nextra")
+            }
         }
         @Test func delimitersAndLexicalRules() {
             for wire in [
-                "Alice30\n", "Alice,30", "Alice,30\r\n", ",30\n", "Alice,-1\n", "Alice,٣٠\n", "Alice,\n",
+                "Alice30\n", "Alice,30", "Alice,30\r\n", ",30\n", "Alice,-1\n", "Alice,٣٠\n",
+                "Alice,\n",
                 "Alice1,30\n",
             ] {
                 #expect(throws: RecordFailure.rejected) { try User.Coder().whole(Substring(wire)) }
@@ -34,11 +38,14 @@ import User_Records_Model
         }
         @Test func invalidSerializationValidatesBeforeWriting() {
             for user in [
-                User(name: "Alice", age: -1), User(name: "Alice", age: 131), User(name: "", age: 20),
+                User(name: "Alice", age: -1), User(name: "Alice", age: 131),
+                User(name: "", age: 20),
                 User(name: "A,B", age: 20),
             ] {
                 var output = "prefix:"
-                #expect(throws: RecordFailure.self) { try User.Coder().serialize(user, into: &output) }
+                #expect(throws: RecordFailure.self) {
+                    try User.Coder().serialize(user, into: &output)
+                }
                 #expect(output == "prefix:")
             }
         }

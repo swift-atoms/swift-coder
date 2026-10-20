@@ -4,137 +4,153 @@ import User_Records_Model
 
 #if Pair && Skip && Map
 
-private enum RequestExample {
-    struct Header: Equatable { var name: String; var value: String }
-    struct Request: Equatable {
-        var method = ""
-        var target = ""
-        var headers: [Header] = []
-        var content: [UInt8]?
-        var trailers: [Header] = []
-    }
-    struct CreateUser: Equatable { var user: User }
-    enum Failure: Error, Equatable {
-        case mismatch
-        case missingBody
-        case invalidUTF8
-        case malformed(RecordFailure)
-        case unprintable(RecordFailure)
+    private enum RequestExample {
+        struct Header: Equatable {
+            var name: String
+            var value: String
+        }
+        struct Request: Equatable {
+            var method = ""
+            var target = ""
+            var headers: [Header] = []
+            var content: [UInt8]?
+            var trailers: [Header] = []
+        }
+        struct CreateUser: Equatable { var user: User }
+        enum Failure: Error, Equatable {
+            case mismatch
+            case missingBody
+            case invalidUTF8
+            case malformed(RecordFailure)
+            case unprintable(RecordFailure)
+        }
+
+        struct Method: Coding {
+
+            var expected: String
+            func parse(_ input: inout Request) throws(Failure) {
+                guard input.method == expected else { throw .mismatch }
+            }
+            func serialize(_ output: borrowing Void, into buffer: inout Request) throws(Failure) {
+                buffer.method = expected
+            }
+        }
+        struct Target: Coding {
+
+            var expected: String
+            func parse(_ input: inout Request) throws(Failure) {
+                guard input.target == expected else { throw .mismatch }
+            }
+            func serialize(_ output: borrowing Void, into buffer: inout Request) throws(Failure) {
+                buffer.target = expected
+            }
+        }
+        struct Content: Coding {
+
+            func parse(_ input: inout Request) throws(Failure) -> User {
+                guard let bytes = input.content else { throw .missingBody }
+                guard let text = String(validating: bytes, as: UTF8.self) else {
+                    throw .invalidUTF8
+                }
+                let value: User
+                do throws(RecordFailure) { value = try User.Coder().whole(text[...]) } catch {
+                    throw .malformed(error)
+                }
+                input.content = nil
+                return value
+            }
+            func serialize(_ output: borrowing User, into buffer: inout Request) throws(Failure) {
+                var text = ""
+                do throws(RecordFailure) { try User.Coder().serialize(output, into: &text) } catch {
+                    throw .unprintable(error)
+                }
+                buffer.content = Array(text.utf8)
+            }
+        }
+        struct Route: Coding {
+            var body: some Coding<Request, CreateUser, Request, Failure> {
+                return Coder(
+                    { user throws(Failure) in CreateUser(user: user) },
+                    from: { route throws(Failure) in route.user }
+                ) {
+                    Method(expected: "POST")
+                    Target(expected: "/users")
+                    Content()
+                }
+            }
+        }
+
+        static func request(for value: borrowing CreateUser) throws(Failure) -> Request {
+            var result = Request()
+            try Route().serialize(value, into: &result)
+            return result
+        }
     }
 
-    struct Method: Coding {
+    @Suite struct `HTTP request boundary fixture` {
+        @Test func `route construction retains both directions`() throws {
+            let value = RequestExample.CreateUser(user: User(name: "Zoë Smith", age: 42))
+            let request = try RequestExample.request(for: value)
+            #expect(request.method == "POST")
+            #expect(request.target == "/users")
+            #expect(request.content == Array("Zoë Smith,42\n".utf8))
+            var input = request
+            #expect(try RequestExample.Route().parse(&input) == value)
+            #expect(input.content == nil)
+        }
 
-        var expected: String
-        func parse(_ input: inout Request) throws(Failure) {
-            guard input.method == expected else { throw .mismatch }
-        }
-        func serialize(_ output: borrowing Void, into buffer: inout Request) throws(Failure) {
-            buffer.method = expected
-        }
-    }
-    struct Target: Coding {
+        @Test func `request normalization does not preserve absent model information`() throws {
+            let original = RequestExample.Request(
+                method: "POST",
+                target: "/users",
+                headers: [
+                    .init(name: "X-Trace", value: "first"), .init(name: "X-Trace", value: "second"),
+                ],
+                content: Array("Alice,0042\n".utf8),
+                trailers: [.init(name: "X-Checksum", value: "abc")]
+            )
+            var input = original
+            let route = try RequestExample.Route().parse(&input)
 
-        var expected: String
-        func parse(_ input: inout Request) throws(Failure) {
-            guard input.target == expected else { throw .mismatch }
+            #expect(input.headers == original.headers)
+            #expect(input.trailers == original.trailers)
+            let canonical = try RequestExample.request(for: route)
+            #expect(canonical.content == Array("Alice,42\n".utf8))
+            #expect(canonical.headers.isEmpty && canonical.trailers.isEmpty)
+            #expect(canonical != original)
         }
-        func serialize(_ output: borrowing Void, into buffer: inout Request) throws(Failure) {
-            buffer.target = expected
-        }
-    }
-    struct Content: Coding {
 
-        func parse(_ input: inout Request) throws(Failure) -> User {
-            guard let bytes = input.content else { throw .missingBody }
-            guard let text = String(validating: bytes, as: UTF8.self) else { throw .invalidUTF8 }
-            let value: User
-            do throws(RecordFailure) { value = try User.Coder().whole(text[...]) }
-            catch { throw .malformed(error) }
-            input.content = nil
-            return value
+        @Test func `a recognized request requires a complete valid UTF8 body`() {
+            let cases: [([UInt8]?, RequestExample.Failure)] = [
+                (nil, .missingBody),
+                ([0xFF], .invalidUTF8),
+                (Array("Alice,42\nextra".utf8), .malformed(.trailingInput)),
+                (Array("Alice,131\n".utf8), .malformed(.invalidAge("131"))),
+                (Array("Alice,42\r\n".utf8), .malformed(.rejected)),
+            ]
+            for (bytes, error) in cases {
+                var request = RequestExample.Request(
+                    method: "POST",
+                    target: "/users",
+                    content: bytes
+                )
+                let original = request
+                #expect(throws: error) { try RequestExample.Route().parse(&request) }
+                #expect(request == original)
+            }
         }
-        func serialize(_ output: borrowing User, into buffer: inout Request) throws(Failure) {
-            var text = ""
-            do throws(RecordFailure) { try User.Coder().serialize(output, into: &text) }
-            catch { throw .unprintable(error) }
-            buffer.content = Array(text.utf8)
-        }
-    }
-    struct Route: Coding {
-        var body: some Coding<Request, CreateUser, Request, Failure> {
-            return Coder(
-                { user throws(Failure) in CreateUser(user: user) },
-                from: { route throws(Failure) in route.user }
-            ) {
-                Method(expected: "POST")
-                Target(expected: "/users")
-                Content()
+
+        @Test func `selection mismatch differs from an invalid printable body`() {
+            var wrong = RequestExample.Request(method: "GET", target: "/users")
+            #expect(throws: RequestExample.Failure.mismatch) {
+                try RequestExample.Route().parse(&wrong)
+            }
+            let invalid = RequestExample.CreateUser(user: User(name: "Alice", age: 131))
+            #expect(throws: RequestExample.Failure.unprintable(.invalidAge("131"))) {
+                try RequestExample.request(for: invalid)
             }
         }
     }
-
-    static func request(for value: borrowing CreateUser) throws(Failure) -> Request {
-        var result = Request()
-        try Route().serialize(value, into: &result)
-        return result
-    }
-}
-
-@Suite struct `HTTP request boundary fixture` {
-    @Test func `route construction retains both directions`() throws {
-        let value = RequestExample.CreateUser(user: User(name: "Zoë Smith", age: 42))
-        let request = try RequestExample.request(for: value)
-        #expect(request.method == "POST")
-        #expect(request.target == "/users")
-        #expect(request.content == Array("Zoë Smith,42\n".utf8))
-        var input = request
-        #expect(try RequestExample.Route().parse(&input) == value)
-        #expect(input.content == nil)
-    }
-
-    @Test func `request normalization does not preserve absent model information`() throws {
-        let original = RequestExample.Request(
-            method: "POST", target: "/users",
-            headers: [.init(name: "X-Trace", value: "first"), .init(name: "X-Trace", value: "second")],
-            content: Array("Alice,0042\n".utf8),
-            trailers: [.init(name: "X-Checksum", value: "abc")]
-        )
-        var input = original
-        let route = try RequestExample.Route().parse(&input)
-
-        #expect(input.headers == original.headers)
-        #expect(input.trailers == original.trailers)
-        let canonical = try RequestExample.request(for: route)
-        #expect(canonical.content == Array("Alice,42\n".utf8))
-        #expect(canonical.headers.isEmpty && canonical.trailers.isEmpty)
-        #expect(canonical != original)
-    }
-
-    @Test func `a recognized request requires a complete valid UTF8 body`() {
-        let cases: [([UInt8]?, RequestExample.Failure)] = [
-            (nil, .missingBody),
-            ([0xFF], .invalidUTF8),
-            (Array("Alice,42\nextra".utf8), .malformed(.trailingInput)),
-            (Array("Alice,131\n".utf8), .malformed(.invalidAge("131"))),
-            (Array("Alice,42\r\n".utf8), .malformed(.rejected)),
-        ]
-        for (bytes, error) in cases {
-            var request = RequestExample.Request(method: "POST", target: "/users", content: bytes)
-            let original = request
-            #expect(throws: error) { try RequestExample.Route().parse(&request) }
-            #expect(request == original)
-        }
-    }
-
-    @Test func `selection mismatch differs from an invalid printable body`() {
-        var wrong = RequestExample.Request(method: "GET", target: "/users")
-        #expect(throws: RequestExample.Failure.mismatch) { try RequestExample.Route().parse(&wrong) }
-        let invalid = RequestExample.CreateUser(user: User(name: "Alice", age: 131))
-        #expect(throws: RequestExample.Failure.unprintable(.invalidAge("131"))) {
-            try RequestExample.request(for: invalid)
-        }
-    }
-}
 #endif
 
 private enum PercentExample {
@@ -150,21 +166,24 @@ private enum PercentExample {
     }
 
     static var coder: Coder<ArraySlice<UInt8>, UInt8, [UInt8], Failure> {
-        Coder(parse: { input throws(Failure) in
+        Coder(
+            parse: { input throws(Failure) in
 
-            var remaining = input
-            guard remaining.popFirst() == 0x25 else { throw .percent }
-            guard let first = remaining.popFirst(), let high = hex(first),
-                let second = remaining.popFirst(), let low = hex(second)
-            else { throw .hexDigit }
-            input = remaining
-            return (high << 4) | low
-        }, serialize: { byte, buffer throws(Failure) in
-            let digits = Array("0123456789ABCDEF".utf8)
-            buffer.append(0x25)
-            buffer.append(digits[Int(byte >> 4)])
-            buffer.append(digits[Int(byte & 0x0F)])
-        })
+                var remaining = input
+                guard remaining.popFirst() == 0x25 else { throw .percent }
+                guard let first = remaining.popFirst(), let high = hex(first),
+                    let second = remaining.popFirst(), let low = hex(second)
+                else { throw .hexDigit }
+                input = remaining
+                return (high << 4) | low
+            },
+            serialize: { byte, buffer throws(Failure) in
+                let digits = Array("0123456789ABCDEF".utf8)
+                buffer.append(0x25)
+                buffer.append(digits[Int(byte >> 4)])
+                buffer.append(digits[Int(byte & 0x0F)])
+            }
+        )
     }
 
     static func whole(_ input: ArraySlice<UInt8>) throws(Failure) -> UInt8 {
@@ -195,7 +214,10 @@ private enum PercentExample {
             try PercentExample.whole(Array("%2F/rest".utf8)[...])
         }
         var output: [UInt8] = []
-        try PercentExample.coder.serialize(try PercentExample.whole(Array("%2f".utf8)[...]), into: &output)
+        try PercentExample.coder.serialize(
+            try PercentExample.whole(Array("%2f".utf8)[...]),
+            into: &output
+        )
         #expect(output == Array("%2F".utf8))
     }
 

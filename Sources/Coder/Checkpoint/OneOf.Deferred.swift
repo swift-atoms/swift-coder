@@ -21,11 +21,15 @@
         }
     }
 
-extension OneOf.Deferred where Node.Input: ~Copyable & ~Escapable, Node.Output: ~Copyable, Node.Buffer: ~Copyable & ~Escapable {
-    @inlinable
-    public borrowing func callAsFunction(absent: Node.Failure) -> Node {
-        node(absent)
+    extension OneOf.Deferred
+    where
+        Node.Input: ~Copyable & ~Escapable, Node.Output: ~Copyable,
+        Node.Buffer: ~Copyable & ~Escapable
+    {
+        @inlinable
+        public borrowing func callAsFunction(absent: Node.Failure) -> Node {
+            node(absent)
+        }
     }
-}
 
 #endif

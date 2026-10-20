@@ -1,9 +1,12 @@
 #if Pair
     public import Coder_Core
     public import Pair
-    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+    extension Coder_Core::Builder
+    where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Pair<A, N>.Coder<N.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -13,8 +16,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Pair<A, N>.Coder<A.Failure>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
@@ -24,8 +29,10 @@
         {
             .init(accumulated, next, { $0 }, { $0 })
         }
-        @inlinable public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
-            accumulated: consuming A, next: consuming N
+        @inlinable
+        public static func buildPartialBlock<A: Coding & ~Copyable, N: Coding & ~Copyable>(
+            accumulated: consuming A,
+            next: consuming N
         ) -> Pair<A, N>.Coder<Never>
         where
             A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,

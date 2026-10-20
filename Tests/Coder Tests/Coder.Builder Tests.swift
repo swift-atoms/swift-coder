@@ -54,18 +54,18 @@
         }
     }
 
-extension Text {
-    func parse(_ input: inout Substring) throws(Mismatch) -> String {
-        guard input.hasPrefix(text) else { throw .mismatch }
-        input.removeFirst(text.count)
-        return text
-    }
+    extension Text {
+        func parse(_ input: inout Substring) throws(Mismatch) -> String {
+            guard input.hasPrefix(text) else { throw .mismatch }
+            input.removeFirst(text.count)
+            return text
+        }
 
-    func serialize(_ output: String, into buffer: inout String) throws(Mismatch) {
-        guard output == text else { throw .mismatch }
-        buffer.append(contentsOf: text)
+        func serialize(_ output: String, into buffer: inout String) throws(Mismatch) {
+            guard output == text else { throw .mismatch }
+            buffer.append(contentsOf: text)
+        }
     }
-}
 
     private struct Marker: Coding {
 
@@ -76,39 +76,39 @@ extension Text {
         }
     }
 
-extension Marker {
-    func parse(_ input: inout Substring) throws(Mismatch) {
-        guard input.hasPrefix(text) else { throw .mismatch }
-        input.removeFirst(text.count)
-    }
+    extension Marker {
+        func parse(_ input: inout Substring) throws(Mismatch) {
+            guard input.hasPrefix(text) else { throw .mismatch }
+            input.removeFirst(text.count)
+        }
 
-    func serialize(_ output: Void, into buffer: inout String) throws(Mismatch) {
-        buffer.append(contentsOf: text)
+        func serialize(_ output: Void, into buffer: inout String) throws(Mismatch) {
+            buffer.append(contentsOf: text)
+        }
     }
-}
 
     private struct Trailing: Coding {}
 
-extension Trailing {
-    typealias Failure = Mismatch
+    extension Trailing {
+        typealias Failure = Mismatch
 
-    @Coder::Builder<Substring, String>
-    var body: some Coding<Substring, String, String, Mismatch> {
-        Text("tag")
-        Marker(">")
+        @Coder::Builder<Substring, String>
+        var body: some Coding<Substring, String, String, Mismatch> {
+            Text("tag")
+            Marker(">")
+        }
     }
-}
 
     private struct Pairing: Coding {}
 
-extension Pairing {
-    typealias Failure = Mismatch
+    extension Pairing {
+        typealias Failure = Mismatch
 
-    @Coder::Builder<Substring, String>
-    var body: some Coding<Substring, Pair<String, String>, String, Mismatch> {
-        Text("a")
-        Text("b")
+        @Coder::Builder<Substring, String>
+        var body: some Coding<Substring, Pair<String, String>, String, Mismatch> {
+            Text("a")
+            Text("b")
+        }
     }
-}
 
 #endif

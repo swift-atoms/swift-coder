@@ -5,26 +5,26 @@
     private enum PrecisionFailure: Error, Equatable { case mismatch }
     private struct FallibleValue: Coding {}
 
-extension FallibleValue {
-    func parse(_ input: inout Substring) throws(PrecisionFailure) -> Int { 7 }
+    extension FallibleValue {
+        func parse(_ input: inout Substring) throws(PrecisionFailure) -> Int { 7 }
 
-    func serialize(_ output: Int, into buffer: inout String) throws(PrecisionFailure) {
-        guard output == 7 else { throw .mismatch }
-        buffer += "7"
+        func serialize(_ output: Int, into buffer: inout String) throws(PrecisionFailure) {
+            guard output == 7 else { throw .mismatch }
+            buffer += "7"
+        }
     }
-}
     private struct InfallibleValue: Coding {}
 
-extension InfallibleValue {
-    func parse(_ input: inout Substring) -> Int { 1 }
-    func serialize(_ output: Int, into buffer: inout String) { buffer += String(output) }
-}
+    extension InfallibleValue {
+        func parse(_ input: inout Substring) -> Int { 1 }
+        func serialize(_ output: Int, into buffer: inout String) { buffer += String(output) }
+    }
     private struct FallibleMarker: Coding {}
 
-extension FallibleMarker {
-    func parse(_ input: inout Substring) throws(PrecisionFailure) {}
-    func serialize(_ output: Void, into buffer: inout String) throws(PrecisionFailure) {}
-}
+    extension FallibleMarker {
+        func parse(_ input: inout Substring) throws(PrecisionFailure) {}
+        func serialize(_ output: Void, into buffer: inout String) throws(PrecisionFailure) {}
+    }
     @Suite struct FailurePrecisionTests {
         @Test func mixedNeverPairsKeepOnlyThePossibleFailure() throws {
             let first = Coder {
@@ -49,17 +49,20 @@ extension FallibleMarker {
                     Always(())
                     FallibleValue()
                     Always(())
-                })
+                }
+            )
             requireFailure(
                 Coder(Substring.self, String.self) {
                     Always(())
                     FallibleMarker()
-                })
+                }
+            )
             requireFailure(
                 Coder(Substring.self, String.self) {
                     FallibleMarker()
                     Always(())
-                })
+                }
+            )
         }
         @Test func allInfallibleCompositionRemainsNonthrowing() {
             let pair = Coder {

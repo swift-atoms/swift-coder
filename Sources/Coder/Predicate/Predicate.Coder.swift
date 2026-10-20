@@ -16,7 +16,8 @@
             public let predicate: Predicate<T>
             public let upstream: Upstream
             public let failure: Failure
-            public init(_ predicate: Predicate<T>, _ upstream: consuming Upstream, failure: Failure) {
+            public init(_ predicate: Predicate<T>, _ upstream: consuming Upstream, failure: Failure)
+            {
                 self.predicate = predicate
                 self.upstream = upstream
                 self.failure = failure
@@ -26,7 +27,10 @@
                 guard predicate(value) else { throw failure }
                 return value
             }
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 guard predicate(output) else { throw failure }
@@ -37,7 +41,8 @@
     extension Predicate.Coder: Copyable
     where
         T: ~Copyable,
-        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure> & Copyable,
+        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
+            & Copyable,
         Upstream.Input: ~Copyable & ~Escapable, Upstream.Output: ~Copyable,
         Upstream.Buffer: ~Copyable & ~Escapable
     {}
@@ -47,7 +52,10 @@
         Self: ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
         Buffer: ~Copyable & ~Escapable
     {
-        public consuming func filter(_ predicate: Predicate<Output>, failure: Failure)
+        public consuming func filter(
+            _ predicate: Predicate<Output>,
+            failure: Failure
+        )
             -> Predicate<Output>.Coder<Self>
         {
             .init(predicate, self, failure: failure)

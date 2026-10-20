@@ -16,7 +16,11 @@
         }
 
         @inlinable
-        public consuming func map<Focus, ForwardFailure: Swift::Error, BackwardFailure: Swift::Error>(
+        public consuming func map<
+            Focus,
+            ForwardFailure: Swift::Error,
+            BackwardFailure: Swift::Error
+        >(
             _ adapter: Optic<Output, Output, Focus, Focus>.Adapter<ForwardFailure, BackwardFailure>,
             forwardFailure: @escaping (ForwardFailure) -> Failure,
             backwardFailure: @escaping (BackwardFailure) -> Failure
@@ -31,11 +35,16 @@
                     do throws(BackwardFailure) { return try adapter.backward(copy value) } catch {
                         throw backwardFailure(error)
                     }
-                })
+                }
+            )
         }
 
         @inlinable
-        public consuming func map<Focus, ForwardFailure: Swift::Error, BackwardFailure: Swift::Error>(
+        public consuming func map<
+            Focus,
+            ForwardFailure: Swift::Error,
+            BackwardFailure: Swift::Error
+        >(
             _ partial: Optic<Output, Output, Focus, Focus>.Isomorphism.Partial<
                 ForwardFailure, BackwardFailure
             >,

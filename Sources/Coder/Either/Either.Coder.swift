@@ -48,7 +48,10 @@
                     }
                 }
             }
-            @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            @inlinable public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
                 switch wrapped {

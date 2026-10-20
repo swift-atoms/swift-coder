@@ -13,12 +13,16 @@
             public borrowing func serialize(_ output: Void, into buffer: inout Buffer) {}
         }
         public func coder<Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable>(
-            for input: Input.Type = Input.self, into buffer: Buffer.Type = Buffer.self
+            for input: Input.Type = Input.self,
+            into buffer: Buffer.Type = Buffer.self
         ) -> Coder<Input, Buffer> { .init() }
     }
 
-    extension Coder_Core::Builder where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
-        public static func buildExpression(_ unit: Always<Void>) -> Always<Void>.Coder<Input, Buffer> {
+    extension Coder_Core::Builder
+    where Input: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
+        public static func buildExpression(
+            _ unit: Always<Void>
+        ) -> Always<Void>.Coder<Input, Buffer> {
             .init()
         }
     }

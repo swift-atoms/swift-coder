@@ -28,7 +28,8 @@
             public let failure: (Repetition<Bounds, Operation>.Error) -> Failure
 
             public init(
-                _ wrapped: consuming Repetition<Bounds, Operation>, separator: consuming Separator?,
+                _ wrapped: consuming Repetition<Bounds, Operation>,
+                separator: consuming Separator?,
                 rejected: @escaping (Failure) -> Bool,
                 failure: @escaping (Repetition<Bounds, Operation>.Error) -> Failure
             ) {
@@ -39,7 +40,9 @@
             }
 
             public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
-                guard wrapped.bounds.contains(wrapped.bounds.minimum) else { throw failure(.emptyBounds) }
+                guard wrapped.bounds.contains(wrapped.bounds.minimum) else {
+                    throw failure(.emptyBounds)
+                }
                 var output: Output = []
                 var count = Cardinal.zero
                 while wrapped.bounds.permitsAnother(after: count) {
@@ -72,13 +75,20 @@
                 return output
             }
 
-            public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
-                guard wrapped.bounds.contains(wrapped.bounds.minimum) else { throw failure(.emptyBounds) }
+                guard wrapped.bounds.contains(wrapped.bounds.minimum) else {
+                    throw failure(.emptyBounds)
+                }
                 let count = Cardinal(UInt(output.count))
                 guard wrapped.bounds.contains(count) else {
-                    if count < wrapped.bounds.minimum { throw failure(.insufficient(actual: count)) }
+                    if count < wrapped.bounds.minimum {
+                        throw failure(.insufficient(actual: count))
+                    }
                     throw failure(.excessive(actual: count))
                 }
                 for index in output.indices {
@@ -117,10 +127,12 @@
     extension Repetition.Coder: Copyable
     where
         Bounds: Cardinal.Range,
-        Operation: Coding<Operation.Input, Operation.Output, Operation.Buffer, Operation.Failure> & Copyable,
+        Operation: Coding<Operation.Input, Operation.Output, Operation.Buffer, Operation.Failure>
+            & Copyable,
         Operation.Input: Restorable & ~Copyable & ~Escapable, Operation.Input.Checkpoint: Equatable,
         Operation.Output: Copyable & Escapable, Operation.Buffer: ~Copyable & ~Escapable,
-        Separator: Coding<Separator.Input, Separator.Output, Separator.Buffer, Separator.Failure> & Copyable,
+        Separator: Coding<Separator.Input, Separator.Output, Separator.Buffer, Separator.Failure>
+            & Copyable,
         Separator.Input: ~Copyable & ~Escapable, Separator.Buffer: ~Copyable & ~Escapable
     {}
 #endif

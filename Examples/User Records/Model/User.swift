@@ -31,8 +31,11 @@ public enum RecordFailure: Error, Equatable {
                         return User(name: fields.first, age: age)
                     },
                     from: { (user: borrowing User) throws(RecordFailure) -> Pair<String, String> in
-                        guard (0...130).contains(user.age) else { throw .invalidAge(String(user.age)) }
-                        guard !user.name.isEmpty, user.name.allSatisfy({ $0.isLetter || $0 == " " }) else {
+                        guard (0...130).contains(user.age) else {
+                            throw .invalidAge(String(user.age))
+                        }
+                        guard !user.name.isEmpty, user.name.allSatisfy({ $0.isLetter || $0 == " " })
+                        else {
                             throw .invalidName
                         }
                         return Pair(user.name, String(user.age))
@@ -56,10 +59,14 @@ public enum RecordFailure: Error, Equatable {
             parse: { input throws(RecordFailure) in
                 guard input.hasPrefix(text) else { throw .rejected }
                 input.removeFirst(text.count)
-            }, serialize: { _, buffer throws(RecordFailure) in buffer.append(contentsOf: text) })
+            },
+            serialize: { _, buffer throws(RecordFailure) in buffer.append(contentsOf: text) }
+        )
     }
 
-    private func text(while accepts: @escaping (Character) -> Bool) -> Coder<
+    private func text(
+        while accepts: @escaping (Character) -> Bool
+    ) -> Coder<
         Substring, String, String, RecordFailure
     > {
         Coder(
@@ -72,7 +79,8 @@ public enum RecordFailure: Error, Equatable {
             serialize: { output, buffer throws(RecordFailure) in
                 guard !output.isEmpty, output.allSatisfy(accepts) else { throw .rejected }
                 buffer.append(contentsOf: output)
-            })
+            }
+        )
     }
 
     #if Repetition
@@ -80,7 +88,8 @@ public enum RecordFailure: Error, Equatable {
             public init() {}
             public var body: some Coding<Substring, [User], String, RecordFailure> {
                 return Repetition((0...), operation: User.Coder()).coder(
-                    rejected: { $0 == .rejected }, failure: { _ in .repetition }
+                    rejected: { $0 == .rejected },
+                    failure: { _ in .repetition }
                 )
             }
         }

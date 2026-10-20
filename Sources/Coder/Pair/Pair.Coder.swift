@@ -21,7 +21,6 @@
 
         public struct Coder<Failure: Swift::Error>: Coding, ~Copyable {
 
-
             public typealias Buffer = First.Buffer
 
             public typealias Input = First.Input
@@ -66,13 +65,19 @@
                 return Output(firstOutput, secondOutput)
             }
 
-            @inlinable public borrowing func serialize(_ output: borrowing Output, into buffer: inout Buffer)
+            @inlinable public borrowing func serialize(
+                _ output: borrowing Output,
+                into buffer: inout Buffer
+            )
                 throws(Failure)
             {
-                do throws(First.Failure) { try first.serialize(output.first, into: &buffer) } catch {
+                do throws(First.Failure) { try first.serialize(output.first, into: &buffer) } catch
+                {
                     throw firstFailure(error)
                 }
-                do throws(Second.Failure) { try second.serialize(output.second, into: &buffer) } catch {
+                do throws(Second.Failure) {
+                    try second.serialize(output.second, into: &buffer)
+                } catch {
                     throw secondFailure(error)
                 }
             }
@@ -97,7 +102,9 @@
         where Second.Failure == Never { .init(first, second, { $0 }, { $0 }) }
 
         @inlinable public consuming func coder() -> Pair::Pair<First, Second>.Coder<Never>
-        where First.Failure == Never, Second.Failure == Never { .init(first, second, \.self, \.self) }
+        where First.Failure == Never, Second.Failure == Never {
+            .init(first, second, \.self, \.self)
+        }
 
     }
 
