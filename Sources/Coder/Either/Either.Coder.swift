@@ -76,8 +76,11 @@
     where
         Left: Coding<Left.Input, Left.Output, Left.Buffer, Left.Failure> & Copyable,
         Right: Coding<Right.Input, Right.Output, Right.Buffer, Right.Failure> & Copyable,
-        Left.Buffer: ~Copyable & ~Escapable, Right.Buffer: ~Copyable & ~Escapable,
-        Left.Input: ~Copyable & ~Escapable, Right.Input: ~Copyable & ~Escapable,
-        Left.Output: ~Copyable & ~Escapable, Right.Output: ~Copyable & ~Escapable
+        Left.Buffer: ~Copyable & ~Escapable,
+        Right.Buffer: ~Copyable & ~Escapable,
+        Left.Input: ~Copyable & ~Escapable,
+        Right.Input: ~Copyable & ~Escapable,
+        Left.Output: ~Copyable & ~Escapable,
+        Right.Output: ~Copyable & ~Escapable
     {}
 #endif

@@ -40,8 +40,7 @@
         }
 
         @Test
-        func `Pair composition safely retains differently sized elements`() throws(any Swift::Error)
-        {
+        func `Pair composition safely retains differently sized elements`() throws(any Swift::Error) {
             let inner = Coder::Builder<Substring, Substring>.buildPartialBlock(
                 accumulated: Wide(),
                 next: Narrow()
@@ -102,8 +101,7 @@
         }
 
         @Test
-        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift::Error)
-        {
+        func `a coder body infers Input Output and Buffer from its body`() throws(any Swift::Error) {
             let _: Bracketed.Input.Type = Substring.self
             let _: Bracketed.Output.Type = String.self
             let _: Bracketed.Buffer.Type = Substring.self
@@ -167,7 +165,8 @@
         _: Failure.Type
     )
     where
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & ~Escapable,
+        C.Input: ~Copyable & ~Escapable,
+        C.Output: ~Copyable & ~Escapable,
         C.Buffer: ~Copyable & ~Escapable,
         C.Failure == Failure
     {}

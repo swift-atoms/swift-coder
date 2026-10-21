@@ -23,8 +23,7 @@
         }
 
         @Test
-        func `a byte coding is spelled with its output and failure alone`() throws(any Swift::Error)
-        {
+        func `a byte coding is spelled with its output and failure alone`() throws(any Swift::Error) {
             let coder: some Byte.Coding<Digit, Digit.Error> = Digit.Coder()
             var buffer: [Byte] = []
             try coder.serialize(Digit(4), into: &buffer)

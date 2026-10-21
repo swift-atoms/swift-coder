@@ -83,8 +83,11 @@
     where
         P0: Coding<P0.Input, P0.Output, P0.Buffer, P0.Failure> & Copyable,
         P1: Coding<P1.Input, P1.Output, P1.Buffer, P1.Failure> & Copyable,
-        P0.Input: Restorable & ~Copyable & ~Escapable, P1.Input: ~Copyable & ~Escapable,
-        P0.Output: ~Copyable & Escapable, P1.Output: ~Copyable & Escapable,
-        P0.Buffer: Restorable & ~Copyable & ~Escapable, P1.Buffer: ~Copyable & ~Escapable
+        P0.Input: Restorable & ~Copyable & ~Escapable,
+        P1.Input: ~Copyable & ~Escapable,
+        P0.Output: ~Copyable & Escapable,
+        P1.Output: ~Copyable & Escapable,
+        P0.Buffer: Restorable & ~Copyable & ~Escapable,
+        P1.Buffer: ~Copyable & ~Escapable
     {}
 #endif

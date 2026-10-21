@@ -6,8 +6,10 @@
 
     extension Parser::Many: @retroactive Serializing, Coding
     where
-        Source: Restorable & ~Copyable & ~Escapable, Element: Coding,
-        Element.Input: ~Copyable & ~Escapable, Element.Buffer: ~Copyable & ~Escapable
+        Source: Restorable & ~Copyable & ~Escapable,
+        Element: Coding,
+        Element.Input: ~Copyable & ~Escapable,
+        Element.Buffer: ~Copyable & ~Escapable
     {
 
         public typealias Buffer = Element.Buffer
@@ -33,9 +35,13 @@
     extension Parser::Many.Separated: @retroactive Serializing, Coding
     where
         Source: Restorable & ~Copyable & ~Escapable,
-        Element: Coding, Separator: Coding, Separator.Output == Void,
-        Element.Input: ~Copyable & ~Escapable, Separator.Input: ~Copyable & ~Escapable,
-        Element.Buffer == Separator.Buffer, Element.Buffer: ~Copyable & ~Escapable,
+        Element: Coding,
+        Separator: Coding,
+        Separator.Output == Void,
+        Element.Input: ~Copyable & ~Escapable,
+        Separator.Input: ~Copyable & ~Escapable,
+        Element.Buffer == Separator.Buffer,
+        Element.Buffer: ~Copyable & ~Escapable,
         Separator.Buffer: ~Copyable & ~Escapable
     {
 

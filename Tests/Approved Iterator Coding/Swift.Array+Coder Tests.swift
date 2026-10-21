@@ -33,8 +33,7 @@
         }
 
         @Test
-        func `an array coder skips into a constant coder and round-trips`() throws(any Swift::Error)
-        {
+        func `an array coder skips into a constant coder and round-trips`() throws(any Swift::Error) {
             let coder = Tagged()
             var buffer = ""
             try coder.serialize("tag", into: &buffer)

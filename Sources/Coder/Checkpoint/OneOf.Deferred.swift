@@ -23,7 +23,8 @@
 
     extension OneOf.Deferred
     where
-        Node.Input: ~Copyable & ~Escapable, Node.Output: ~Copyable,
+        Node.Input: ~Copyable & ~Escapable,
+        Node.Output: ~Copyable,
         Node.Buffer: ~Copyable & ~Escapable
     {
         @inlinable

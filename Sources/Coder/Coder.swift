@@ -29,8 +29,7 @@ public struct Coder<
 }
 
 extension Coder
-where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable
-{
+where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
     @inlinable @_lifetime(borrow self, &input)
     public borrowing func parse(_ input: inout Input) throws(Failure) -> Output {
         try _parse(&input)
@@ -48,14 +47,20 @@ where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Co
 
 extension Coder
 where
-    Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
+    Input: ~Copyable & ~Escapable,
+    Output: ~Copyable & Escapable,
     Buffer: ~Copyable & ~Escapable
 {
 
     @inlinable public init<C: Coding>(@Coder_Core::Builder<Input, Buffer> _ build: () -> C)
     where
-        C.Input == Input, C.Output == Output, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable, C.Buffer: ~Copyable & ~Escapable
+        C.Input == Input,
+        C.Output == Output,
+        C.Buffer == Buffer,
+        C.Failure == Failure,
+        C.Input: ~Copyable & ~Escapable,
+        C.Output: ~Copyable,
+        C.Buffer: ~Copyable & ~Escapable
     {
         let composition = build()
         self.init(
@@ -72,8 +77,13 @@ where
         @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
-        C.Input == Input, C.Output == Output, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable, C.Buffer: ~Copyable & ~Escapable
+        C.Input == Input,
+        C.Output == Output,
+        C.Buffer == Buffer,
+        C.Failure == Failure,
+        C.Input: ~Copyable & ~Escapable,
+        C.Output: ~Copyable,
+        C.Buffer: ~Copyable & ~Escapable
     {
         self.init(build)
     }
@@ -84,8 +94,11 @@ where
         @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
-        C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable,
+        C.Input == Input,
+        C.Buffer == Buffer,
+        C.Failure == Failure,
+        C.Input: ~Copyable & ~Escapable,
+        C.Output: ~Copyable & Escapable,
         C.Buffer: ~Copyable & ~Escapable
     {
         self.init(
@@ -102,8 +115,11 @@ where
         @Coder_Core::Builder<Input, Buffer> _ build: () -> C
     )
     where
-        C.Input == Input, C.Buffer == Buffer, C.Failure == Failure,
-        C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & Escapable,
+        C.Input == Input,
+        C.Buffer == Buffer,
+        C.Failure == Failure,
+        C.Input: ~Copyable & ~Escapable,
+        C.Output: ~Copyable & Escapable,
         C.Buffer: ~Copyable & ~Escapable
     {
         let composition = build()

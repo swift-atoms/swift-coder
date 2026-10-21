@@ -5,8 +5,10 @@
     extension Map where Source: ~Copyable & Escapable, Target: ~Copyable & Escapable {
         public struct Coder<Upstream: Coding & ~Copyable>: Coding, ~Copyable
         where
-            Upstream.Output == Source, Upstream.Failure == Failure,
-            Upstream.Input: ~Copyable & ~Escapable, Upstream.Output: ~Copyable,
+            Upstream.Output == Source,
+            Upstream.Failure == Failure,
+            Upstream.Input: ~Copyable & ~Escapable,
+            Upstream.Output: ~Copyable,
             Upstream.Buffer: ~Copyable & ~Escapable
         {
 
@@ -41,10 +43,12 @@
     }
     extension Map.Coder: Copyable
     where
-        Source: ~Copyable, Target: ~Copyable,
+        Source: ~Copyable,
+        Target: ~Copyable,
         Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
             & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
-        Upstream.Output: ~Copyable, Upstream.Buffer: ~Copyable & ~Escapable
+        Upstream.Output: ~Copyable,
+        Upstream.Buffer: ~Copyable & ~Escapable
     {}
 #endif

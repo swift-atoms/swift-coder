@@ -8,10 +8,15 @@
             Coding,
             ~Copyable
         where
-            A.Input == N.Input, A.Buffer == N.Buffer, A.Output == Kept, N.Output == Void,
-            A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable,
+            A.Input == N.Input,
+            A.Buffer == N.Buffer,
+            A.Output == Kept,
+            N.Output == Void,
+            A.Input: ~Copyable & ~Escapable,
+            N.Input: ~Copyable & ~Escapable,
             A.Output: ~Copyable & Escapable,
-            A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable
+            A.Buffer: ~Copyable & ~Escapable,
+            N.Buffer: ~Copyable & ~Escapable
         {
 
             public typealias Input = A.Input
@@ -76,11 +81,14 @@
     }
     extension Skip.Coder: Copyable
     where
-        Kept: ~Copyable, Dropped == Void,
+        Kept: ~Copyable,
+        Dropped == Void,
         A: Coding<A.Input, A.Output, A.Buffer, A.Failure> & Copyable,
         N: Coding<N.Input, N.Output, N.Buffer, N.Failure> & Copyable,
-        A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable,
+        A.Input: ~Copyable & ~Escapable,
+        N.Input: ~Copyable & ~Escapable,
         A.Output: ~Copyable & Escapable,
-        A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable
+        A.Buffer: ~Copyable & ~Escapable,
+        N.Buffer: ~Copyable & ~Escapable
     {}
 #endif

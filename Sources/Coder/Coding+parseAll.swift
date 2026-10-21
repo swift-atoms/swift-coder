@@ -2,7 +2,9 @@ public import Coder_Core
 
 extension Coding
 where
-    Self: ~Copyable, Input: Swift::Collection, Output: ~Copyable & Escapable,
+    Self: ~Copyable,
+    Input: Swift::Collection,
+    Output: ~Copyable & Escapable,
     Buffer: ~Copyable & ~Escapable
 {
 

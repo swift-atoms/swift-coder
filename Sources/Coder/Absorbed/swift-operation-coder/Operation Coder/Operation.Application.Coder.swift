@@ -23,8 +23,10 @@
 
     extension Operation._Application.Coder: Parsing
     where
-        Input: ~Copyable & Escapable, Inner.Output: ~Copyable & Escapable,
-        Inner.Input: ~Copyable & ~Escapable, Inner.Buffer: ~Copyable & ~Escapable
+        Input: ~Copyable & Escapable,
+        Inner.Output: ~Copyable & Escapable,
+        Inner.Input: ~Copyable & ~Escapable,
+        Inner.Buffer: ~Copyable & ~Escapable
     {
 
         public typealias Input = Inner.Input
@@ -40,8 +42,10 @@
 
     extension Operation._Application.Coder: Serializing
     where
-        Input: ~Copyable & Escapable, Inner.Output: ~Copyable & Escapable,
-        Inner.Input: ~Copyable & ~Escapable, Inner.Buffer: ~Copyable & ~Escapable
+        Input: ~Copyable & Escapable,
+        Inner.Output: ~Copyable & Escapable,
+        Inner.Input: ~Copyable & ~Escapable,
+        Inner.Buffer: ~Copyable & ~Escapable
     {
 
         public typealias Buffer = Inner.Buffer
@@ -56,7 +60,9 @@
 
     extension Operation._Application.Coder: Coding
     where
-        Input: ~Copyable & Escapable, Inner.Output: ~Copyable & Escapable,
-        Inner.Input: ~Copyable & ~Escapable, Inner.Buffer: ~Copyable & ~Escapable
+        Input: ~Copyable & Escapable,
+        Inner.Output: ~Copyable & Escapable,
+        Inner.Input: ~Copyable & ~Escapable,
+        Inner.Buffer: ~Copyable & ~Escapable
     {}
 #endif

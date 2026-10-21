@@ -6,16 +6,22 @@
 
     extension Repetition
     where
-        Bounds: Cardinal.Range, Operation: Coding & ~Copyable,
-        Operation.Input: Restorable & ~Copyable & ~Escapable, Operation.Input.Checkpoint: Equatable,
-        Operation.Output: Copyable & Escapable, Operation.Buffer: ~Copyable & ~Escapable
+        Bounds: Cardinal.Range,
+        Operation: Coding & ~Copyable,
+        Operation.Input: Restorable & ~Copyable & ~Escapable,
+        Operation.Input.Checkpoint: Equatable,
+        Operation.Output: Copyable & Escapable,
+        Operation.Buffer: ~Copyable & ~Escapable
     {
 
         public struct Coder<Separator: Coding & ~Copyable>: Coding, ~Copyable
         where
-            Separator.Input == Operation.Input, Separator.Output == Void,
-            Separator.Buffer == Operation.Buffer, Separator.Failure == Operation.Failure,
-            Separator.Input: ~Copyable & ~Escapable, Separator.Buffer: ~Copyable & ~Escapable
+            Separator.Input == Operation.Input,
+            Separator.Output == Void,
+            Separator.Buffer == Operation.Buffer,
+            Separator.Failure == Operation.Failure,
+            Separator.Input: ~Copyable & ~Escapable,
+            Separator.Buffer: ~Copyable & ~Escapable
         {
 
             public typealias Input = Operation.Input
@@ -116,9 +122,12 @@
             failure: @escaping (Repetition<Bounds, Operation>.Error) -> Operation.Failure
         ) -> Coder<Separator>
         where
-            Separator.Input == Operation.Input, Separator.Output == Void,
-            Separator.Buffer == Operation.Buffer, Separator.Failure == Operation.Failure,
-            Separator.Input: ~Copyable & ~Escapable, Separator.Buffer: ~Copyable & ~Escapable
+            Separator.Input == Operation.Input,
+            Separator.Output == Void,
+            Separator.Buffer == Operation.Buffer,
+            Separator.Failure == Operation.Failure,
+            Separator.Input: ~Copyable & ~Escapable,
+            Separator.Buffer: ~Copyable & ~Escapable
         {
             .init(self, separator: separator, rejected: rejected, failure: failure)
         }
@@ -129,10 +138,13 @@
         Bounds: Cardinal.Range,
         Operation: Coding<Operation.Input, Operation.Output, Operation.Buffer, Operation.Failure>
             & Copyable,
-        Operation.Input: Restorable & ~Copyable & ~Escapable, Operation.Input.Checkpoint: Equatable,
-        Operation.Output: Copyable & Escapable, Operation.Buffer: ~Copyable & ~Escapable,
+        Operation.Input: Restorable & ~Copyable & ~Escapable,
+        Operation.Input.Checkpoint: Equatable,
+        Operation.Output: Copyable & Escapable,
+        Operation.Buffer: ~Copyable & ~Escapable,
         Separator: Coding<Separator.Input, Separator.Output, Separator.Buffer, Separator.Failure>
             & Copyable,
-        Separator.Input: ~Copyable & ~Escapable, Separator.Buffer: ~Copyable & ~Escapable
+        Separator.Input: ~Copyable & ~Escapable,
+        Separator.Buffer: ~Copyable & ~Escapable
     {}
 #endif

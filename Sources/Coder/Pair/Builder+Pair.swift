@@ -10,10 +10,16 @@
             next: consuming N
         ) -> Pair<A, N>.Coder<Either<A.Failure, N.Failure>>
         where
-            A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
-            A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable,
-            A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable,
-            A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable
+            A.Input == Input,
+            N.Input == Input,
+            A.Buffer == Buffer,
+            N.Buffer == Buffer,
+            A.Input: ~Copyable & ~Escapable,
+            N.Input: ~Copyable & ~Escapable,
+            A.Output: ~Copyable & Escapable,
+            N.Output: ~Copyable & Escapable,
+            A.Buffer: ~Copyable & ~Escapable,
+            N.Buffer: ~Copyable & ~Escapable
         {
             .init(accumulated, next, { .left($0) }, { .right($0) })
         }
@@ -23,10 +29,16 @@
             next: consuming N
         ) -> Pair<A, N>.Coder<A.Failure>
         where
-            A.Input == Input, N.Input == Input, A.Buffer == Buffer, N.Buffer == Buffer,
-            A.Input: ~Copyable & ~Escapable, N.Input: ~Copyable & ~Escapable,
-            A.Output: ~Copyable & Escapable, N.Output: ~Copyable & Escapable,
-            A.Buffer: ~Copyable & ~Escapable, N.Buffer: ~Copyable & ~Escapable,
+            A.Input == Input,
+            N.Input == Input,
+            A.Buffer == Buffer,
+            N.Buffer == Buffer,
+            A.Input: ~Copyable & ~Escapable,
+            N.Input: ~Copyable & ~Escapable,
+            A.Output: ~Copyable & Escapable,
+            N.Output: ~Copyable & Escapable,
+            A.Buffer: ~Copyable & ~Escapable,
+            N.Buffer: ~Copyable & ~Escapable,
             A.Failure == N.Failure
         {
             .init(accumulated, next, { $0 }, { $0 })

@@ -6,10 +6,14 @@
 
     extension Parser::OneOf.Two: @retroactive Serializing, Coding
     where
-        P0: Coding, P1: Coding, P0.Buffer == P1.Buffer,
+        P0: Coding,
+        P1: Coding,
+        P0.Buffer == P1.Buffer,
         P0.Buffer: RangeReplaceableCollection,
-        P0.Input: Restorable & ~Copyable & ~Escapable, P1.Input: ~Copyable & ~Escapable,
-        P0.Output: ~Copyable & Escapable, P1.Output: ~Copyable & Escapable
+        P0.Input: Restorable & ~Copyable & ~Escapable,
+        P1.Input: ~Copyable & ~Escapable,
+        P0.Output: ~Copyable & Escapable,
+        P1.Output: ~Copyable & Escapable
     {
 
         public typealias Buffer = P0.Buffer
@@ -47,8 +51,10 @@
 
     extension Parser::Optionally: @retroactive Serializing, Coding
     where
-        Wrapped: Coding, Wrapped.Input: Restorable & ~Copyable & ~Escapable,
-        Wrapped.Output: ~Copyable & Escapable, Wrapped.Buffer: ~Copyable & ~Escapable
+        Wrapped: Coding,
+        Wrapped.Input: Restorable & ~Copyable & ~Escapable,
+        Wrapped.Output: ~Copyable & Escapable,
+        Wrapped.Buffer: ~Copyable & ~Escapable
     {
 
         public typealias Buffer = Wrapped.Buffer

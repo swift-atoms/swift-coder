@@ -7,7 +7,8 @@
         public struct Optional<Content: Coding & ~Copyable>: Coding, ~Copyable
         where
             Content.Input: Restorable & ~Copyable & ~Escapable,
-            Content.Output: ~Copyable & Escapable, Content.Buffer: ~Copyable & ~Escapable
+            Content.Output: ~Copyable & Escapable,
+            Content.Buffer: ~Copyable & ~Escapable
         {
 
             public typealias Input = Content.Input
@@ -44,14 +45,17 @@
     extension OneOf.Optional: Copyable
     where
         Content: Coding<Content.Input, Content.Output, Content.Buffer, Content.Failure> & Copyable,
-        Content.Input: Restorable & ~Copyable & ~Escapable, Content.Output: ~Copyable,
+        Content.Input: Restorable & ~Copyable & ~Escapable,
+        Content.Output: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {}
 
     extension Coding
     where
-        Self: ~Copyable, Input: Restorable & ~Copyable & ~Escapable,
-        Output: ~Copyable & Escapable, Buffer: ~Copyable & ~Escapable
+        Self: ~Copyable,
+        Input: Restorable & ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
+        Buffer: ~Copyable & ~Escapable
     {
         public consuming func optional(
             rejected: @escaping (Failure) -> Bool

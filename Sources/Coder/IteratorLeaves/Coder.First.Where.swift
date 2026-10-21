@@ -12,7 +12,8 @@
             Buffer: RangeReplaceableCollection
         >: Coding
         where
-            Input.Element: Copyable & Escapable, Input.Failure == Never,
+            Input.Element: Copyable & Escapable,
+            Input.Failure == Never,
             Buffer.Element == Input.Element
         {
 

@@ -84,7 +84,8 @@
         private func requireFailure<C: Coding>(_ coder: C)
         where
             C.Failure == PrecisionFailure,
-            C.Input: ~Copyable & ~Escapable, C.Output: ~Copyable & ~Escapable,
+            C.Input: ~Copyable & ~Escapable,
+            C.Output: ~Copyable & ~Escapable,
             C.Buffer: ~Copyable & ~Escapable
         {}
     }

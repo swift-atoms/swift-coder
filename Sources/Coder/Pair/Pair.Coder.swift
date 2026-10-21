@@ -71,8 +71,7 @@
             )
                 throws(Failure)
             {
-                do throws(First.Failure) { try first.serialize(output.first, into: &buffer) } catch
-                {
+                do throws(First.Failure) { try first.serialize(output.first, into: &buffer) } catch {
                     throw firstFailure(error)
                 }
                 do throws(Second.Failure) {

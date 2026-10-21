@@ -11,7 +11,8 @@
             OutputBuffer: RangeReplaceableCollection
         >: Coding
         where
-            Input.Element: Copyable & Escapable, Input.Failure == Never,
+            Input.Element: Copyable & Escapable,
+            Input.Failure == Never,
             OutputBuffer.Element == Input.Element
         {
 

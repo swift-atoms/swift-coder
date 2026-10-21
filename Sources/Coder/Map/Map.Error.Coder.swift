@@ -5,8 +5,10 @@
     extension Map.Error where Source: Swift::Error, Target: Swift::Error, Failure == Never {
         public struct Coder<Upstream: Coding & ~Copyable>: Coding, ~Copyable
         where
-            Upstream.Failure == Source, Upstream.Input: ~Copyable & ~Escapable,
-            Upstream.Output: ~Copyable & Escapable, Upstream.Buffer: ~Copyable & ~Escapable
+            Upstream.Failure == Source,
+            Upstream.Input: ~Copyable & ~Escapable,
+            Upstream.Output: ~Copyable & Escapable,
+            Upstream.Buffer: ~Copyable & ~Escapable
         {
 
             public typealias Input = Upstream.Input
@@ -33,8 +35,7 @@
             )
                 throws(Failure)
             {
-                do throws(Upstream.Failure) { try upstream.serialize(output, into: &buffer) } catch
-                {
+                do throws(Upstream.Failure) { try upstream.serialize(output, into: &buffer) } catch {
                     throw transform(error)
                 }
             }
@@ -42,10 +43,13 @@
     }
     extension Map.Error.Coder: Copyable
     where
-        Source: Swift::Error, Target: Swift::Error, Failure == Never,
+        Source: Swift::Error,
+        Target: Swift::Error,
+        Failure == Never,
         Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
             & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
-        Upstream.Output: ~Copyable, Upstream.Buffer: ~Copyable & ~Escapable
+        Upstream.Output: ~Copyable,
+        Upstream.Buffer: ~Copyable & ~Escapable
     {}
 #endif

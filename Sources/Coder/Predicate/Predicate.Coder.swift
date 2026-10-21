@@ -5,8 +5,10 @@
     extension Predicate where T: ~Copyable & Escapable {
         public struct Coder<Upstream: Coding & ~Copyable>: Coding, ~Copyable
         where
-            Upstream.Output == T, Upstream.Output: ~Copyable & Escapable,
-            Upstream.Input: ~Copyable & ~Escapable, Upstream.Buffer: ~Copyable & ~Escapable
+            Upstream.Output == T,
+            Upstream.Output: ~Copyable & Escapable,
+            Upstream.Input: ~Copyable & ~Escapable,
+            Upstream.Buffer: ~Copyable & ~Escapable
         {
 
             public typealias Input = Upstream.Input
@@ -16,8 +18,7 @@
             public let predicate: Predicate<T>
             public let upstream: Upstream
             public let failure: Failure
-            public init(_ predicate: Predicate<T>, _ upstream: consuming Upstream, failure: Failure)
-            {
+            public init(_ predicate: Predicate<T>, _ upstream: consuming Upstream, failure: Failure) {
                 self.predicate = predicate
                 self.upstream = upstream
                 self.failure = failure
@@ -43,13 +44,16 @@
         T: ~Copyable,
         Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
             & Copyable,
-        Upstream.Input: ~Copyable & ~Escapable, Upstream.Output: ~Copyable,
+        Upstream.Input: ~Copyable & ~Escapable,
+        Upstream.Output: ~Copyable,
         Upstream.Buffer: ~Copyable & ~Escapable
     {}
 
     extension Coding
     where
-        Self: ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
+        Self: ~Copyable,
+        Input: ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
         Buffer: ~Copyable & ~Escapable
     {
         public consuming func filter(

@@ -5,7 +5,9 @@
 
     extension Coding
     where
-        Self: ~Copyable, Input: ~Copyable & ~Escapable, Output: ~Copyable & Escapable,
+        Self: ~Copyable,
+        Input: ~Copyable & ~Escapable,
+        Output: ~Copyable & Escapable,
         Buffer: ~Copyable & ~Escapable
     {
 

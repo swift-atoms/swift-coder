@@ -121,9 +121,12 @@
 
     extension Case: Copyable
     where
-        Input: ~Copyable & ~Escapable, Source: ~Copyable, Focus: ~Copyable,
+        Input: ~Copyable & ~Escapable,
+        Source: ~Copyable,
+        Focus: ~Copyable,
         Content: Coding<Content.Input, Content.Output, Content.Buffer, Content.Failure> & Copyable,
-        Content.Input: ~Copyable & ~Escapable, Content.Output: ~Copyable,
+        Content.Input: ~Copyable & ~Escapable,
+        Content.Output: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {}
 #endif

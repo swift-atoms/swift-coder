@@ -10,7 +10,8 @@
     >: Coding
     where
         Input.Element: Equatable & Copyable & Escapable,
-        Input.Failure == Never, OutputBuffer.Element == Input.Element
+        Input.Failure == Never,
+        OutputBuffer.Element == Input.Element
     {
 
         public typealias Buffer = OutputBuffer
@@ -21,8 +22,7 @@
         @inlinable public borrowing func parse(_ input: inout Input) throws(Failure) {
             try Parser::ConsumingLiteral<Input>(elements).parse(&input)
         }
-        @inlinable public borrowing func serialize(_ output: Void, into buffer: inout OutputBuffer)
-        {
+        @inlinable public borrowing func serialize(_ output: Void, into buffer: inout OutputBuffer) {
             buffer.append(contentsOf: elements)
         }
     }
