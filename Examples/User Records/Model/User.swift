@@ -22,7 +22,10 @@ public enum RecordFailure: Error, Equatable {
         public struct Coder: Coding {
             public init() {}
             @Coder::Builder<Substring, String>
-            public var body: some Coding<Substring, User, String, RecordFailure> {
+            public var body:
+                some Coding & Parsing<Substring, User, RecordFailure>
+                    & Serializing<User, String, RecordFailure>
+            {
                 Coder::Coder(
                     { (fields: consuming Pair<String, String>) throws(RecordFailure) -> User in
                         guard let age = Int(fields.second), (0...130).contains(age) else {
@@ -86,7 +89,10 @@ public enum RecordFailure: Error, Equatable {
     #if Repetition
         public struct UserRecords: Coding {
             public init() {}
-            public var body: some Coding<Substring, [User], String, RecordFailure> {
+            public var body:
+                some Coding & Parsing<Substring, [User], RecordFailure>
+                    & Serializing<[User], String, RecordFailure>
+            {
                 return Repetition((0...), operation: User.Coder()).coder(
                     rejected: { $0 == .rejected },
                     failure: { _ in .repetition }

@@ -26,7 +26,10 @@ extension User {
         public init() {}
 
         @Coder::Builder<Substring, Substring>
-        public var body: some Coding<Substring, User, Substring, GrammarFailure> {
+        public var body:
+            some Coding & Parsing<Substring, User, GrammarFailure>
+                & Serializing<User, Substring, GrammarFailure>
+        {
             Coder::Coder {
                 nameToken()
                 literal(",")
@@ -85,7 +88,10 @@ extension Node {
         public init() {}
 
         @Coder::Builder<Substring, Substring>
-        public var body: some Coding<Substring, Node, Substring, GrammarFailure> {
+        public var body:
+            some Coding & Parsing<Substring, Node, GrammarFailure>
+                & Serializing<Node, Substring, GrammarFailure>
+        {
             Coder::OneOf.Sequence(absent: .rejected) {
                 Coder::Case(Node.prisms.leaf, absent: .rejected) {
                     literal("leaf(")
