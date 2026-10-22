@@ -13,11 +13,6 @@
             case word(String)
         }
         struct Age: Equatable { let value: Int }
-        struct LeafParser: Parsing {
-            func parse(_ input: inout Substring) throws(Failure) -> Int {
-                try OpticAndChoiceTests.integer.parse(&input)
-            }
-        }
 
         static var leaf: Optic<Node, Node, Int, Int>.Prism {
             Optic<Node, Node, Int, Int>.Prism(
@@ -68,7 +63,9 @@
                 }
             )
         }
-        static var grammar: some Coding<Substring, Node, Substring, Failure> {
+        static var grammar: some Coding & Parsing<Substring, Node, Failure>
+            & Serializing<Node, Substring, Failure>
+        {
             return Coder::OneOf.Sequence(absent: Failure.absent) {
                 Coder::Case(leaf, absent: Failure.absent) {
                     marker("@")
@@ -114,9 +111,6 @@
             var buffer: Substring = "prefix:"
             #expect(throws: Failure.absent) { try leaf.serialize(.word("name"), into: &buffer) }
             #expect(buffer == "prefix:")
-        }
-        @Test func caseTypeRequiresParsingWithoutCoding() {
-            _ = Coder::Case<Substring, Node, Int, LeafParser>.self
         }
         @Test func fatalPrintingIsNotRetriedOrSilentlyDiscarded() {
             var buffer: Substring = ""

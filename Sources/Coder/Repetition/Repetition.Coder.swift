@@ -136,13 +136,13 @@
     extension Repetition.Coder: Copyable
     where
         Bounds: Cardinal.Range,
-        Operation: Coding<Operation.Input, Operation.Output, Operation.Buffer, Operation.Failure>
+        Operation: Coding
             & Copyable,
         Operation.Input: Restorable & ~Copyable & ~Escapable,
         Operation.Input.Checkpoint: Equatable,
         Operation.Output: Copyable & Escapable,
         Operation.Buffer: ~Copyable & ~Escapable,
-        Separator: Coding<Separator.Input, Separator.Output, Separator.Buffer, Separator.Failure>
+        Separator: Coding
             & Copyable,
         Separator.Input: ~Copyable & ~Escapable,
         Separator.Buffer: ~Copyable & ~Escapable

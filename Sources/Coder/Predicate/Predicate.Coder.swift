@@ -42,7 +42,7 @@
     extension Predicate.Coder: Copyable
     where
         T: ~Copyable,
-        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
+        Upstream: Coding
             & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable,

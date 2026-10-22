@@ -44,7 +44,7 @@
     }
     extension OneOf.Optional: Copyable
     where
-        Content: Coding<Content.Input, Content.Output, Content.Buffer, Content.Failure> & Copyable,
+        Content: Coding & Copyable,
         Content.Input: Restorable & ~Copyable & ~Escapable,
         Content.Output: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable

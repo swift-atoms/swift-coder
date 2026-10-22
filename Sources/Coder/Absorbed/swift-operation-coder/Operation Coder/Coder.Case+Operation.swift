@@ -10,7 +10,6 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: Coding & ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
 
@@ -48,7 +47,6 @@
         Input: ~Copyable & ~Escapable,
         Source: Operation.Coproduct & ~Copyable,
         Focus: ~Copyable,
-        Content: Coding & ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
 
@@ -75,7 +73,8 @@
     where
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
-        Focus: ~Copyable
+        Focus: ~Copyable,
+        Content.Buffer: ~Copyable & ~Escapable
     {
 
         @inlinable
@@ -163,7 +162,8 @@
     where
         Input: ~Copyable & ~Escapable,
         Source: Operation.Coproduct & ~Copyable,
-        Focus: ~Copyable
+        Focus: ~Copyable,
+        Content.Buffer: ~Copyable & ~Escapable
     {
 
         @inlinable

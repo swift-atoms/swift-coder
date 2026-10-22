@@ -111,8 +111,8 @@
     where
         First.Buffer: ~Copyable & ~Escapable,
         Second.Buffer: ~Copyable & ~Escapable,
-        First: Coding<First.Input, First.Output, First.Buffer, First.Failure> & Copyable,
-        Second: Coding<Second.Input, Second.Output, Second.Buffer, Second.Failure> & Copyable,
+        First: Coding & Copyable,
+        Second: Coding & Copyable,
         First.Input: ~Copyable & ~Escapable,
         Second.Input: ~Copyable & ~Escapable,
         First.Output: ~Copyable & Escapable,

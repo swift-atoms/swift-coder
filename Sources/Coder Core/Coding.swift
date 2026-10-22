@@ -1,7 +1,7 @@
 @_exported public import Parser
 @_exported public import Serializer
 
-public protocol Coding<Input, Output, Buffer, Failure>: Parsing, Serializing, ~Copyable
+public protocol Coding: Parsing, Serializing, ~Copyable
 where Input: ~Copyable & ~Escapable, Output: ~Copyable & ~Escapable, Buffer: ~Copyable & ~Escapable {
     @Builder<Input, Buffer>
     var body: Body { borrowing get }

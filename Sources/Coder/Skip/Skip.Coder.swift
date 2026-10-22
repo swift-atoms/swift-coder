@@ -83,8 +83,8 @@
     where
         Kept: ~Copyable,
         Dropped == Void,
-        A: Coding<A.Input, A.Output, A.Buffer, A.Failure> & Copyable,
-        N: Coding<N.Input, N.Output, N.Buffer, N.Failure> & Copyable,
+        A: Coding & Copyable,
+        N: Coding & Copyable,
         A.Input: ~Copyable & ~Escapable,
         N.Input: ~Copyable & ~Escapable,
         A.Output: ~Copyable & Escapable,

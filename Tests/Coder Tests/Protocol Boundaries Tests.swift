@@ -68,7 +68,9 @@ import User_Records_Model
             }
         }
         struct Route: Coding {
-            var body: some Coding<Request, CreateUser, Request, Failure> {
+            var body: some Coding & Parsing<Request, CreateUser, Failure>
+                & Serializing<CreateUser, Request, Failure>
+            {
                 return Coder(
                     { user throws(Failure) in CreateUser(user: user) },
                     from: { route throws(Failure) in route.user }

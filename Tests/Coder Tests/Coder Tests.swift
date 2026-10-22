@@ -221,7 +221,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, Character, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, Character, Mismatch>
+            & Serializing<Character, Substring, Mismatch>
+        {
             Coder::Coder<Substring, Character, Substring, Mismatch>(
                 parse: { input throws(Mismatch) in
                     guard let first = input.first else { throw .mismatch }
@@ -251,7 +253,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, String, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, String, Mismatch>
+            & Serializing<String, Substring, Mismatch>
+        {
             Marker("<")
             Constant("tag")
         }
@@ -261,7 +265,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, String, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, String, Mismatch>
+            & Serializing<String, Substring, Mismatch>
+        {
             Constant("tag")
             Marker(">")
         }
@@ -271,7 +277,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, Pair<String, String>, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, Pair<String, String>, Mismatch>
+            & Serializing<Pair<String, String>, Substring, Mismatch>
+        {
             Constant("k")
             Marker("=")
             Constant("v")
@@ -314,7 +322,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, String, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, String, Mismatch>
+            & Serializing<String, Substring, Mismatch>
+        {
             Coder::Coder {
                 Marker("<")
                 Constant("tag")
@@ -327,7 +337,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, String, Substring, Mismatch> {
+        var body: some Coding & Parsing<Substring, String, Mismatch>
+            & Serializing<String, Substring, Mismatch>
+        {
             Coder::Coder {
                 Marker("<")
                 Constant("tag")
@@ -340,7 +352,9 @@
         typealias Failure = Domain
 
         @Coder::Builder<Substring, Substring>
-        var body: some Coding<Substring, String, Substring, Domain> {
+        var body: some Coding & Parsing<Substring, String, Domain>
+            & Serializing<String, Substring, Domain>
+        {
             Constant("tag").mapFailure { _ in Domain.malformed }
         }
     }
@@ -354,7 +368,9 @@
             typealias Failure = Mismatch
 
             @Coder::Builder<Substring, Substring>
-            var body: some Coding<Substring, Boxed, Substring, Mismatch> {
+            var body: some Coding & Parsing<Substring, Boxed, Mismatch>
+                & Serializing<Boxed, Substring, Mismatch>
+            {
                 Coder::Coder {
                     Marker("(")
                     Digit()
@@ -451,7 +467,9 @@
         typealias Failure = ByteMismatch
 
         @Coder::Builder<Cursor, [UInt8]>
-        var body: some Coding<Cursor, UInt8, [UInt8], ByteMismatch> {
+        var body: some Coding & Parsing<Cursor, UInt8, ByteMismatch>
+            & Serializing<UInt8, [UInt8], ByteMismatch>
+        {
             ByteMarker(0x28)
             ByteDigit()
             ByteMarker(0x29)

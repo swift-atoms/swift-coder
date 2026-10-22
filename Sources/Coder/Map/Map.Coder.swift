@@ -45,7 +45,7 @@
     where
         Source: ~Copyable,
         Target: ~Copyable,
-        Upstream: Coding<Upstream.Input, Upstream.Output, Upstream.Buffer, Upstream.Failure>
+        Upstream: Coding
             & Copyable,
         Upstream.Input: ~Copyable & ~Escapable,
         Upstream.Output: ~Copyable,

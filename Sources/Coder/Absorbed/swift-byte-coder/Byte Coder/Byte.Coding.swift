@@ -5,11 +5,8 @@
     extension Byte {
 
         public typealias Coding<Output: ~Copyable & ~Escapable, Failure: Swift::Error> =
-            Coder::Coding<
-                ArraySlice<Byte>,
-                Output,
-                [Byte],
-                Failure
-            >
+            Coder::Coding
+            & Parsing<ArraySlice<Byte>, Output, Failure>
+            & Serializing<Output, [Byte], Failure>
     }
 #endif

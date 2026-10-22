@@ -93,7 +93,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, String>
-        var body: some Coding<Substring, String, String, Mismatch> {
+        var body: some Coding & Parsing<Substring, String, Mismatch>
+            & Serializing<String, String, Mismatch>
+        {
             Text("tag")
             Marker(">")
         }
@@ -105,7 +107,9 @@
         typealias Failure = Mismatch
 
         @Coder::Builder<Substring, String>
-        var body: some Coding<Substring, Pair<String, String>, String, Mismatch> {
+        var body: some Coding & Parsing<Substring, Pair<String, String>, Mismatch>
+            & Serializing<Pair<String, String>, String, Mismatch>
+        {
             Text("a")
             Text("b")
         }
