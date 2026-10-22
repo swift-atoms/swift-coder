@@ -1,5 +1,4 @@
 #if Byte
-    public import Coder_Core
     public import Byte
 
     import Parser

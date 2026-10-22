@@ -105,12 +105,12 @@
         @Coder::Builder<Characters, String>
         var body:
             some Coding
-            & Parsing<
-                Characters, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
-            >
-            & Serializing<
-                String, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
-            >
+                & Parsing<
+                    Characters, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
+                >
+                & Serializing<
+                    String, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
+                >
         {
             Coder::ConsumingLiteral<Characters, String>(["<"])
             Constant("tag")
@@ -132,13 +132,13 @@
             @Coder::Builder<Characters, String>
             var body:
                 some Coding
-                & Parsing<
-                    Characters, Label,
-                    Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
-                >
-                & Serializing<
-                    Label, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
-                >
+                    & Parsing<
+                        Characters, Label,
+                        Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
+                    >
+                    & Serializing<
+                        Label, String, Either<Parser::ConsumingLiteral<Characters>.Error, Mismatch>
+                    >
             {
                 Tagged().map(to: { Label($0) }, from: { $0.text })
             }

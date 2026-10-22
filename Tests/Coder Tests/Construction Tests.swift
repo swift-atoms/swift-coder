@@ -26,9 +26,10 @@
 
     extension ConditionalBranch {
         @Coder::Builder<Substring, String>
-        var body: some Coding
-            & Parsing<Substring, Character, Either<ChosenFailure, ChosenFailure>>
-            & Serializing<Character, String, Either<ChosenFailure, ChosenFailure>>
+        var body:
+            some Coding
+                & Parsing<Substring, Character, Either<ChosenFailure, ChosenFailure>>
+                & Serializing<Character, String, Either<ChosenFailure, ChosenFailure>>
         {
             if first { Chosen(character: "a") } else { Chosen(character: "b") }
         }

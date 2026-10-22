@@ -84,8 +84,9 @@
         >
 
         @Coder::Builder<Characters, String>
-        var body: some Coding & Parsing<Characters, Character, Failure>
-            & Serializing<Character, String, Failure>
+        var body:
+            some Coding & Parsing<Characters, Character, Failure>
+                & Serializing<Character, String, Failure>
         {
             Coder::ConsumingLiteral<Characters, String>(["["])
             Coder::First.Element()

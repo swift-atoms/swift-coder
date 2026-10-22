@@ -41,8 +41,9 @@
             case .countOverflow: .overflow
             }
         }
-        static var list: some Coding & Parsing<Substring, [Int], Failure>
-            & Serializing<[Int], String, Failure>
+        static var list:
+            some Coding & Parsing<Substring, [Int], Failure>
+                & Serializing<[Int], String, Failure>
         {
             return Repetition((1...3), operation: Digit()).coder(
                 separatedBy: Comma(),

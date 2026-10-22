@@ -90,12 +90,12 @@
         @Coder::Builder<Substring, Substring>
         var body:
             some Coding
-            & Parsing<
-                Substring, Character?, Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
-            >
-            & Serializing<
-                Character?, Substring, Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
-            >
+                & Parsing<
+                    Substring, Character?, Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
+                >
+                & Serializing<
+                    Character?, Substring, Either<Mismatch, Swift::Optional<Digit>.Coder.Error>
+                >
         {
             if present {
                 Digit()

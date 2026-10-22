@@ -63,8 +63,9 @@
                 }
             )
         }
-        static var grammar: some Coding & Parsing<Substring, Node, Failure>
-            & Serializing<Node, Substring, Failure>
+        static var grammar:
+            some Coding & Parsing<Substring, Node, Failure>
+                & Serializing<Node, Substring, Failure>
         {
             return Coder::OneOf.Sequence(absent: Failure.absent) {
                 Coder::Case(leaf, absent: Failure.absent) {
