@@ -13,13 +13,9 @@
             case word(String)
         }
         struct Age: Equatable { let value: Int }
-        struct SplitContent: Parsing, Serializing {
+        struct LeafParser: Parsing {
             func parse(_ input: inout Substring) throws(Failure) -> Int {
                 try OpticAndChoiceTests.integer.parse(&input)
-            }
-
-            func serialize(_ output: Int, into buffer: inout Substring) throws(Failure) {
-                try OpticAndChoiceTests.integer.serialize(output, into: &buffer)
             }
         }
 
@@ -119,14 +115,8 @@
             #expect(throws: Failure.absent) { try leaf.serialize(.word("name"), into: &buffer) }
             #expect(buffer == "prefix:")
         }
-        @Test func caseAcceptsSeparateParsingAndSerializingConformances() throws {
-            let leaf = Coder::Case(Self.leaf, absent: Failure.absent) { SplitContent() }
-            var input: Substring = "42!"
-            #expect(try leaf.parse(&input) == .leaf(42))
-            #expect(input == "!")
-            var buffer: Substring = ""
-            try leaf.serialize(.leaf(42), into: &buffer)
-            #expect(buffer == "42")
+        @Test func caseTypeRequiresParsingWithoutCoding() {
+            _ = Coder::Case<Substring, Node, Int, LeafParser>.self
         }
         @Test func fatalPrintingIsNotRetriedOrSilentlyDiscarded() {
             var buffer: Substring = ""

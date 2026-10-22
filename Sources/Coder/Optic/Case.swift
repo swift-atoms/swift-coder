@@ -9,12 +9,11 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: Parsing & Serializing & ~Copyable
+        Content: Parsing & ~Copyable
     >: ~Copyable
     where
         Content.Input == Input,
-        Content.Output == Focus,
-        Content.Buffer: ~Copyable & ~Escapable
+        Content.Output == Focus
     {
         public let prism: Optic::Optic<Source, Source, Focus, Focus>.Prism
 
@@ -23,6 +22,16 @@
         public let absent: Content.Failure
 
         public let content: Content
+    }
+
+    extension Case
+    where
+        Input: ~Copyable & ~Escapable,
+        Source: ~Copyable,
+        Focus: ~Copyable,
+        Content: Coding & ~Copyable,
+        Content.Buffer: ~Copyable & ~Escapable
+    {
 
         @inlinable
         public init<Buffer: ~Copyable & ~Escapable>(
@@ -43,7 +52,7 @@
         Input: ~Copyable & ~Escapable,
         Source: Copyable,
         Focus: ~Copyable,
-        Content: ~Copyable,
+        Content: Coding & ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
 
@@ -62,8 +71,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: ~Copyable,
-        Content.Buffer: ~Copyable & ~Escapable
+        Content: ~Copyable
     {
 
         public typealias Output = Source
@@ -81,7 +89,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: ~Copyable,
+        Content: Coding & ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {
 
@@ -114,8 +122,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: ~Copyable,
-        Content: ~Copyable,
+        Content: Coding & ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
     {}
 
@@ -124,9 +131,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: Parsing & Serializing & Copyable,
-        Content.Input: ~Copyable & ~Escapable,
-        Content.Output: ~Copyable,
-        Content.Buffer: ~Copyable & ~Escapable
+        Content: Copyable,
+        Content.Failure: Copyable & Escapable
     {}
 #endif
