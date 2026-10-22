@@ -9,7 +9,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: Coding & ~Copyable
+        Content: Parsing & Serializing & ~Copyable
     >: ~Copyable
     where
         Content.Input == Input,
@@ -124,7 +124,7 @@
         Input: ~Copyable & ~Escapable,
         Source: ~Copyable,
         Focus: ~Copyable,
-        Content: Coding<Content.Input, Content.Output, Content.Buffer, Content.Failure> & Copyable,
+        Content: Parsing & Serializing & Copyable,
         Content.Input: ~Copyable & ~Escapable,
         Content.Output: ~Copyable,
         Content.Buffer: ~Copyable & ~Escapable
