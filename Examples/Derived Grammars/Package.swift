@@ -28,12 +28,12 @@ let package = Package(
         ),
         .executableTarget(
             name: "Derived Grammars Example",
-            dependencies: ["Derived Grammars"]
+            dependencies: [.target(name: "Derived Grammars")]
         ),
         .testTarget(
             name: "Derived Grammars Tests",
             dependencies: [
-                "Derived Grammars",
+                .target(name: "Derived Grammars"),
                 .product(name: "Prism Macro", package: "swift-optic"),
             ]
         ),
