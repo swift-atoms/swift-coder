@@ -3,7 +3,7 @@
     import Testing
 
     @Suite struct RepetitionAndOptionalTests {
-        enum Failure: Error, Equatable {
+        enum Failure: Swift.Error, Equatable {
             case absent, fatal, insufficient, excessive, empty, noProgress, overflow, trailing
         }
         struct Digit: Coding {

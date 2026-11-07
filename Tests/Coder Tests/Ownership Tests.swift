@@ -74,7 +74,7 @@ extension LinearCoder {
 
     #if Map
         @Test func conversionAndFailureMappingRetainSingleOwnedComponent() {
-            enum Failure: Error { case unused }
+            enum Failure: Swift.Error { case unused }
             let counter = Destructions()
             func scope() {
                 let mapped = LinearCoder(resource: Resource(counter: counter))
@@ -96,7 +96,7 @@ extension LinearCoder {
 #if Repetition
     private struct LinearByteCoder: Coding, ~Copyable {
 
-        enum Failure: Error { case absent, invalid }
+        enum Failure: Swift.Error { case absent, invalid }
         let resource: Resource
     }
 
@@ -136,7 +136,7 @@ extension LinearCoder {
 #endif
 
 #if Checkpoint && Optic
-    private enum OwnedChoiceFailure: Error, Equatable { case absent }
+    private enum OwnedChoiceFailure: Swift.Error, Equatable { case absent }
     private struct OwnedChoice: Coding, ~Copyable {
 
         let resource: Resource

@@ -2,7 +2,7 @@
     import Coder
     import Testing
 
-    private enum PrecisionFailure: Error, Equatable { case mismatch }
+    private enum PrecisionFailure: Swift.Error, Equatable { case mismatch }
     private struct FallibleValue: Coding {}
 
     extension FallibleValue {

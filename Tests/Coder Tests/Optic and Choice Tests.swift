@@ -3,11 +3,11 @@
     import Testing
 
     @Suite struct OpticAndChoiceTests {
-        enum Failure: Error, Equatable {
+        enum Failure: Swift.Error, Equatable {
             case absent, malformed
             case conversion(Conversion)
         }
-        enum Conversion: Error, Equatable { case invalidAge, unsupportedAge }
+        enum Conversion: Swift.Error, Equatable { case invalidAge, unsupportedAge }
         enum Node: Equatable {
             case leaf(Int)
             case word(String)

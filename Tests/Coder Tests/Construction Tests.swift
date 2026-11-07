@@ -2,7 +2,7 @@
     import Coder
     import Testing
 
-    private enum ChosenFailure: Error, Equatable { case mismatch }
+    private enum ChosenFailure: Swift.Error, Equatable { case mismatch }
     private struct Chosen: Coding {
 
         let character: Character
